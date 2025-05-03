@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-pg00$8-3m8^@idjlfly_^1z=5d3z@7a48qlw50+h68b0i1s*g5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'pixelspy.apps.PixelspyConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
