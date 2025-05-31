@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PixelSpy | Login</title>
+</head>
+<body>
+    <form action="{% url 'logincheck' %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>Log in using your credentials</h1></legend>
+            <label>Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label>Password:</label>
+            <input type="password" id="password" name="password" required>
+        </fieldset>
+        <input type="submit" value="Log in">
+    </form>
+</body>
+</html>

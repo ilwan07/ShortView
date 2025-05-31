@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpRequest
+from django.contrib.auth import authenticate, login
 
 
 # Create your views here.
@@ -10,7 +11,7 @@ def index(request: HttpRequest):
     return render(request, "pixelspy/index.html")
 
 
-def login(request: HttpRequest):
+def loginpage(request: HttpRequest):
     """
     the login page, only show if the user isn't logged in
     """
@@ -21,12 +22,26 @@ def login(request: HttpRequest):
         return render(request, "pixelspy/login.html")
 
 
+def logincheck(request: HttpRequest):
+    """
+    handles a POST request for user login
+    """
+    username = request.POST["username"]
+    password = request.POST["password"]
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return redirect("home")
+    else:
+        pass
+
+
 def home(request: HttpRequest):
     """
     the view for the user home page, only show if user logged in, else redirect to login page
     """
     if not request.user.is_authenticated:
-        return redirect("login")
+        return redirect("loginpage")
     
     context = {"pixels": None}  #TODO: pass all the user's pixel objects to the context
     return render(request, "pixelspy/home.html", context)
