@@ -1,4 +1,3 @@
-import django
 from django.db import models
 from django.utils import timezone
 import datetime
@@ -21,6 +20,7 @@ class Pixel(models.Model):
     
     def is_expired(self) -> bool:
         return self.life_duration >= timezone.now() - self.creation_date
+
 
 class Tracker(models.Model):
     """

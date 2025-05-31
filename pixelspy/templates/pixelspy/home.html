@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PixelSpy | Home</title>
+</head>
+<body>
+    <h1>User home page</h1>
+    <h3>Spy agents:</h3>
+    <ul>
+    {% for pixel in pixels %}
+        <li>{{ pixel.display_url }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
