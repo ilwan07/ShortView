@@ -9,7 +9,7 @@ def index(request: HttpRequest):
     """
     the view to be displayed when requesting the pixelspy index page
     """
-    return render(request, "pixelspy/index.html")
+    return render(request, "pixelspy/index.html", {"loggedin": request.user.is_authenticated})
 
 
 def loginpage(request: HttpRequest):
@@ -33,7 +33,8 @@ def loginpage(request: HttpRequest):
             login(request, user)
             return redirect("home")
         else:
-            return render(request, "pixelspy/login.html", {"error": "The credentials are invalid, make sure the user exists ans the password is correct."})
+            return render(request, "pixelspy/login.html", {"error": "The credentials are invalid, make sure the user exists ans the password is correct.",
+                                                           "username": username})
 
 
 def logoutpage(request: HttpRequest):

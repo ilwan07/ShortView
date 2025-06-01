@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>Welcome to PixelSpy!</h1>
-    <a href="{% url 'loginpage' %}">Log in</a>
+    {% if loggedin %} <a href="{% url 'home' %}">Home page</a>
+    {% else %} <a href="{% url 'loginpage' %}">Log in</a> {% endif %}
 </body>
 </html>
