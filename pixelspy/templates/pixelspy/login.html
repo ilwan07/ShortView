@@ -5,8 +5,9 @@
     <title>PixelSpy | Login</title>
 </head>
 <body>
-    <form action="{% url 'logincheck' %}" method="post">
+    <form action="{% url 'loginpage' %}" method="post">
         {% csrf_token %}
+        {% if error %}<p><strong>{{ error }}</strong></p>{% endif %}
         <fieldset>
             <legend><h1>Log in using your credentials</h1></legend>
             <label>Username:</label>
