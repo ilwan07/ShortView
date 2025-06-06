@@ -9,7 +9,10 @@ def index(request: HttpRequest):
     """
     the view to be displayed when requesting the pixelspy index page
     """
-    return render(request, "pixelspy/index.html", {"loggedin": request.user.is_authenticated})
+    if request.user.is_authenticated:
+        return redirect("home")
+    else:
+        return render(request, "pixelspy/index.html")
 
 
 def loginpage(request: HttpRequest):

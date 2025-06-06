@@ -5,9 +5,8 @@
     <title>PixelSpy | Home</title>
 </head>
 <body>
-    <a href="{% url 'index' %}">Index page</a>
     {% if user.is_staff %}
-    <br> <a href="{% url 'admin:index' %}">admin access</a>
+    <a href="{% url 'admin:index' %}">admin access</a>
     {% endif %}
     <h1>{{ user.username }}'s home page</h1>
     <a href="{% url 'logoutpage' %}">Log out</a>
