@@ -5,7 +5,11 @@
     <title>PixelSpy | Index Page</title>
 </head>
 <body>
+    {% if loggedin %}
+    <h1>Hello again, welcome back to PixelSpy!</h1>
+    {% else %}
     <h1>Welcome to PixelSpy!</h1>
+    {% endif %}
     {% if loggedin %} <a href="{% url 'home' %}">Home page</a>
     {% else %} <a href="{% url 'loginpage' %}">Log in</a> {% endif %}
 </body>

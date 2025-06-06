@@ -6,12 +6,20 @@
 </head>
 <body>
     <a href="{% url 'index' %}">Index page</a>
-    <h1>User home page</h1>
+    {% if user.is_staff %}
+    <br> <a href="{% url 'admin:index' %}">admin access</a>
+    {% endif %}
+    <h1>{{ user.username }}'s home page</h1>
     <a href="{% url 'logoutpage' %}">Log out</a>
     <h3>Spy agents:</h3>
     <ul>
     {% for pixel in pixels %}
-        <li>{{ pixel.display_url }}</li>
+        <li>{{ pixel }}</li>
+        <ul>
+        {% for tracker in pixel.tracker_set.all %}
+        <li>{{ tracker }}</li>
+        {% endfor %}
+        </ul>
     {% endfor %}
     </ul>
 </body>

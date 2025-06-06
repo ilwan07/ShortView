@@ -52,5 +52,5 @@ def home(request: HttpRequest):
     if not request.user.is_authenticated:
         return redirect("loginpage")
     
-    context = {"pixels": None}  #TODO: pass all the user's pixel objects to the context
+    context = {"user": request.user, "pixels": request.user.pixel_set.all()}
     return render(request, "pixelspy/home.html", context)
