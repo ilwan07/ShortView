@@ -29,6 +29,9 @@ class PixelAdmin(admin.ModelAdmin):
         ("Information", {"fields": ["url"]}),
     ]
     inlines = [TrackerInLine]
+    list_display = ["description", "owner", "date", "active"]
+    list_filter = ["date", "owner"]
+    search_fields = ["description"]
 
 
 admin.site.unregister(Group)
