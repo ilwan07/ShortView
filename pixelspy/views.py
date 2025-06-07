@@ -7,12 +7,14 @@ from django.utils.datastructures import MultiValueDictKeyError
 # Create your views here.
 def index(request: HttpRequest):
     """
-    the view to be displayed when requesting the pixelspy index page
+    the view to display the index page, or the home page if the user is logged in
     """
-    if request.user.is_authenticated:
-        return redirect("home")
-    else:
+    if not request.user.is_authenticated:
         return render(request, "pixelspy/index.html")
+    
+    else:
+        context = {"user": request.user, "pixels": request.user.pixel_set.all()}
+        return render(request, "pixelspy/home.html", context)
 
 
 def loginpage(request: HttpRequest):
@@ -20,7 +22,7 @@ def loginpage(request: HttpRequest):
     the login page, only show if the user isn't logged in, manages the login procedure too
     """
     if request.user.is_authenticated:
-        return redirect("home")
+        return redirect("index")
     
     try:
         username = request.POST["username"]
@@ -34,7 +36,7 @@ def loginpage(request: HttpRequest):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("home")
+            return redirect("index")
         else:
             return render(request, "pixelspy/login.html", {"error": "The credentials are invalid, make sure the user exists ans the password is correct.",
                                                            "username": username})
@@ -46,14 +48,3 @@ def logoutpage(request: HttpRequest):
     """
     logout(request)
     return redirect("index")
-
-
-def home(request: HttpRequest):
-    """
-    the view for the user home page, only show if user logged in, else redirect to login page
-    """
-    if not request.user.is_authenticated:
-        return redirect("loginpage")
-    
-    context = {"user": request.user, "pixels": request.user.pixel_set.all()}
-    return render(request, "pixelspy/home.html", context)
