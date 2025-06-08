@@ -5,6 +5,7 @@
     <title>PixelSpy | Login</title>
 </head>
 <body>
+    <a href="{% url 'index' %}">Back to home page</a>
     <form action="{% url 'loginpage' %}" method="post">
         {% csrf_token %}
         {% if error %}<p><strong>{{ error }}</strong></p>{% endif %}
@@ -17,5 +18,7 @@
         </fieldset>
         <input type="submit" value="Log in">
     </form>
+    <br>
+    <a href="{% url 'passStoreInfo' %}">How do we store your sensitive data?</a>
 </body>
 </html>

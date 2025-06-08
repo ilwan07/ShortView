@@ -61,6 +61,13 @@ def loginpage(request: HttpRequest):
                                                            "identifier": identifier})
 
 
+def passStoreInfo(request: HttpRequest):
+    """
+    an informative page to explain to the user how passwords are stored
+    """
+    return render(request, "pixelspy/info/passwords.html")
+
+
 def logoutpage(request: HttpRequest):
     """
     logs out the current user

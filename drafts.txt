@@ -1,5 +1,4 @@
 Main page with explanations
-Login system -> email address+password to authenticate, login button on ui,
 add explanation page to reassure users about the security of the password storage
 Once logged in, get to a list of all the monitored mails sent (pixels)
 
@@ -20,6 +19,5 @@ or to get a link to the spy pixel, you can also choose your own image, and choos
 then send it with the message from your mail app, then go back to the page to enable monitoring
 
 Things to add or change:
-- log in with either username or email, and when login failed tell if the username/email is wrong or if it's the password
 - create sign in system, limit the username to 3-16 chars (or more?), upper/lowercase letters, numbers,
 and a strict set of symbols (space, dash, underscore), forbid the creation of an account with a duplicate email, force the user to verify mail?
