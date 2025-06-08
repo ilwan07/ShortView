@@ -10,8 +10,8 @@
         {% if error %}<p><strong>{{ error }}</strong></p>{% endif %}
         <fieldset>
             <legend><h1>Log in using your credentials</h1></legend>
-            <label>Username:</label>
-            <input type="text" id="username" name="username" {% if username %} value='{{username}}' {% endif %} required>
+            <label>Username/Email:</label>
+            <input type="text" id="identifier" name="identifier" {% if identifier %} value='{{identifier}}' {% endif %} required>
             <label>Password:</label>
             <input type="password" id="password" name="password" required>
         </fieldset>
