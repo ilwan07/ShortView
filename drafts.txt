@@ -21,3 +21,4 @@ then send it with the message from your mail app, then go back to the page to en
 Things to add or change:
 - create sign in system, limit the username to 3-16 chars (or more?), upper/lowercase letters, numbers,
 and a strict set of symbols (space, dash, underscore), forbid the creation of an account with a duplicate email, force the user to verify mail?
+- Allow the user to use a custom image instead of the default transparent pixel
