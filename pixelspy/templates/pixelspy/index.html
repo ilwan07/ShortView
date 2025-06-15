@@ -1,11 +1,30 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PixelSpy | Index Page</title>
+    <title>PixelSpy</title>
+    <link rel="stylesheet" href="{% static 'pixelspy/style.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'pixelspy/assets/icon_16.png' %}">
 </head>
 <body>
     <h1>Welcome to PixelSpy!</h1>
     <a href="{% url 'loginpage' %}">Log in</a>
+    <br><br>
+    <h3>What is PixelSpy?</h3>
+    <p>With this platform, you can monitor the mails you send, and know when someone opens a mail you sent them.</p>
+    <h3>How does this work?</h3>
+    <p>
+        To achieve that, this platform will give you the link to an image that you need to add at the end of your mails.
+        This image is a transparent 1x1 image which is practically invisible to the receiver. When the person opens the mail, 
+        a request is automatically made by his mail client to our servers to retrieve the invisible image, but thanks to this 
+        request we know that the mail has been opened, and from which device.
+    </p>
+    <h3>Who can I send tracked mails to?</h3>
+    <p>
+        Make sure that the person you're going to send tracked mails to is aware of it, and has accepted it. 
+        Never put a tracker in a mail if the receiver doesn't know it, as it may constitute a privacy violation.
+    </p>
 </body>
 </html>

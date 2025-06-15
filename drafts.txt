@@ -1,5 +1,4 @@
 Main page with explanations
-add explanation page to reassure users about the security of the password storage
 Once logged in, get to a list of all the monitored mails sent (pixels)
 
 Settings area: connect your mailing service for direct use, set some IP addresses to specific names,

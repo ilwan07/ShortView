@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.datastructures import MultiValueDictKeyError

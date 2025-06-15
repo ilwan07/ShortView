@@ -1,12 +1,16 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>PixelSpy | Home</title>
+    <link rel="stylesheet" href="{% static 'pixelspy/style.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'pixelspy/assets/icon_16.png' %}">
 </head>
 <body>
     {% if user.is_staff %}
-    <a href="{% url 'admin:index' %}">admin access</a>
+    <a target="_blank" href="{% url 'admin:index' %}">admin access</a>
     {% endif %}
     <h1>{{ user.username }}'s home page</h1>
     <a href="{% url 'logoutpage' %}">Log out</a>
