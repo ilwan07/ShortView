@@ -1,8 +1,11 @@
 from django.shortcuts import redirect, render
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, Http404
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.datastructures import MultiValueDictKeyError
+
+from .models import Pixel, Tracker
 
 
 # Create your views here.
@@ -61,7 +64,7 @@ def loginpage(request: HttpRequest):
                                                            "identifier": identifier})
 
 
-def passStoreInfo(request: HttpRequest):
+def password_info(request: HttpRequest):
     """
     an informative page to explain to the user how passwords are stored
     """
@@ -74,3 +77,26 @@ def logoutpage(request: HttpRequest):
     """
     logout(request)
     return redirect("index")
+
+def view_pixel(request: HttpRequest, pixel_id: int):
+    """
+    displays info about a pixel, if it belongs to the active user
+    """
+    if not request.user.is_authenticated:
+        return redirect("loginpage")
+    try:
+        pixelObject = Pixel.objects.get(id=pixel_id)
+    except Pixel.DoesNotExist:
+        raise Http404("Pixel does not exist")
+    else:
+        if pixelObject.owner == request.user:
+            return render(request, "pixelspy/view_pixel.html", {"pixel": pixelObject})
+        else:
+            raise PermissionDenied("You are not the owner of this pixel")
+
+def view_tracker(request: HttpRequest, pixel_id: int, tracker_id: int):
+    """
+    displays the data from a tracker if it exists and comes from the correct pixel
+    the use of a pixel id too is for ease of navigation with the url structure
+    """
+    return HttpResponse("<h1>TODO</h1>")  #TODO
