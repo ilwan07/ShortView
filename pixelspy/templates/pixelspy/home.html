@@ -17,12 +17,14 @@
     <h3>Spy agents:</h3>
     <ul>
     {% for pixel in pixels %}
-        <li>{{ pixel }}</li>
+        <li {% if pixel.active %} class="active" {% else %} class="inactive" {% endif %}> {{ pixel }} </li>
+        {% if pixel.active %}
         <ul>
         {% for tracker in pixel.tracker_set.all %}
             <li>{{ tracker }}</li>
         {% endfor %}
         </ul>
+        {% endif %}
     {% endfor %}
     </ul>
 </body>

@@ -3,6 +3,11 @@ from .models import Pixel, Tracker
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin
 
+# Change admin page headers
+admin.site.site_header = "PixelSpy Administration"
+admin.site.site_title = "PixelSpy Admin Portal"
+admin.site.index_title = "Welcome to the PixelSpy Administration Interface"
+
 # Register your models here.
 
 class PixelInLine(admin.TabularInline):

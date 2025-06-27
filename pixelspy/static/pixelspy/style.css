@@ -1,0 +1,8 @@
+li.active {
+  color: green;
+}
+
+li.inactive {
+  color: red;
+  text-decoration: line-through;
+}
