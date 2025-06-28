@@ -1,8 +1,15 @@
-li.active {
+ul a {
+  text-decoration: none;
+}
+
+li.read {
   color: green;
 }
 
+li.unread {
+  color: orange;
+}
+
 li.inactive {
-  color: red;
   text-decoration: line-through;
 }
