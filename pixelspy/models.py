@@ -5,6 +5,16 @@ from django.contrib.auth.models import User
 import datetime
 
 # Create your models here.
+
+class Profile(models.Model):
+    """
+    a model to store a user profile, with all its settings, data and preferences
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    hide_expired = models.BooleanField("hide expired pixels", default=False)
+    default_lifetime = models.DurationField("default pixel life duration", default=datetime.timedelta(0))
+
+
 class Pixel(models.Model):
     """
     a model to represent a tracking pixel with its attributes

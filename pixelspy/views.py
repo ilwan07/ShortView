@@ -84,19 +84,44 @@ def view_pixel(request: HttpRequest, pixel_id: int):
     """
     if not request.user.is_authenticated:
         return redirect("loginpage")
+    # verify that the pixel exists
     try:
         pixelObject = Pixel.objects.get(id=pixel_id)
     except Pixel.DoesNotExist:
         raise Http404("Pixel does not exist")
     else:
+        # check that the user owns the pixel, then display the page
         if pixelObject.owner == request.user:
-            return render(request, "pixelspy/view_pixel.html", {"pixel": pixelObject})
+            return render(request, "pixelspy/view_pixel.html", {"pixel": pixelObject,
+                                                                "trackers": pixelObject.tracker_set.all()})
         else:
             raise PermissionDenied("You are not the owner of this pixel")
 
-def view_tracker(request: HttpRequest, pixel_id: int, tracker_id: int):
+def view_tracker(request: HttpRequest, pixel_id:int, tracker_id:int):
     """
-    displays the data from a tracker if it exists and comes from the correct pixel
-    the use of a pixel id too is for ease of navigation with the url structure
+    view the full header of a request to the pixel, also verifies if the url is consistent
+    the used url contains the pixel id for the sake of easy url navigation for the user
     """
-    return HttpResponse("<h1>TODO</h1>")  #TODO
+    if not request.user.is_authenticated:
+        return redirect("loginpage")
+    # verify that the pixel exists
+    try:
+        pixelObject = Pixel.objects.get(id=pixel_id)
+    except Pixel.DoesNotExist:
+        raise Http404("Pixel does not exist")
+    else:
+        # verify that the tracker exists
+        try:
+            trackerObject = Tracker.objects.get(id=tracker_id)
+        except Tracker.DoesNotExist:
+            raise Http404("Tracker does not exist")
+        else:
+            # verify that the tracker belongs to the pixel
+            if trackerObject not in pixelObject.tracker_set.all():
+                raise Http404("The tracker is not from the given pixel")
+            else:
+                # check that the user owns the pixel, then display the header in plaintext
+                if pixelObject.owner == request.user:
+                    return HttpResponse(trackerObject.header)
+                else:
+                    raise PermissionDenied("You are not the owner of the pixel associated to this tracker")

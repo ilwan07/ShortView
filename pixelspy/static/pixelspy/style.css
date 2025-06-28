@@ -1,15 +1,46 @@
-ul a {
+ul.pixels a {
   text-decoration: none;
 }
 
-li.read {
+ul.pixels li {
+  font-size: 1.2rem;
+}
+
+ul.pixels li.read {
   color: green;
 }
 
-li.unread {
+ul.pixels li.unread {
   color: orange;
 }
 
-li.inactive {
+ul.pixels li.inactive {
   text-decoration: line-through;
+}
+
+button.pixelurl {
+  text-decoration: underline;
+  background: transparent;
+  border: none;
+  cursor: grab;
+  font-size: 1rem;
+  color: darkslategrey;
+}
+
+table.trackers {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+table.trackers th, table.trackers tr, table.trackers td {
+  border: 1px solid grey;
+}
+
+a.headerlink {
+  color: darkslategrey;
+}
+
+p#copyconfirm {
+  color: darkslategrey;
 }

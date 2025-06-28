@@ -9,7 +9,7 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'pixelspy/assets/icon_16.png' %}">
 </head>
 <body>
-    <a href="{% url 'index' %}">Back to home page</a>
+    <a href="{% url 'index' %}">Back to index page</a>
     <form action="{% url 'loginpage' %}" method="post">
         {% csrf_token %}
         {% if error %}<p><strong>{{ error }}</strong></p>{% endif %}

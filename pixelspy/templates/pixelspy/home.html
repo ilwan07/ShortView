@@ -14,19 +14,12 @@
     {% endif %}
     <h1>{{ user.username }}'s home page</h1>
     <a href="{% url 'logoutpage' %}">Log out</a>
-    <h3>Spy agents:</h3>
-    <ul>
+    <h2>Spy agents:</h2>
+    <ul class="pixels">
     {% for pixel in pixels %}
         <a href="{% url 'view_pixel' pixel.id %}">
             <li class="{% if pixel.active %}active{% else %}inactive{% endif %} {% if pixel.tracker_set.all|length > 0 %}read{% else %}unread{% endif %}"> {{ pixel }} </li>
         </a>
-        {% if pixel.active %}
-        <ul>
-        {% for tracker in pixel.tracker_set.all %}
-            <a href="{% url 'view_tracker' pixel.id tracker.id %}"> <li>{{ tracker }}</li> </a>
-        {% endfor %}
-        </ul>
-        {% endif %}
     {% empty %}
     <p>You don't have created any pixel yet.</p>
     {% endfor %}
