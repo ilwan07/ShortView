@@ -17,8 +17,18 @@ def index(request: HttpRequest):
         return render(request, "pixelspy/index.html")
     
     else:
-        context = {"user": request.user, "pixels": request.user.pixel_set.all()}
-        return render(request, "pixelspy/home.html", context)
+        return render(request, "pixelspy/home.html", {"user": request.user,
+                                                      "pixels": request.user.pixel_set.all()})
+
+
+def preferences(request: HttpRequest):
+    """
+    the view to let the user change the preferences
+    """
+    if not request.user.is_authenticated:
+        return redirect("loginpage")
+    else:
+        return render(request, "pixelspy/preferences.html", {"profile": request.user.profile})
 
 
 def loginpage(request: HttpRequest):
@@ -78,6 +88,7 @@ def logoutpage(request: HttpRequest):
     logout(request)
     return redirect("index")
 
+
 def view_pixel(request: HttpRequest, pixel_id: int):
     """
     displays info about a pixel, if it belongs to the active user
@@ -96,6 +107,7 @@ def view_pixel(request: HttpRequest, pixel_id: int):
                                                                 "trackers": pixelObject.tracker_set.all()})
         else:
             raise PermissionDenied("You are not the owner of this pixel")
+
 
 def view_tracker(request: HttpRequest, pixel_id:int, tracker_id:int):
     """
@@ -122,6 +134,6 @@ def view_tracker(request: HttpRequest, pixel_id:int, tracker_id:int):
             else:
                 # check that the user owns the pixel, then display the header in plaintext
                 if pixelObject.owner == request.user:
-                    return HttpResponse(trackerObject.header)
+                    return HttpResponse(f"<samp>{trackerObject.header}</samp>")
                 else:
                     raise PermissionDenied("You are not the owner of the pixel associated to this tracker")

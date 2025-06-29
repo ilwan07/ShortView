@@ -44,3 +44,19 @@ a.headerlink {
 p#copyconfirm {
   color: darkslategrey;
 }
+
+p.expiredtext {
+  font-size: 1.15rem;
+}
+
+a.adminaccess {
+  font-size: 1.2rem;
+}
+
+a.preferenceslink {
+  font-size: 1.2rem;
+}
+
+input.applypreferences {
+  font-size: 1.2rem;
+}

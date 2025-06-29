@@ -11,8 +11,11 @@ class Profile(models.Model):
     a model to store a user profile, with all its settings, data and preferences
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    hide_expired = models.BooleanField("hide expired pixels", default=False)
-    default_lifetime = models.DurationField("default pixel life duration", default=datetime.timedelta(0))
+    hide_expired = models.BooleanField("hide expired pixels", default=True)
+    default_lifetime = models.DurationField("default pixel life duration", default=datetime.timedelta(days=14))
+
+    def __str__(self):
+        return str(self.user)
 
 
 class Pixel(models.Model):
@@ -53,7 +56,7 @@ class Tracker(models.Model):
     pixel = models.ForeignKey(Pixel, on_delete=models.CASCADE)  # the pixel from which the tracking originates
     ip = models.GenericIPAddressField("receiver ip")
     date = models.DateTimeField("date of opening")
-    header = models.CharField("request metadata", default="")
+    header = models.CharField("request header", default="")
 
     def __str__(self):
         return f"{self.date} from {self.ip}"

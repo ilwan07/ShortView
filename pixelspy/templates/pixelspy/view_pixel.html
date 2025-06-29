@@ -11,10 +11,13 @@
 <body>
     <a href="{% url 'index' %}">Back to home page</a>
     <h2>{{ pixel.description }}</h2>
-    <br>
+    {% if pixel.active %}
     <p>The pixel can be added in a mail with the following link (click to copy):</p>
     <button onclick="copy_link()" class="pixelurl"><i>{{ pixel.url }}</i></button>
     <small> <p id="copyconfirm"></p> </small>
+    {% else %}
+    <p class="expiredtext"><i><u>This pixel is expired</u></i></p>
+    {% endif %}
     <br>
     {% if trackers|length == 0 %}
     <p>The email containing the pixel hasn't been opened yet, no tracker available.</p>

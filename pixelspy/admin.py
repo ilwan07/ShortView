@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pixel, Tracker
+from .models import Profile, Pixel, Tracker
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin
 
@@ -15,11 +15,26 @@ class PixelInLine(admin.TabularInline):
     extra = 0
 
 
+class ProfileInLine(admin.TabularInline):
+    model = Profile
+    can_delete = False
+
+
 class UserAdminCustom(UserAdmin):
     """
     keep the default admin entries, but add an inline
     """
-    inlines = [PixelInLine]
+    inlines = [ProfileInLine, PixelInLine]
+
+
+class ProfileAdmin(admin.ModelAdmin):
+    """
+    manage the preferences of a user
+    """
+    fieldsets = [
+        ("User", {"fields": ["user"]}),
+        ("Pixels", {"fields": ["default_lifetime", "hide_expired"]}),
+    ]
 
 
 class TrackerInLine(admin.TabularInline):
@@ -28,6 +43,9 @@ class TrackerInLine(admin.TabularInline):
 
 
 class PixelAdmin(admin.ModelAdmin):
+    """
+    section to manage pixels and their trackers
+    """
     fieldsets = [
         ("General", {"fields": ["description", "owner"]}),
         ("Date and time", {"fields": ["date", "lifetime"]}),
@@ -42,4 +60,5 @@ class PixelAdmin(admin.ModelAdmin):
 admin.site.unregister(Group)
 admin.site.unregister(User)
 admin.site.register(User, UserAdminCustom)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Pixel, PixelAdmin)
