@@ -1,12 +1,14 @@
 from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse, Http404
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .models import Pixel, Tracker
+from .models import Profile, Pixel, Tracker
 
+import datetime
 
 # Create your views here.
 def index(request: HttpRequest):
@@ -18,7 +20,8 @@ def index(request: HttpRequest):
     
     else:
         return render(request, "pixelspy/home.html", {"user": request.user,
-                                                      "pixels": request.user.pixel_set.all()})
+                                                      "pixels": request.user.pixel_set.all(),
+                                                      })
 
 
 def preferences(request: HttpRequest):
@@ -28,7 +31,48 @@ def preferences(request: HttpRequest):
     if not request.user.is_authenticated:
         return redirect("loginpage")
     else:
-        return render(request, "pixelspy/preferences.html", {"profile": request.user.profile})
+        profile = request.user.profile
+        lifetime: datetime.timedelta = profile.default_lifetime
+        hours = lifetime.seconds // 3600
+        minutes = (lifetime.seconds % 3600) // 60
+        seconds = (lifetime.seconds % 60)
+        return render(request, "pixelspy/preferences.html", {"profile": profile,
+                                                             "never_expire": request.user.profile.default_lifetime == datetime.timedelta(0),
+                                                             "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                             })
+
+
+def submit_preferences(request: HttpRequest):
+    """
+    set the new preferences using the POST data from the preferences view
+    """
+    if not request.user.is_authenticated:
+        return redirect("loginpage")
+    if "never_expire" in request.POST:
+        days, hours, minutes, seconds = 0, 0, 0, 0
+    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"]):
+        days = request.POST["days"]
+        hours = request.POST["hours"]
+        minutes = request.POST["minutes"]
+        seconds = request.POST["seconds"]
+    else:
+        messages.error(request, "Error: Some data to post is missing, try again or contact the developer to fix the issue.")
+        return redirect("preferences")
+    
+    try:
+        days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
+    except ValueError:
+        messages.error(request, "Error: You tried to set the lifetime value without using integers.")
+        return redirect("preferences")
+    never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
+    hide_expired = request.POST["hide_expired"] == "on" if "hide_expired" in request.POST else False
+    
+    profile:Profile = request.user.profile
+    profile.default_lifetime = datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
+    profile.hide_expired = hide_expired
+    profile.save()
+    messages.success(request, "Successfully applied the new preferences!")
+    return redirect("preferences")
 
 
 def loginpage(request: HttpRequest):
@@ -57,11 +101,13 @@ def loginpage(request: HttpRequest):
         except User.DoesNotExist:
             # if the identifier is wrong
             return render(request, "pixelspy/login.html", {"error": f"The {login_type} you entered is invalid. Make sure the {login_type} is correct, or use the sign in button to create a new account.",
-                                                           "identifier": identifier})
+                                                           "identifier": identifier,
+                                                           })
         except User.MultipleObjectsReturned:
             # if there (somehow) is multiple users possible
             return render(request, "pixelspy/login.html", {"error": f"Multiple different users are using this {login_type}. This is an issue, please contact the developper to fix this.",
-                                                           "identifier": identifier})
+                                                           "identifier": identifier,
+                                                           })
         
         # log the user in if everything is ok
         username = user_object.username
@@ -71,7 +117,8 @@ def loginpage(request: HttpRequest):
             return redirect("index")
         else:
             return render(request, "pixelspy/login.html", {"error": "The credentials are invalid, make sure that the password is correct.",
-                                                           "identifier": identifier})
+                                                           "identifier": identifier,
+                                                           })
 
 
 def password_info(request: HttpRequest):
@@ -104,7 +151,8 @@ def view_pixel(request: HttpRequest, pixel_id: int):
         # check that the user owns the pixel, then display the page
         if pixelObject.owner == request.user:
             return render(request, "pixelspy/view_pixel.html", {"pixel": pixelObject,
-                                                                "trackers": pixelObject.tracker_set.all()})
+                                                                "trackers": pixelObject.tracker_set.all(),
+                                                                })
         else:
             raise PermissionDenied("You are not the owner of this pixel")
 
@@ -121,19 +169,16 @@ def view_tracker(request: HttpRequest, pixel_id:int, tracker_id:int):
         pixelObject = Pixel.objects.get(id=pixel_id)
     except Pixel.DoesNotExist:
         raise Http404("Pixel does not exist")
+    # verify that the tracker exists
+    try:
+        trackerObject = Tracker.objects.get(id=tracker_id)
+    except Tracker.DoesNotExist:
+        raise Http404("Tracker does not exist")
+    # verify that the tracker belongs to the pixel
+    if trackerObject not in pixelObject.tracker_set.all():
+        raise Http404("The tracker is not from the given pixel")
+    # check that the user owns the pixel, then display the header in plaintext
+    if pixelObject.owner != request.user:
+        raise PermissionDenied("You are not the owner of the pixel associated to this tracker")
     else:
-        # verify that the tracker exists
-        try:
-            trackerObject = Tracker.objects.get(id=tracker_id)
-        except Tracker.DoesNotExist:
-            raise Http404("Tracker does not exist")
-        else:
-            # verify that the tracker belongs to the pixel
-            if trackerObject not in pixelObject.tracker_set.all():
-                raise Http404("The tracker is not from the given pixel")
-            else:
-                # check that the user owns the pixel, then display the header in plaintext
-                if pixelObject.owner == request.user:
-                    return HttpResponse(f"<samp>{trackerObject.header}</samp>")
-                else:
-                    raise PermissionDenied("You are not the owner of the pixel associated to this tracker")
+        return HttpResponse(f"<samp>{trackerObject.header}</samp>")

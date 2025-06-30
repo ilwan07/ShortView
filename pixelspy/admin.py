@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Profile, Pixel, Tracker
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin
+
+from .models import Profile, Pixel, Tracker
 
 # Change admin page headers
 admin.site.site_header = "PixelSpy Administration"
@@ -35,6 +36,8 @@ class ProfileAdmin(admin.ModelAdmin):
         ("User", {"fields": ["user"]}),
         ("Pixels", {"fields": ["default_lifetime", "hide_expired"]}),
     ]
+    list_display = ["user"]
+    search_fields = ["user__username"]
 
 
 class TrackerInLine(admin.TabularInline):
