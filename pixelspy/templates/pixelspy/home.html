@@ -18,9 +18,11 @@
     <h2>Spy agents:</h2>
     <ul class="pixels">
     {% for pixel in pixels %}
+        {% if not profile.hide_expired or pixel.active %}
         <a href="{% url 'view_pixel' pixel.id %}">
             <li class="{% if pixel.active %}active{% else %}inactive{% endif %} {% if pixel.tracker_set.all|length > 0 %}read{% else %}unread{% endif %}"> {{ pixel }} </li>
         </a>
+        {% endif %}
     {% empty %}
     <p>You don't have created any pixel yet.</p>
     {% endfor %}

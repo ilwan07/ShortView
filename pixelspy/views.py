@@ -20,6 +20,7 @@ def index(request: HttpRequest):
     
     else:
         return render(request, "pixelspy/home.html", {"user": request.user,
+                                                      "profile": request.user.profile,
                                                       "pixels": request.user.pixel_set.all(),
                                                       })
 

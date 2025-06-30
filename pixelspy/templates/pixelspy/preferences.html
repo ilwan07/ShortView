@@ -20,30 +20,32 @@
         <fieldset>
             <legend><h3>Change preferences below, then apply</h3></legend>
             <label>Time before a pixel expires (days/hours/minutes/seconds):</label> <br>
-            <input id="days" type="number" name="days" min="0" max="36500"
+            <input onChange="modify()" id="days" type="number" name="days" min="0" max="36500"
                 value="{% if never_expire %}14{% else %}{{ days }}{% endif %}" {% if never_expire %} disabled {% endif %}>
-            <input id="hours" type="number" name="hours" min="0" max="23"
+            <input onChange="modify()" id="hours" type="number" name="hours" min="0" max="23"
                 value="{{ hours }}" {% if never_expire %} disabled {% endif %}>
-            <input id="minutes" type="number" name="minutes" min="0" max="59"
+            <input onChange="modify()" id="minutes" type="number" name="minutes" min="0" max="59"
                 value="{{ minutes }}" {% if never_expire %} disabled {% endif %}>
-            <input id="seconds" type="number" name="seconds" min="0" max="59"
+            <input onChange="modify()" id="seconds" type="number" name="seconds" min="0" max="59"
                 value="{{ seconds }}" {% if never_expire %} disabled {% endif %}>
             <br>
             <label for="never_expire">Never expire:</label>
-            <input id="never_expire" type="checkbox" name="never_expire" onChange="change_never_expire()" {% if never_expire %} checked {% endif %}>
+            <input onChange="modify()" id="never_expire" type="checkbox" name="never_expire" onChange="change_never_expire()" {% if never_expire %} checked {% endif %}>
             <br><br>
             <label for="hide_expired">Hide expired pixels:</label>
-            <input id="hide_expired" type="checkbox" name="hide_expired" {% if profile.hide_expired %} checked {% endif %}>
+            <input onChange="modify()" id="hide_expired" type="checkbox" name="hide_expired" {% if profile.hide_expired %} checked {% endif %}>
         </fieldset>
         <input id="applypreferences" type="submit" value="Apply preferences">
     </form>
 
     <script>
-        days_input = document.getElementById("days");
-        hours_input = document.getElementById("hours");
-        minutes_input = document.getElementById("minutes");
-        seconds_input = document.getElementById("seconds");
-        never_expire_input = document.getElementById("never_expire")
+        var modified = false;
+
+        var days_input = document.getElementById("days");
+        var hours_input = document.getElementById("hours");
+        var minutes_input = document.getElementById("minutes");
+        var seconds_input = document.getElementById("seconds");
+        var never_expire_input = document.getElementById("never_expire");
         
         function change_never_expire() {
             if (never_expire_input.checked) {
@@ -59,6 +61,18 @@
                 seconds_input.removeAttribute("disabled");
             }
         }
+
+        function modify() {
+            modified = true;
+        }
+        
+        // warn the user before leaving the page if there's unapplied changes
+        window.addEventListener("beforeunload", function(e) {
+            if (modified) {
+                e.preventDefault();
+                e.returnValue = "";
+            }
+        });
     </script>
 </body>
 </html>

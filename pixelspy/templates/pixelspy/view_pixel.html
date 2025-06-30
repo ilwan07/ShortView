@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PixelSpy | Pixel {{ pixel.id }}</title>
+    <title>PixelSpy | {{ pixel.description }}</title>
     <link rel="stylesheet" href="{% static 'pixelspy/style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'pixelspy/assets/icon_16.png' %}">
 </head>
@@ -13,7 +13,7 @@
     <h2>{{ pixel.description }}</h2>
     {% if pixel.active %}
     <p>The pixel can be added in a mail with the following link (click to copy):</p>
-    <button onclick="copy_link()" class="pixelurl"><i>{{ pixel.url }}</i></button>
+    <button onclick="copy_link()" class="urlbutton"><i>{{ pixel.url }}</i></button>
     <small> <p id="copyconfirm"></p> </small>
     {% else %}
     <p class="expiredtext"><i><u>This pixel is expired</u></i></p>

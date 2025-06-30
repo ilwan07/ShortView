@@ -18,7 +18,7 @@ ul.pixels li.inactive {
   text-decoration: line-through;
 }
 
-button.pixelurl {
+button.urlbutton {
   text-decoration: underline;
   background: transparent;
   border: none;
