@@ -12,7 +12,7 @@
     <a href="{% url 'index' %}">Back to index page</a>
     <form action="{% url 'loginpage' %}" method="post">
         {% csrf_token %}
-        {% if error %}<p><strong>{{ error }}</strong></p>{% endif %}
+        {% if error %}<p><strong>Error: {{ error }}</strong></p>{% endif %}
         <fieldset>
             <legend><h1>Log in using your credentials</h1></legend>
             <label>Username/Email:</label>
@@ -23,6 +23,5 @@
         <input type="submit" value="Log in">
     </form>
     <br>
-    <a href="{% url 'password_info' %}">How do we securely store your passwords?</a>
 </body>
 </html>

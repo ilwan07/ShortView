@@ -1,14 +1,15 @@
 from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse, Http404
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import User
-from django.utils.datastructures import MultiValueDictKeyError
 
 from .models import Profile, Pixel, Tracker
 
 import datetime
+import re
 
 # Create your views here.
 def index(request: HttpRequest):
@@ -29,6 +30,7 @@ def preferences(request: HttpRequest):
     """
     the view to let the user change the preferences
     """
+    #TODO: create the Profile model if it doesn't exist (it should be created when registering, but just in case, or if creating users manually)
     if not request.user.is_authenticated:
         return redirect("loginpage")
     else:
@@ -76,6 +78,71 @@ def submit_preferences(request: HttpRequest):
     return redirect("preferences")
 
 
+def register(request: HttpRequest):
+    """
+    view with a form to register a new user
+    """
+    if request.user.is_authenticated:
+        return redirect("index")
+    
+    if all(element in request.POST for element in ["username", "email", "password", "password_confirm"]):
+        username = request.POST["username"]
+        email = request.POST["email"].lower()  # emails are case insensitive, so standarize everything to lowercase
+        password = request.POST["password"]
+        password_confirm = request.POST["password_confirm"]
+    else:
+        # if some POST data hasn't been received (the user wants the register page)
+        return render(request, "pixelspy/register.html")
+    
+    # if POST data has been received to try a registration
+    # check username validity
+    if not re.fullmatch(r"^[A-Za-z0-9_.+-]{3,50}$", username):
+        return render(request, "pixelspy/register.html", {"error": "The username format is invalid, it must be between 3 and 50 characters, can only contain letters, numbers, and these symbols:  _ + . -",
+                                                          "username": username,
+                                                          "email": email,
+                                                          })
+    if User.objects.filter(username=username).exists():
+        return render(request, "pixelspy/register.html", {"error": "This username already exists, try another one, or use the log in page if your account already exists.",
+                                                          "username": username,
+                                                          "email": email,
+                                                          })
+    
+    # check email validity
+    if not re.fullmatch(r"^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$", email):
+        return render(request, "pixelspy/register.html", {"error": "The email format is invalid, please enter a valid email address.",
+                                                          "username": username,
+                                                          "email": email,
+                                                          })
+    if User.objects.filter(email=email).exists():
+        return render(request, "pixelspy/register.html", {"error": "This email address is already in use, try logging in with it.",
+                                                          "username": username,
+                                                          "email": email,
+                                                          })
+    
+    # check basic password validity
+    if password != password_confirm:
+        return render(request, "pixelspy/register.html", {"error": "The two passwords you entered are different, you need to enter the same password twice.",
+                                                          "username": username,
+                                                          "email": email,
+                                                          })
+    
+    # try registering with the given credentials
+    try:
+        validate_password(password)
+    except ValidationError as e:
+        # if the password is not valid, return the error message(s)
+        return render(request, "pixelspy/register.html", {"error": f"The password you entered is not valid. {' '.join(e.messages)}",
+                                                          "username": username,
+                                                          "email": email,
+                                                          })
+    else:
+        user = User.objects.create_user(username, email, password)
+        profile = Profile(user=user)
+        profile.save()
+        login(request, user)
+        return redirect("index")
+
+
 def loginpage(request: HttpRequest):
     """
     the login page, only show if the user isn't logged in, manages the login procedure too
@@ -83,43 +150,42 @@ def loginpage(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect("index")
     
-    try:
+    if all(element in request.POST for element in ["identifier", "password"]):
         identifier = request.POST["identifier"]
         password = request.POST["password"]
-    except MultiValueDictKeyError:
-        # if no POST data has been received (the user wants the login page)
+    else:
+        # if some POST data hasn't been received (the user wants the login page)
         return render(request, "pixelspy/login.html")
     
-    else:
-        # if POST data has been received to try a login
-        login_type = "email" if "@" in identifier else "username"
-        try:
-            if login_type == "email":
-                identifier = identifier.lower()  # emails are case insensitive, so standarize everything to lowercase
-                user_object = User.objects.get(email=identifier)
-            else:
-                user_object = User.objects.get(username=identifier)
-        except User.DoesNotExist:
-            # if the identifier is wrong
-            return render(request, "pixelspy/login.html", {"error": f"The {login_type} you entered is invalid. Make sure the {login_type} is correct, or use the sign in button to create a new account.",
-                                                           "identifier": identifier,
-                                                           })
-        except User.MultipleObjectsReturned:
-            # if there (somehow) is multiple users possible
-            return render(request, "pixelspy/login.html", {"error": f"Multiple different users are using this {login_type}. This is an issue, please contact the developper to fix this.",
-                                                           "identifier": identifier,
-                                                           })
-        
-        # log the user in if everything is ok
-        username = user_object.username
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect("index")
+    # if POST data has been received to try a login
+    login_type = "email" if "@" in identifier else "username"
+    try:
+        if login_type == "email":
+            identifier = identifier.lower()  # emails are case insensitive, so standarize everything to lowercase
+            user_object = User.objects.get(email=identifier)
         else:
-            return render(request, "pixelspy/login.html", {"error": "The credentials are invalid, make sure that the password is correct.",
-                                                           "identifier": identifier,
-                                                           })
+            user_object = User.objects.get(username=identifier)
+    except User.DoesNotExist:
+        # if the identifier is wrong
+        return render(request, "pixelspy/login.html", {"error": f"The {login_type} you entered is invalid. Make sure the {login_type} is correct, or use the sign in button to create a new account.",
+                                                        "identifier": identifier,
+                                                        })
+    except User.MultipleObjectsReturned:
+        # if there (somehow) are multiple users possible
+        return render(request, "pixelspy/login.html", {"error": f"Multiple different users are using this {login_type}. This is an issue, please contact the developper to fix this.",
+                                                        "identifier": identifier,
+                                                        })
+    
+    # log the user in if everything is ok
+    username = user_object.username
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return redirect("index")
+    else:
+        return render(request, "pixelspy/login.html", {"error": "The credentials are invalid, make sure that the password is correct.",
+                                                        "identifier": identifier,
+                                                        })
 
 
 def password_info(request: HttpRequest):
