@@ -10,7 +10,6 @@ from .models import Profile, Pixel, Tracker
 
 import datetime
 import re
-from django.urls import reverse
 
 # Create your views here.
 def index(request: HttpRequest):
@@ -278,7 +277,7 @@ def view_pixel(request: HttpRequest, pixel_id: int):
             raise PermissionDenied("You are not the owner of this pixel")
 
 
-def display_pixel(request: HttpRequest):
+def display_pixel(request: HttpRequest, pixel_id: int):
     """
     log the request by creating a tracker and serve the image to the client
     """

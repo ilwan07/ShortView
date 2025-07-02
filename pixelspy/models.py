@@ -1,7 +1,10 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 from django.contrib import admin
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.conf import settings
 
 import datetime
 
@@ -33,6 +36,15 @@ class Pixel(models.Model):
             return self.description
         else:
             return super().__str__()
+    
+    def url(self):
+        """
+        returns the absolute url to display the pixel
+        """
+        path = reverse("display_pixel", args=[self.id])
+        domain = Site.objects.get_current().domain
+        scheme = "https" if getattr(settings, "SECURE_SSL_REDIRECT", False) else "http"
+        return f"{scheme}://{domain}{path}"
     
     @admin.display(
         boolean=True,

@@ -13,7 +13,7 @@
     <h2>{{ pixel.description }}</h2>
     {% if pixel.active %}
     <p>The pixel can be added in a mail with the following link (click to copy):</p>
-    <button onclick="copy_link()" class="urlbutton" id="copylink">TODO: display actual url</button>
+    <button onclick="copy_link()" class="urlbutton" id="copylink">{{ pixel.url }}</button>
     <small> <p id="copyconfirm"></p> </small>
     {% else %}
     <p class="expiredtext"><i><u>This pixel is expired</u></i></p>
