@@ -20,6 +20,11 @@ def index(request: HttpRequest):
         return render(request, "pixelspy/index.html")
     
     else:
+        # make sure the user has a profile
+        if not Profile.objects.filter(user=request.user).exists():
+            profile = Profile(user=request.user)
+            profile.save()
+        
         return render(request, "pixelspy/home.html", {"user": request.user,
                                                       "profile": request.user.profile,
                                                       "pixels": request.user.pixel_set.all(),
@@ -30,19 +35,23 @@ def preferences(request: HttpRequest):
     """
     the view to let the user change the preferences
     """
-    #TODO: create the Profile model if it doesn't exist (it should be created when registering, but just in case, or if creating users manually)
     if not request.user.is_authenticated:
         return redirect("loginpage")
-    else:
-        profile = request.user.profile
-        lifetime: datetime.timedelta = profile.default_lifetime
-        hours = lifetime.seconds // 3600
-        minutes = (lifetime.seconds % 3600) // 60
-        seconds = (lifetime.seconds % 60)
-        return render(request, "pixelspy/preferences.html", {"profile": profile,
-                                                             "never_expire": request.user.profile.default_lifetime == datetime.timedelta(0),
-                                                             "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                             })
+    
+    # make sure the user has a profile
+    if not Profile.objects.filter(user=request.user).exists():
+        profile = Profile(user=request.user)
+        profile.save()
+
+    profile = request.user.profile
+    lifetime: datetime.timedelta = profile.default_lifetime
+    hours = lifetime.seconds // 3600
+    minutes = (lifetime.seconds % 3600) // 60
+    seconds = (lifetime.seconds % 60)
+    return render(request, "pixelspy/preferences.html", {"profile": profile,
+                                                            "never_expire": request.user.profile.default_lifetime == datetime.timedelta(0),
+                                                            "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                            })
 
 
 def submit_preferences(request: HttpRequest):

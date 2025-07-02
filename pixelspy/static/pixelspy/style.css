@@ -18,11 +18,18 @@ ul.pixels li.inactive {
   text-decoration: line-through;
 }
 
+input[type="submit"] {
+  cursor: grab;
+}
+
+button {
+  cursor: grab;
+}
+
 button.urlbutton {
   text-decoration: underline;
   background: transparent;
   border: none;
-  cursor: grab;
   font-size: 1rem;
   color: darkslategrey;
 }

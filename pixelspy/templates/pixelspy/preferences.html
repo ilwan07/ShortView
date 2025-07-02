@@ -30,12 +30,12 @@
                 value="{{ seconds }}" {% if never_expire %} disabled {% endif %}>
             <br>
             <label for="never_expire">Never expire:</label>
-            <input onChange="modify()" id="never_expire" type="checkbox" name="never_expire" onChange="change_never_expire()" {% if never_expire %} checked {% endif %}>
+            <input onChange="modify(); change_never_expire()" id="never_expire" type="checkbox" name="never_expire" {% if never_expire %} checked {% endif %}>
             <br><br>
             <label for="hide_expired">Hide expired pixels:</label>
             <input onChange="modify()" id="hide_expired" type="checkbox" name="hide_expired" {% if profile.hide_expired %} checked {% endif %}>
         </fieldset>
-        <input id="applypreferences" type="submit" value="Apply preferences">
+        <input id="applypreferences" type="submit" value="Apply preferences" onclick="let_confirm()">
     </form>
 
     <script>
@@ -64,6 +64,10 @@
 
         function modify() {
             modified = true;
+        }
+
+        function let_confirm() {
+            modified = false;
         }
         
         // warn the user before leaving the page if there's unapplied changes

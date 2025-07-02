@@ -10,7 +10,6 @@ admin.site.site_title = "PixelSpy Admin Portal"
 admin.site.index_title = "Welcome to the PixelSpy Administration Interface"
 
 # Register your models here.
-
 class PixelInLine(admin.TabularInline):
     model = Pixel
     extra = 0
@@ -23,21 +22,9 @@ class ProfileInLine(admin.TabularInline):
 
 class UserAdminCustom(UserAdmin):
     """
-    keep the default admin entries, but add an inline
+    keep the default admin entries, but add inlines
     """
     inlines = [ProfileInLine, PixelInLine]
-
-
-class ProfileAdmin(admin.ModelAdmin):
-    """
-    manage the preferences of a user
-    """
-    fieldsets = [
-        ("User", {"fields": ["user"]}),
-        ("Pixels", {"fields": ["default_lifetime", "hide_expired"]}),
-    ]
-    list_display = ["user"]
-    search_fields = ["user__username"]
 
 
 class TrackerInLine(admin.TabularInline):
@@ -63,5 +50,4 @@ class PixelAdmin(admin.ModelAdmin):
 admin.site.unregister(Group)
 admin.site.unregister(User)
 admin.site.register(User, UserAdminCustom)
-admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Pixel, PixelAdmin)
