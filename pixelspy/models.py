@@ -27,7 +27,6 @@ class Pixel(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)  # user who owns the pixel
     date = models.DateTimeField("date of creation")
     lifetime = models.DurationField("life duration", default=datetime.timedelta(0))  # 0 for unlimited
-    url = models.URLField("display url")
 
     def __str__(self):
         if self.description:
@@ -47,7 +46,7 @@ class Pixel(models.Model):
         if self.lifetime == datetime.timedelta(0):
             return True
         # return True if the pixel isn't expired and is not scheduled to be active in the future
-        return self.lifetime >= timezone.now() - self.date >= timezone.now()
+        return self.lifetime >= timezone.now() - self.date and self.date <= timezone.now()
 
 
 class Tracker(models.Model):

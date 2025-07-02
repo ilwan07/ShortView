@@ -39,7 +39,6 @@ class PixelAdmin(admin.ModelAdmin):
     fieldsets = [
         ("General", {"fields": ["description", "owner"]}),
         ("Date and time", {"fields": ["date", "lifetime"]}),
-        ("Information", {"fields": ["url"]}),
     ]
     inlines = [TrackerInLine]
     list_display = ["description", "owner", "date", "active"]

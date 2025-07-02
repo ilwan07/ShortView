@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse, Http404
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.contrib import messages
+from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import User
@@ -10,6 +10,7 @@ from .models import Profile, Pixel, Tracker
 
 import datetime
 import re
+from django.urls import reverse
 
 # Create your views here.
 def index(request: HttpRequest):
@@ -24,67 +25,11 @@ def index(request: HttpRequest):
         if not Profile.objects.filter(user=request.user).exists():
             profile = Profile(user=request.user)
             profile.save()
-        
+
         return render(request, "pixelspy/home.html", {"user": request.user,
                                                       "profile": request.user.profile,
                                                       "pixels": request.user.pixel_set.all(),
                                                       })
-
-
-def preferences(request: HttpRequest):
-    """
-    the view to let the user change the preferences
-    """
-    if not request.user.is_authenticated:
-        return redirect("loginpage")
-    
-    # make sure the user has a profile
-    if not Profile.objects.filter(user=request.user).exists():
-        profile = Profile(user=request.user)
-        profile.save()
-
-    profile = request.user.profile
-    lifetime: datetime.timedelta = profile.default_lifetime
-    hours = lifetime.seconds // 3600
-    minutes = (lifetime.seconds % 3600) // 60
-    seconds = (lifetime.seconds % 60)
-    return render(request, "pixelspy/preferences.html", {"profile": profile,
-                                                            "never_expire": request.user.profile.default_lifetime == datetime.timedelta(0),
-                                                            "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                            })
-
-
-def submit_preferences(request: HttpRequest):
-    """
-    set the new preferences using the POST data from the preferences view
-    """
-    if not request.user.is_authenticated:
-        return redirect("loginpage")
-    if "never_expire" in request.POST:
-        days, hours, minutes, seconds = 0, 0, 0, 0
-    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"]):
-        days = request.POST["days"]
-        hours = request.POST["hours"]
-        minutes = request.POST["minutes"]
-        seconds = request.POST["seconds"]
-    else:
-        messages.error(request, "Error: Some data to post is missing, try again or contact the developer to fix the issue.")
-        return redirect("preferences")
-    
-    try:
-        days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
-    except ValueError:
-        messages.error(request, "Error: You tried to set the lifetime value without using integers.")
-        return redirect("preferences")
-    never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
-    hide_expired = request.POST["hide_expired"] == "on" if "hide_expired" in request.POST else False
-    
-    profile:Profile = request.user.profile
-    profile.default_lifetime = datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
-    profile.hide_expired = hide_expired
-    profile.save()
-    messages.success(request, "Successfully applied the new preferences!")
-    return redirect("preferences")
 
 
 def register(request: HttpRequest):
@@ -212,6 +157,106 @@ def logoutpage(request: HttpRequest):
     return redirect("index")
 
 
+def preferences(request: HttpRequest):
+    """
+    the view to let the user change the preferences and set the new preferences using the POST data
+    """
+    if not request.user.is_authenticated:
+        return redirect("loginpage")
+    
+    never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
+    if never_expire:
+        days, hours, minutes, seconds = 0, 0, 0, 0
+    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"]):
+        days = request.POST["days"]
+        hours = request.POST["hours"]
+        minutes = request.POST["minutes"]
+        seconds = request.POST["seconds"]
+    else:  # missing post data, user want the page
+        # make sure the user has a profile
+        if not Profile.objects.filter(user=request.user).exists():
+            profile = Profile(user=request.user)
+            profile.save()
+
+        profile:Profile = request.user.profile
+        lifetime: datetime.timedelta = profile.default_lifetime
+        hours = lifetime.seconds // 3600
+        minutes = (lifetime.seconds % 3600) // 60
+        seconds = lifetime.seconds % 60
+        return render(request, "pixelspy/preferences.html", {"profile": profile,
+                                                            "never_expire": profile.default_lifetime == datetime.timedelta(0),
+                                                            "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                            })
+    
+    # continue handling post data
+    try:
+        days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
+    except ValueError:
+        return render(request, "pixelspy/preferences.html", {"profile": profile,
+                                                            "never_expire": profile.default_lifetime == datetime.timedelta(0),
+                                                            "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                            "error": "Error: You tried to set the lifetime value without using integers.",
+                                                            })
+    hide_expired = request.POST["hide_expired"] == "on" if "hide_expired" in request.POST else False
+    
+    profile:Profile = request.user.profile
+    profile.default_lifetime = datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
+    profile.hide_expired = hide_expired
+    profile.save()
+    return render(request, "pixelspy/preferences.html", {"profile": profile,
+                                                         "never_expire": never_expire,
+                                                         "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                         "success": "Successfully applied the new preferences!",
+                                                         })
+
+
+def new_pixel(request: HttpRequest):
+    """
+    allow the user to create a new pixel spy agent
+    """
+    if not request.user.is_authenticated:
+        return redirect("loginpage")
+    
+    # if we have the post data, then we create the pixel, else we send the page
+    never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
+    if never_expire and all(element in request.POST for element in ["description"]):
+        days, hours, minutes, seconds = 0, 0, 0, 0
+        description = request.POST["description"]
+    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds", "description"]):
+        days = request.POST["days"]
+        hours = request.POST["hours"]
+        minutes = request.POST["minutes"]
+        seconds = request.POST["seconds"]
+        description = request.POST["description"]
+    
+    else:  # missing post data, user want the page
+        profile:Profile = request.user.profile
+        lifetime:datetime.timedelta = profile.default_lifetime
+        hours = lifetime.seconds // 3600
+        minutes = (lifetime.seconds % 3600) // 60
+        seconds = lifetime.seconds % 60
+        return render(request, "pixelspy/new_pixel.html", {"never_expire": profile.default_lifetime == datetime.timedelta(0),
+                                                           "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                           })
+    
+    # continue handling post data
+    try:
+        days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
+    except ValueError:
+        return render(request, "pixelspy/preferences.html", {"description": description,
+                                                            "never_expire": never_expire,
+                                                            "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                            "error": "Error: You tried to set the lifetime value without using integers.",
+                                                            })
+    
+    # create the new pixel
+    pixel: Pixel = Pixel(description=description, owner=request.user, date=timezone.now(),
+                         lifetime=datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds),
+                         )
+    pixel.save()
+    return redirect("view_pixel", pixel.id)
+
+
 def view_pixel(request: HttpRequest, pixel_id: int):
     """
     displays info about a pixel, if it belongs to the active user
@@ -231,6 +276,13 @@ def view_pixel(request: HttpRequest, pixel_id: int):
                                                                 })
         else:
             raise PermissionDenied("You are not the owner of this pixel")
+
+
+def display_pixel(request: HttpRequest):
+    """
+    log the request by creating a tracker and serve the image to the client
+    """
+    return HttpResponse("NOT IMPLEMENTED")  #TODO
 
 
 def view_tracker(request: HttpRequest, pixel_id:int, tracker_id:int):

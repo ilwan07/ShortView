@@ -4,19 +4,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PixelSpy | Preferences</title>
+    <title>PixelSpy | Create Agent</title>
     <link rel="stylesheet" href="{% static 'pixelspy/style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'pixelspy/assets/icon_16.png' %}">
 </head>
 <body>
-    <a href="{% url 'index' %}">Go back to home page</a>
+    <a href="{% url 'index' %}">Back to home page</a>
     {% if error %} <p><i>{{ error }}</i></p> {% endif %}
-    {% if success %} <p><i>{{ success }}</i></p> {% endif %}
-    <form action="{% url 'preferences' %}" method="post">
+    <form action="{% url 'new_pixel' %}" method="post">
         {% csrf_token %}
         <fieldset>
-            <legend><h3>Change preferences below, then apply</h3></legend>
-            <label>Time before a spy agent expires (days/hours/minutes/seconds):</label> <br>
+            <legend><h3>Create a new spy agent</h3></legend>
+            <label for="description">Description:</label>
+            <input onChange="modify()" id="description" type="text" name="description"
+                minlength="3" placeholder="spy agent description" {% if description %} value="{{ description }}" {% endif %} required>
+            <br><br>
+            <label>Time before the spy agent expires (days/hours/minutes/seconds):</label> <br>
             <input onChange="modify()" id="days" type="number" name="days" min="0" max="36500"
                 value="{% if never_expire %}14{% else %}{{ days }}{% endif %}" {% if never_expire %} disabled {% endif %}>
             <input onChange="modify()" id="hours" type="number" name="hours" min="0" max="23"
@@ -28,16 +31,11 @@
             <br>
             <label for="never_expire">Never expire:</label>
             <input onChange="modify(); change_never_expire()" id="never_expire" type="checkbox" name="never_expire" {% if never_expire %} checked {% endif %}>
-            <br><br>
-            <label for="hide_expired">Hide expired spy agents:</label>
-            <input onChange="modify()" id="hide_expired" type="checkbox" name="hide_expired" {% if profile.hide_expired %} checked {% endif %}>
         </fieldset>
-        <input class="apply" id="applypreferences" type="submit" value="Apply preferences" onclick="let_confirm()">
+        <input class="apply" id="createpixel" type="submit" value="Create the spy agent" onclick="let_confirm()">
     </form>
 
     <script>
-        var modified = false;
-
         var days_input = document.getElementById("days");
         var hours_input = document.getElementById("hours");
         var minutes_input = document.getElementById("minutes");
@@ -67,7 +65,7 @@
             modified = false;
         }
         
-        // warn the user before leaving the page if there's unapplied changes
+        // warn the user before leaving the page if he started filling some data
         window.addEventListener("beforeunload", function(e) {
             if (modified) {
                 e.preventDefault();

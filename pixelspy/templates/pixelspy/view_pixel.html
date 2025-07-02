@@ -13,7 +13,7 @@
     <h2>{{ pixel.description }}</h2>
     {% if pixel.active %}
     <p>The pixel can be added in a mail with the following link (click to copy):</p>
-    <button onclick="copy_link()" class="urlbutton"><i>{{ pixel.url }}</i></button>
+    <button onclick="copy_link()" class="urlbutton" id="copylink">TODO: display actual url</button>
     <small> <p id="copyconfirm"></p> </small>
     {% else %}
     <p class="expiredtext"><i><u>This pixel is expired</u></i></p>
@@ -39,9 +39,10 @@
     {% endif %}
 
     <script>
+        var copy_button = document.getElementById("copylink")
+        var copy_confirm = document.getElementById("copyconfirm");
         function copy_link() {
-            navigator.clipboard.writeText("{{ pixel.url }}");
-            copy_confirm = document.getElementById("copyconfirm");
+            navigator.clipboard.writeText(copy_button.innerText);
             copy_confirm.innerHTML = "Link copied!";
             setTimeout(() => { copy_confirm.innerHTML = ""; }, 2000);
         }

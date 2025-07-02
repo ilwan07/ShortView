@@ -1,23 +1,18 @@
-Main page with explanations
-Once logged in, get to a list of all the monitored mails sent (pixels)
-
 Settings area: connect your mailing service for direct use, set some IP addresses to specific names,
-set an expiration delay, set a way to get notified when a mail was read (global setting),
+set a way to get notified when a mail was read,
 edit an ip blacklist (the user should put the ip of his devices there so it won't mark mails as read when he opens them himself)
 
-On each one, see if it has been opened (colors) with the ip/name of the last person opening it and the date,
+[On each one, see if it has been opened (colors)] with the ip/name of the last person opening it and the date,
 and the number of times it's been loaded
 
-When selecting an entry, you can see the message (if sent directly from the page), the link to the image (only textual to avoid clicking it),
-the pixel name/description, the log of each time it has been opened with the ip/name
-(you can set the ip to a name directly if it's unknown) and the date and time of opening as well as full response header metadata
+When selecting an entry, you can see the message (if sent directly from the page), [ip of receiver]
+(you can set the ip to a name directly if it's unknown) [as well as full response header metadata]
 formated as a human readable format, and a way to remove the entry and therefore delete the pixel
 
 You can go to a page where you can create a new spy agent, with the choice of either sending a spy mail directly from the page using your address,
 or to get a link to the spy pixel, you can also choose your own image, and choosing to get notified or not for this message
 then send it with the message from your mail app, then go back to the page to enable monitoring
 
-Things to add or change:
-- create sign in system, limit the username to 3-16 chars (or more?), upper/lowercase letters, numbers,
-and a strict set of symbols (space, dash, underscore), forbid the creation of an account with a duplicate email, force the user to verify mail?
-- Allow the user to use a custom image instead of the default transparent pixel
+force the user to verify mail?
+Allow the user to use a custom image instead of the default transparent pixel
+Require the user to accept conditions before registering

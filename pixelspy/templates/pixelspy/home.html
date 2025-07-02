@@ -10,11 +10,12 @@
 </head>
 <body>
     {% if user.is_staff %}
-    <a class="adminaccess" target="_blank" href="{% url 'admin:index' %}"><i>Admin access</i></a> <br>
+    <a class="biglink" target="_blank" href="{% url 'admin:index' %}"><i>Admin access</i></a> <br>
     {% endif %}
-    <a class="preferenceslink" href="{% url 'preferences' %}">User preferences</a> <br>
+    <a class="biglink" href="{% url 'preferences' %}">User preferences</a> <br>
     <a href="{% url 'logoutpage' %}">Log out</a>
     <h1>{{ user.username }}'s home page</h1>
+    <a class="biglink" href="{% url 'new_pixel' %}">Create new spy agent</a>
     <h2>Spy agents:</h2>
     <ul class="pixels">
     {% for pixel in pixels %}
