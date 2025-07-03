@@ -4,24 +4,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PixelSpy | Create Agent</title>
-    <link rel="stylesheet" href="{% static 'pixelspy/css/style.css' %}">
-    <link rel="shortcut icon" type="image/png" href="{% static 'pixelspy/assets/icon_16.png' %}">
+    <title>ShortView | Create Link</title>
+    <link rel="stylesheet" href="{% static 'shortview/css/style.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
     <a href="{% url 'index' %}">Back to home page</a>
     {% if error %} <p><i>{{ error }}</i></p> {% endif %}
-    <form action="{% url 'new_pixel' %}" method="post">
+    <form action="{% url 'new_link' %}" method="post">
         {% csrf_token %}
         <fieldset>
-            <legend><h3>Create a new spy agent</h3></legend>
+            <legend><h3>Create a new tracked shortened link</h3></legend>
             <label for="description">Description:</label>
             <input onChange="modify()" id="description" type="text" name="description"
-                minlength="3" placeholder="spy agent description" {% if description %} value="{{ description }}" {% endif %} required>
+                minlength="3" placeholder="tracked link description" {% if description %} value="{{ description }}" {% endif %} required>
             <br><br>
-            <label>Time before the spy agent expires (days/hours/minutes/seconds):</label> <br>
+            <label>Time before the link expires (days/hours/minutes/seconds):</label> <br>
             <input onChange="modify()" id="days" type="number" name="days" min="0" max="36500"
-                value="{% if never_expire %}14{% else %}{{ days }}{% endif %}" {% if never_expire %} disabled {% endif %}>
+                value="{% if never_expire %}60{% else %}{{ days }}{% endif %}" {% if never_expire %} disabled {% endif %}>
             <input onChange="modify()" id="hours" type="number" name="hours" min="0" max="23"
                 value="{{ hours }}" {% if never_expire %} disabled {% endif %}>
             <input onChange="modify()" id="minutes" type="number" name="minutes" min="0" max="59"
@@ -32,10 +32,10 @@
             <label for="never_expire">Never expire:</label>
             <input onChange="modify(); change_never_expire()" id="never_expire" type="checkbox" name="never_expire" {% if never_expire %} checked {% endif %}>
         </fieldset>
-        <input class="apply" id="createpixel" type="submit" value="Create the spy agent" onclick="let_confirm()">
+        <input class="apply" id="createlink" type="submit" value="Create the link" onclick="let_confirm()">
     </form>
 
-    <script src="{% static 'pixelspy/js/change_never_expire.js' %}"></script>
-    <script src="{% static 'pixelspy/js/warn_exit.js' %}"></script>
+    <script src="{% static 'shortview/js/change_never_expire.js' %}"></script>
+    <script src="{% static 'shortview/js/warn_exit.js' %}"></script>
 </body>
 </html>

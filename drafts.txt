@@ -1,18 +1,14 @@
-Settings area: connect your mailing service for direct use, set some IP addresses to specific names,
-set a way to get notified when a mail was read,
-edit an ip blacklist (the user should put the ip of his devices there so it won't mark mails as read when he opens them himself)
+set a way to get notified when a link was clicked,
+edit an ip blacklist (the user should put the ip of his devices there so it won't track if he opens the link himself)
 
-[On each one, see if it has been opened (colors)] with the ip/name of the last person opening it and the date,
+[On each one, see if it has been clicked (colors)] with the ip/name of the last person clicking it and the date,
 and the number of times it's been loaded
 
-When selecting an entry, you can see the message (if sent directly from the page), [ip of receiver]
-(you can set the ip to a name directly if it's unknown) [as well as full response header metadata]
-formated as a human readable format, and a way to remove the entry and therefore delete the pixel
+When selecting an entry, you can see the [ip of the person clicking]
+(you can set the ip to a name directly if it's unknown) [as well as full request header metadata]
+formated as a human readable format, and a way to remove the entry and therefore delete the shortened link, therefore returning 404 error
 
-You can go to a page where you can create a new spy agent, with the choice of either sending a spy mail directly from the page using your address,
-or to get a link to the spy pixel, you can also choose your own image, and choosing to get notified or not for this message
-then send it with the message from your mail app, then go back to the page to enable monitoring
+You can go to a page where you can create a new spy url and choose to get notified or not for this tracked url
 
 force the user to verify mail?
-Allow the user to use a custom image instead of the default transparent pixel
 Require the user to accept conditions before registering

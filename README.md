@@ -1,2 +1,3 @@
-# PixelSpy
-A webapp that allows you to incorporate a tracker in a mail to know if it has been opened
+# ShortView
+
+A webapp that allows you to create a tracked shortened link and know when it's clicked

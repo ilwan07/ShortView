@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShortView | {{ link.description }}</title>
+    <link rel="stylesheet" href="{% static 'shortview/css/style.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
+</head>
+<body>
+    <a href="{% url 'index' %}">Back to home page</a>
+    <h2>{{ link.description }}</h2>
+    {% if link.active %}
+    <p>The tracked link is the following (click to copy):</p>
+    <button onclick="copy_link()" class="urlbutton" id="copylink">{{ link.url }}</button>
+    <small> <p id="copyconfirm"></p> </small>
+    {% else %}
+    <p class="expiredtext"><i><u>This link is expired</u></i></p>
+    {% endif %}
+    <br>
+    {% if trackers|length == 0 %}
+    <p>The link hasn't been clicked yet, no tracker available.</p>
+    {% else %}
+    <table class="trackers">
+        <tr>
+            <th>Date of clicking</th>
+            <th>Opener's IP</th>
+            <th>See full request header</th>
+        </tr>
+        {% for tracker in trackers %}
+        <tr>
+            <td>{{ tracker.date }}</td>
+            <td>{{ tracker.ip }}</td>
+            <td> <a target="_blank" href="{% url 'view_tracker' link.id tracker.id %}" class="headerlink">See header content</a> </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <script src="{% static 'shortview/js/view_link.js' %}"></script>
+</body>
+</html>

@@ -4,9 +4,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PixelSpy | Preferences</title>
-    <link rel="stylesheet" href="{% static 'pixelspy/css/style.css' %}">
-    <link rel="shortcut icon" type="image/png" href="{% static 'pixelspy/assets/icon_16.png' %}">
+    <title>ShortView | Preferences</title>
+    <link rel="stylesheet" href="{% static 'shortview/css/style.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
     <a href="{% url 'index' %}">Go back to home page</a>
@@ -16,9 +16,9 @@
         {% csrf_token %}
         <fieldset>
             <legend><h3>Change preferences below, then apply</h3></legend>
-            <label>Time before a spy agent expires (days/hours/minutes/seconds):</label> <br>
+            <label>Time before a link expires (days/hours/minutes/seconds):</label> <br>
             <input onChange="modify()" id="days" type="number" name="days" min="0" max="36500"
-                value="{% if never_expire %}14{% else %}{{ days }}{% endif %}" {% if never_expire %} disabled {% endif %}>
+                value="{% if never_expire %}60{% else %}{{ days }}{% endif %}" {% if never_expire %} disabled {% endif %}>
             <input onChange="modify()" id="hours" type="number" name="hours" min="0" max="23"
                 value="{{ hours }}" {% if never_expire %} disabled {% endif %}>
             <input onChange="modify()" id="minutes" type="number" name="minutes" min="0" max="59"
@@ -35,7 +35,7 @@
         <input class="apply" id="applypreferences" type="submit" value="Apply preferences" onclick="let_confirm()">
     </form>
 
-    <script src="{% static 'pixelspy/js/change_never_expire.js' %}"></script>
-    <script src="{% static 'pixelspy/js/warn_exit.js' %}"></script>
+    <script src="{% static 'shortview/js/change_never_expire.js' %}"></script>
+    <script src="{% static 'shortview/js/warn_exit.js' %}"></script>
 </body>
 </html>

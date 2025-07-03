@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShortView | Home</title>
+    <link rel="stylesheet" href="{% static 'shortview/css/style.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
+</head>
+<body>
+    {% if user.is_staff %}
+    <a class="biglink" target="_blank" href="{% url 'admin:index' %}"><i>Admin access</i></a> <br>
+    {% endif %}
+    <a class="biglink" href="{% url 'preferences' %}">User preferences</a> <br>
+    <a href="{% url 'logoutpage' %}">Log out</a>
+    <h1>{{ user.username }}'s home page</h1>
+    <a class="biglink" href="{% url 'new_link' %}">Create new tracked link</a>
+    <h2>Tracked links:</h2>
+    <ul class="links">
+    {% for link in links %}
+        {% if not profile.hide_expired or link.active %}
+        <a href="{% url 'view_link' link.id %}">
+            <li class="{% if link.active %}active{% else %}inactive{% endif %} {% if link.tracker_set.all|length > 0 %}clicked{% else %}pending{% endif %}"> {{ link }} </li>
+        </a>
+        {% endif %}
+    {% empty %}
+    <p>You haven't created any link yet.</p>
+    {% endfor %}
+    </ul>
+</body>
+</html>
