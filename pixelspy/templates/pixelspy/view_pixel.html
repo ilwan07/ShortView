@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>PixelSpy | {{ pixel.description }}</title>
-    <link rel="stylesheet" href="{% static 'pixelspy/style.css' %}">
+    <link rel="stylesheet" href="{% static 'pixelspy/css/style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'pixelspy/assets/icon_16.png' %}">
 </head>
 <body>
@@ -38,14 +38,6 @@
     </table>
     {% endif %}
 
-    <script>
-        var copy_button = document.getElementById("copylink")
-        var copy_confirm = document.getElementById("copyconfirm");
-        function copy_link() {
-            navigator.clipboard.writeText(copy_button.innerText);
-            copy_confirm.innerHTML = "Link copied!";
-            setTimeout(() => { copy_confirm.innerHTML = ""; }, 2000);
-        }
-    </script>
+    <script src="{% static 'pixelspy/js/view_pixel.js' %}"></script>
 </body>
 </html>

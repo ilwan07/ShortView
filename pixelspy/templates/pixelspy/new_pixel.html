@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>PixelSpy | Create Agent</title>
-    <link rel="stylesheet" href="{% static 'pixelspy/style.css' %}">
+    <link rel="stylesheet" href="{% static 'pixelspy/css/style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'pixelspy/assets/icon_16.png' %}">
 </head>
 <body>
@@ -35,43 +35,7 @@
         <input class="apply" id="createpixel" type="submit" value="Create the spy agent" onclick="let_confirm()">
     </form>
 
-    <script>
-        var days_input = document.getElementById("days");
-        var hours_input = document.getElementById("hours");
-        var minutes_input = document.getElementById("minutes");
-        var seconds_input = document.getElementById("seconds");
-        var never_expire_input = document.getElementById("never_expire");
-        
-        function change_never_expire() {
-            if (never_expire_input.checked) {
-                days_input.setAttribute("disabled", "disabled");
-                hours_input.setAttribute("disabled", "disabled");
-                minutes_input.setAttribute("disabled", "disabled");
-                seconds_input.setAttribute("disabled", "disabled");
-            }
-            else {
-                days_input.removeAttribute("disabled");
-                hours_input.removeAttribute("disabled");
-                minutes_input.removeAttribute("disabled");
-                seconds_input.removeAttribute("disabled");
-            }
-        }
-
-        function modify() {
-            modified = true;
-        }
-
-        function let_confirm() {
-            modified = false;
-        }
-        
-        // warn the user before leaving the page if he started filling some data
-        window.addEventListener("beforeunload", function(e) {
-            if (modified) {
-                e.preventDefault();
-                e.returnValue = "";
-            }
-        });
-    </script>
+    <script src="{% static 'pixelspy/js/change_never_expire.js' %}"></script>
+    <script src="{% static 'pixelspy/js/warn_exit.js' %}"></script>
 </body>
 </html>
