@@ -27,6 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'https://shortview.woah.pw',
+    'http://shortview.woah.pw',
+]
+
 
 # Application definition
 

@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from .models import Profile, Link, Tracker
 
 import datetime
+import json
 import re
 
 # Create your views here.
@@ -178,7 +179,7 @@ def preferences(request: HttpRequest):
             profile.save()
 
         profile:Profile = request.user.profile
-        lifetime: datetime.timedelta = profile.default_lifetime
+        lifetime:datetime.timedelta = profile.default_lifetime
         hours = lifetime.seconds // 3600
         minutes = (lifetime.seconds % 3600) // 60
         seconds = lifetime.seconds % 60
@@ -211,7 +212,7 @@ def preferences(request: HttpRequest):
 
 def new_link(request: HttpRequest):
     """
-    allow the user to create a new tracked link
+    allow the user to create a new tracked linkraise Http404("NOT IMPLEMENTED")  #TODO
     """
     if not request.user.is_authenticated:
         return redirect("loginpage")
@@ -253,7 +254,7 @@ def new_link(request: HttpRequest):
                                                               })
     
     # create the new link
-    link: Link = Link(owner=request.user, description=description, date=timezone.now(), destination=destination,
+    link:Link = Link(owner=request.user, description=description, date=timezone.now(), destination=destination,
                       lifetime=datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds),
                       )
     link.save()
@@ -285,7 +286,32 @@ def redirect_link(request: HttpRequest, link_id: int):
     """
     log the request by creating a tracker and serve the destination page to the client
     """
-    raise Http404("NOT IMPLEMENTED")  #TODO
+    # check that the link exists
+    try:
+        link_object:Link = Link.objects.get(id=link_id)
+    except Link.DoesNotExist:
+        raise Http404("link does not exist")
+    # do not log if the link is clicked by the owner
+    if request.user.is_authenticated and request.user == link_object.owner:
+        return redirect(link_object.destination)
+    
+    # else track the click and redirect to the destination
+    # get the ip address (ipv6 or ipv4)
+    ip = request.META.get('HTTP_X_FORWARDED_FOR')
+    if ip:
+        ip = ip.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    
+    # get the header as json and strip sensitive cookies
+    header = dict(request.headers)
+    header["Cookie"] = "removed for security reasons"
+    header_json = json.dumps(header, indent=2)
+    
+    tracker:Tracker = Tracker(link=link_object, date=timezone.now(), ip=ip, header=header_json)
+    tracker.save()
+    return redirect(link_object.destination)
+    #TODO: get ip from model method instead of static info
 
 
 def view_tracker(request: HttpRequest, link_id:int, tracker_id:int):
@@ -312,4 +338,4 @@ def view_tracker(request: HttpRequest, link_id:int, tracker_id:int):
     if link_object.owner != request.user:
         raise PermissionDenied("You are not the owner of the link associated to this tracker")
     else:
-        return HttpResponse(f"<samp>{tracker_object.header}</samp>")
+        return HttpResponse(tracker_object.header, content_type="application/json")
