@@ -218,15 +218,18 @@ def new_link(request: HttpRequest):
     
     # if we have the post data, then we create the link, else we send the page
     never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
-    if never_expire and all(element in request.POST for element in ["description"]):
+    required_post_data = ["description", "destination"]
+    if never_expire and all(element in request.POST for element in required_post_data):
         days, hours, minutes, seconds = 0, 0, 0, 0
         description = request.POST["description"]
-    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds", "description"]):
+        destination = request.POST["destination"]
+    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"] + required_post_data):
         days = request.POST["days"]
         hours = request.POST["hours"]
         minutes = request.POST["minutes"]
         seconds = request.POST["seconds"]
         description = request.POST["description"]
+        destination = request.POST["destination"]
     
     else:  # missing post data, user want the page
         profile:Profile = request.user.profile
@@ -243,15 +246,16 @@ def new_link(request: HttpRequest):
         days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
     except ValueError:
         return render(request, "shortview/preferences.html", {"description": description,
-                                                            "never_expire": never_expire,
-                                                            "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                            "error": "Error: You tried to set the lifetime value without using integers.",
-                                                            })
+                                                              "destination": destination,
+                                                              "never_expire": never_expire,
+                                                              "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                              "error": "Error: You tried to set the lifetime value without using integers.",
+                                                              })
     
     # create the new link
-    link: Link = Link(description=description, owner=request.user, date=timezone.now(),
-                         lifetime=datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds),
-                         )  #TODO: destination url
+    link: Link = Link(owner=request.user, description=description, date=timezone.now(), destination=destination,
+                      lifetime=datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds),
+                      )
     link.save()
     return redirect("view_link", link.id)
 
@@ -270,7 +274,7 @@ def view_link(request: HttpRequest, link_id: int):
     else:
         # check that the user owns the link, then display the page
         if link_object.owner == request.user:
-            return render(request, "shortview/view_pixel.html", {"link": link_object,
+            return render(request, "shortview/view_link.html", {"link": link_object,
                                                                 "trackers": link_object.tracker_set.all(),
                                                                 })
         else:
@@ -281,7 +285,7 @@ def redirect_link(request: HttpRequest, link_id: int):
     """
     log the request by creating a tracker and serve the destination page to the client
     """
-    return Http404("NOT IMPLEMENTED")  #TODO
+    raise Http404("NOT IMPLEMENTED")  #TODO
 
 
 def view_tracker(request: HttpRequest, link_id:int, tracker_id:int):

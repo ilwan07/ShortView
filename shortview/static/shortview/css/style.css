@@ -48,12 +48,21 @@ a.headerlink {
   color: darkslategrey;
 }
 
-p#copyconfirm {
+small#copyconfirm {
   color: darkslategrey;
 }
 
 p.expiredtext {
   font-size: 1.15rem;
+}
+p.destinationlink {
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: normal;
+  line-height: 0.8rem;
+}
+a.destinationlink {
+  font-size: 0.7rem;
 }
 
 a.biglink {

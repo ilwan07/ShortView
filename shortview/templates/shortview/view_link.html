@@ -11,10 +11,10 @@
 <body>
     <a href="{% url 'index' %}">Back to home page</a>
     <h2>{{ link.description }}</h2>
+    <p class="destinationlink">Original destination link: <a target="_blank" class="destinationlink" href="{{ link.destination }}">{{ link.destination }}</a></p>
     {% if link.active %}
-    <p>The tracked link is the following (click to copy):</p>
-    <button onclick="copy_link()" class="urlbutton" id="copylink">{{ link.url }}</button>
-    <small> <p id="copyconfirm"></p> </small>
+    <p>The tracked link to send is the following (click to copy): <button onclick="copy_link()" class="urlbutton" id="copylink">{{ link.url }}</button>
+        <small id="copyconfirm"></small></p>
     {% else %}
     <p class="expiredtext"><i><u>This link is expired</u></i></p>
     {% endif %}

@@ -16,7 +16,7 @@ class Profile(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     hide_expired = models.BooleanField("hide expired links", default=True)
-    default_lifetime = models.DurationField("default link life duration", default=datetime.timedelta(days=60))
+    default_lifetime = models.DurationField("default link life duration", default=datetime.timedelta(0))
 
     def __str__(self):
         return str(self.user)
@@ -34,7 +34,12 @@ class Link(models.Model):
 
     def __str__(self):
         if self.description:
-            return f"{self.description} ({self.destination})"
+            short_url = self.destination
+            if "://" in short_url:
+                short_url = short_url.split("://")[1].split("/")[0]
+            else:
+                short_url = short_url.split("/")[0]
+            return f"{self.description} --> {short_url}"
         else:
             return super().__str__()
     
