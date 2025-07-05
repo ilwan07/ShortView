@@ -18,25 +18,31 @@
     {% else %}
     <p class="expiredtext"><i><u>This link is expired</u></i></p>
     {% endif %}
-    <br>
+    <button class="urlbutton deletebutton" onclick="delete_link()">Delete this link</button>
+    <br> <br>
     {% if trackers|length == 0 %}
     <p>The link hasn't been clicked yet, no tracker available.</p>
     {% else %}
     <table class="trackers">
         <tr>
-            <th>Date of clicking</th>
+            <th>Date and time</th>
             <th>Opener's IP</th>
-            <th>See full request header</th>
+            <th>Full request headers</th>
         </tr>
         {% for tracker in trackers %}
         <tr>
             <td>{{ tracker.date }}</td>
             <td>{{ tracker.ip }}</td>
-            <td> <a target="_blank" href="{% url 'view_tracker' link.id tracker.id %}" class="headerlink">See header content</a> </td>
+            <td> <a target="_blank" href="{% url 'view_tracker' link.id tracker.id %}" class="headerlink">See headers content</a> </td>
         </tr>
         {% endfor %}
     </table>
     {% endif %}
+
+    <form id="delete_form" action="{% url 'delete_link' link.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="confirm_delete" value="true">
+    </form>
 
     <script src="{% static 'shortview/js/view_link.js' %}"></script>
 </body>

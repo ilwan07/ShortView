@@ -1,12 +1,11 @@
 set a way to get notified when a link was clicked,
 edit an ip blacklist (the user should put the ip of his devices there so it won't track if he opens the link himself)
 
-[On each one, see if it has been clicked (colors)] with the ip/name of the last person clicking it and the date,
-and the number of times it's been loaded
+[On each one, see if it has been clicked (colors)] with the number of times it's been loaded
 
 When selecting an entry, you can see the [ip of the person clicking]
-(you can set the ip to a name directly if it's unknown) [as well as full request header metadata]
-formated as a human readable format, and a way to remove the entry and therefore delete the shortened link, therefore returning 404 error
+(you can set the ip to a name directly if it's unknown)
+and a way to remove the entry and therefore delete the shortened link, therefore returning 404 error
 
 You can go to a page where you can create a new spy url and choose to get notified or not for this tracked url
 

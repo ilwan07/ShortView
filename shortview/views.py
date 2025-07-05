@@ -25,10 +25,21 @@ def index(request: HttpRequest):
         if not Profile.objects.filter(user=request.user).exists():
             profile = Profile(user=request.user)
             profile.save()
+        
+        # sort links
+        links = request.user.link_set.all().order_by("-date")
+        active, expired = [], []
+        for link in links:
+            if not link.date > timezone.now():
+                if link.active():
+                    active.append(link)
+                else:
+                    expired.append(link)
+        sorted_links = active + expired
 
         return render(request, "shortview/home.html", {"user": request.user,
                                                       "profile": request.user.profile,
-                                                      "links": request.user.link_set.all(),
+                                                      "links": sorted_links,
                                                       })
 
 
@@ -280,6 +291,26 @@ def view_link(request: HttpRequest, link_id: int):
                                                                 })
         else:
             raise PermissionDenied("You are not the owner of this link")
+
+
+def delete_link(request: HttpRequest, link_id: int):
+    """
+    delete the link if the correct post data is given and the user owns it
+    """
+    try:
+        link_object:Link = Link.objects.get(id=link_id)
+    except Link.DoesNotExist:
+        return redirect("view_link", link_id)
+
+    if not "confirm_delete" in request.POST:
+        return redirect("view_link", link_id)
+    
+    if not (request.user.is_authenticated and request.user == link_object.owner):
+        return redirect("view_link", link_id)
+    
+    # delete the link object
+    link_object.delete()
+    return redirect("index")
 
 
 def redirect_link(request: HttpRequest, link_id: int):

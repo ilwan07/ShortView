@@ -16,6 +16,7 @@ ul.links li.pending {
 
 ul.links li.inactive {
   text-decoration: line-through;
+  color: grey !important;
 }
 
 input[type="submit"] {
@@ -32,6 +33,10 @@ button.urlbutton {
   border: none;
   font-size: 1rem;
   color: darkslategrey;
+}
+
+button.deletebutton {
+  color: red !important;
 }
 
 table.trackers {
