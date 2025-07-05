@@ -195,30 +195,36 @@ def preferences(request: HttpRequest):
         minutes = (lifetime.seconds % 3600) // 60
         seconds = lifetime.seconds % 60
         return render(request, "shortview/preferences.html", {"profile": profile,
-                                                            "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                            "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                            })
+                                                              "delete_expired": profile.delete_expired,
+                                                              "never_expire": profile.default_lifetime == datetime.timedelta(0),
+                                                              "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                              })
     
     # continue handling post data
     try:
         days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
     except ValueError:
         return render(request, "shortview/preferences.html", {"profile": profile,
-                                                            "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                            "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                            "error": "Error: You tried to set the lifetime value without using integers.",
-                                                            })
+                                                              "delete_expired": profile.delete_expired,
+                                                              "never_expire": profile.default_lifetime == datetime.timedelta(0),
+                                                              "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                              "error": "Error: You tried to set the lifetime value without using integers.",
+                                                              })
+    
+    delete_expired = request.POST["delete_expired"] == "on" if "delete_expired" in request.POST else False
     hide_expired = request.POST["hide_expired"] == "on" if "hide_expired" in request.POST else False
     
     profile:Profile = request.user.profile
     profile.default_lifetime = datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
+    profile.delete_expired = delete_expired
     profile.hide_expired = hide_expired
     profile.save()
     return render(request, "shortview/preferences.html", {"profile": profile,
-                                                         "never_expire": never_expire,
-                                                         "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                         "success": "Successfully applied the new preferences!",
-                                                         })
+                                                          "delete_expired": delete_expired,
+                                                          "never_expire": never_expire,
+                                                          "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                          "success": "Successfully applied the new preferences!",
+                                                          })
 
 
 def new_link(request: HttpRequest):

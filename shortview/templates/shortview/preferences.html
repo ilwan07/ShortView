@@ -29,12 +29,18 @@
             <label for="never_expire">Never expire:</label>
             <input onChange="modify(); change_never_expire()" id="never_expire" type="checkbox" name="never_expire" {% if never_expire %} checked {% endif %}>
             <br><br>
-            <label for="hide_expired">Hide expired spy agents:</label>
-            <input onChange="modify()" id="hide_expired" type="checkbox" name="hide_expired" {% if profile.hide_expired %} checked {% endif %}>
+
+            <label for="delete_expired">Automatically delete expired links (including the current ones)</label>
+            <input onChange="modify(); change_delete_expired()" id="delete_expired" type="checkbox" name="delete_expired"
+                {% if profile.delete_expired %} checked {% endif %}> <br>
+            <label for="hide_expired">Hide expired tracked links:</label>
+            <input onChange="modify()" id="hide_expired" type="checkbox" name="hide_expired"
+                {% if profile.hide_expired or profile.delete_expired %} checked {% endif %} {% if profile.delete_expired %} disabled {% endif %}>
         </fieldset>
         <input class="apply" id="applypreferences" type="submit" value="Apply preferences" onclick="let_confirm()">
     </form>
 
+    <script src="{% static 'shortview/js/preferences.js' %}"></script>
     <script src="{% static 'shortview/js/change_never_expire.js' %}"></script>
     <script src="{% static 'shortview/js/warn_exit.js' %}"></script>
 </body>

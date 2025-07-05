@@ -15,11 +15,12 @@ class Profile(models.Model):
     a model to store a user profile, with all its settings, data and preferences
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    delete_expired = models.BooleanField("delete expired links", default=False)
     hide_expired = models.BooleanField("hide expired links", default=True)
     default_lifetime = models.DurationField("default link life duration", default=datetime.timedelta(0))
 
     def __str__(self):
-        return str(self.user)
+        return str(f"{self.user}'s profile")
 
 
 class Link(models.Model):

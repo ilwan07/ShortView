@@ -25,6 +25,7 @@ class UserAdminCustom(UserAdmin):
     keep the default admin entries, but add inlines
     """
     inlines = [ProfileInLine, LinkInLine]
+    list_display = ["username", "email", "is_staff"]
 
 
 class TrackerInLine(admin.TabularInline):
