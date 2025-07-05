@@ -26,11 +26,11 @@ class Link(models.Model):
     """
     a model to represent a tracked link shortener with its attributes
     """
-    description = models.CharField("description", default="")
+    description = models.CharField("description", default="", max_length=255)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)  # user who owns the link
     date = models.DateTimeField("date of creation")
     lifetime = models.DurationField("life duration", default=datetime.timedelta(0))  # 0 for unlimited
-    destination = models.URLField("url destination")
+    destination = models.URLField("url destination", default="https://example.com/", max_length=65535)
 
     def __str__(self):
         if self.description:
@@ -72,9 +72,9 @@ class Tracker(models.Model):
     a model to store the informations when a link has been clicked, a link can have multiple trackers
     """
     link = models.ForeignKey(Link, on_delete=models.CASCADE)  # the link from which the tracking originates
-    ip = models.GenericIPAddressField("receiver ip")
+    ip = models.GenericIPAddressField("receiver ip", default="0.0.0.0")
     date = models.DateTimeField("date of clicking")
-    header = models.CharField("request header", default="")
+    header = models.TextField("request header", default="")
 
     def __str__(self):
         return f"{self.ip} | {self.date}"

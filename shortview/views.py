@@ -294,24 +294,28 @@ def redirect_link(request: HttpRequest, link_id: int):
     # do not log if the link is clicked by the owner
     if request.user.is_authenticated and request.user == link_object.owner:
         return redirect(link_object.destination)
-    
-    # else track the click and redirect to the destination
+
     # get the ip address (ipv6 or ipv4)
-    ip = request.META.get('HTTP_X_FORWARDED_FOR')
+    ip = request.META.get("HTTP_X_FORWARDED_FOR")
     if ip:
-        ip = ip.split(',')[0]
+        ip = ip.split(",")[0]
     else:
-        ip = request.META.get('REMOTE_ADDR')
+        ip = request.META.get("REMOTE_ADDR")
     
-    # get the header as json and strip sensitive cookies
+    # get the header as json and remove sensitive data
     header = dict(request.headers)
-    header["Cookie"] = "removed for security reasons"
+    header["Cookie"] = "[REDACTED]"
     header_json = json.dumps(header, indent=2)
+
+    # do not log if the link has been opened by an app agent to generate a preview
+    agents_blacklist = ["whatsapp", "discord", "slack"]
+    if any([agent.lower() in header["User-Agent"].lower() for agent in agents_blacklist]):
+        return redirect(link_object.destination)
     
+    # else log and redirect
     tracker:Tracker = Tracker(link=link_object, date=timezone.now(), ip=ip, header=header_json)
     tracker.save()
     return redirect(link_object.destination)
-    #TODO: get ip from model method instead of static info
 
 
 def view_tracker(request: HttpRequest, link_id:int, tracker_id:int):

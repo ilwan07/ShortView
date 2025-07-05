@@ -16,10 +16,10 @@
         <fieldset>
             <legend><h3>Create a new tracked shortened link</h3></legend>
             <label for="description">Description:</label>
-            <input onChange="modify()" id="description" type="text" name="description"
-                minlength="3" placeholder="tracked link description" {% if description %} value="{{ description }}" {% endif %} required> <br>
+            <input onChange="modify()" id="description" type="text" name="description" minlength="3" maxlength="255"
+                placeholder="tracked link description" {% if description %} value="{{ description }}" {% endif %} required> <br>
             <label for="destination">Full destination URL:</label>
-            <input onChange="modify()" id="destination" type="text" name="destination"
+            <input onChange="modify()" id="destination" type="text" name="destination" maxlength="65535"
                 placeholder="https://example.com/" {% if destination %} value="{{ destination }}" {% endif %} required>
             <br><br>
             <label>Time before the link expires (days/hours/minutes/seconds):</label> <br>
