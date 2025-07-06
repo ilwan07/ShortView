@@ -35,8 +35,15 @@ def index(request: HttpRequest):
                     active.append(link)
                 else:
                     expired.append(link)
+        
+        # delete expired links if necessary
+        profile:Profile = request.user.profile
+        if profile.delete_expired:
+            for link in expired:
+                link.delete()
+            expired = []
+        
         sorted_links = active + expired
-
         return render(request, "shortview/home.html", {"user": request.user,
                                                       "profile": request.user.profile,
                                                       "links": sorted_links,
@@ -175,6 +182,12 @@ def preferences(request: HttpRequest):
     if not request.user.is_authenticated:
         return redirect("loginpage")
     
+    # make sure the user has a profile
+    if not Profile.objects.filter(user=request.user).exists():
+        profile = Profile(user=request.user)
+        profile.save()
+    
+    profile:Profile = request.user.profile
     never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
     if never_expire:
         days, hours, minutes, seconds = 0, 0, 0, 0
@@ -184,12 +197,6 @@ def preferences(request: HttpRequest):
         minutes = request.POST["minutes"]
         seconds = request.POST["seconds"]
     else:  # missing post data, user want the page
-        # make sure the user has a profile
-        if not Profile.objects.filter(user=request.user).exists():
-            profile = Profile(user=request.user)
-            profile.save()
-
-        profile:Profile = request.user.profile
         lifetime:datetime.timedelta = profile.default_lifetime
         hours = lifetime.seconds // 3600
         minutes = (lifetime.seconds % 3600) // 60
@@ -229,7 +236,7 @@ def preferences(request: HttpRequest):
 
 def new_link(request: HttpRequest):
     """
-    allow the user to create a new tracked linkraise Http404("NOT IMPLEMENTED")  #TODO
+    allow the user to create a new tracked link
     """
     if not request.user.is_authenticated:
         return redirect("loginpage")

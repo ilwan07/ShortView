@@ -10,14 +10,15 @@ admin.site.site_title = "ShortView Admin Portal"
 admin.site.index_title = "Welcome to the ShortView Administration Interface"
 
 # Register your models here.
-class LinkInLine(admin.TabularInline):
-    model = Link
-    extra = 0
-
-
 class ProfileInLine(admin.TabularInline):
     model = Profile
     can_delete = False
+
+
+class LinkInLine(admin.TabularInline):
+    model = Link
+    extra = 0
+    classes=["collapse"]
 
 
 class UserAdminCustom(UserAdmin):
@@ -31,6 +32,7 @@ class UserAdminCustom(UserAdmin):
 class TrackerInLine(admin.TabularInline):
     model = Tracker
     extra = 0
+    classes=["collapse"]
 
 
 class LinkAdmin(admin.ModelAdmin):

@@ -21,7 +21,9 @@
     {% for link in links %}
         {% if not profile.hide_expired or link.active %}
         <a href="{% url 'view_link' link.id %}">
-            <li class="{% if link.active %}active{% else %}inactive{% endif %} {% if link.tracker_set.all|length > 0 %}clicked{% else %}pending{% endif %}"> {{ link }} </li>
+            <li class="{% if link.active %}active{% else %}inactive{% endif %} {% if link.tracker_set.all|length > 0 %}clicked{% else %}pending{% endif %}">
+                {{ link }} | {{ link.tracker_set.all|length }} click{{ link.tracker_set.all|length|pluralize }}
+            </li>
         </a>
         {% endif %}
     {% empty %}
