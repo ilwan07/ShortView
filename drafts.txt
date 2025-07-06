@@ -1,13 +1,9 @@
 set a way to get notified when a link was clicked,
-edit an ip blacklist (the user should put the ip of his devices there so it won't track if he opens the link himself)
-
-[On each one, see if it has been clicked (colors)] with the number of times it's been loaded
 
 When selecting an entry, you can see the [ip of the person clicking]
 (you can set the ip to a name directly if it's unknown)
-and a way to remove the entry and therefore delete the shortened link, therefore returning 404 error
 
-You can go to a page where you can create a new spy url and choose to get notified or not for this tracked url
+[You can go to a page where you can create a new spy url] and choose to get notified or not for this tracked url, also can be set in preferences
 
 force the user to verify mail?
 Require the user to accept conditions before registering

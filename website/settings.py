@@ -11,16 +11,20 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load the environment variables
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wrv!a!aqv)2e5m2!fkq)&@xg(a41m=_r#-#t(m!l20*(9b7c(*'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEy8SHORTVIEW')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -138,4 +142,16 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.zoho.eu'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+DOMAIN = 'ilwan.woah.pw'
+EMAIL_HOST_USER = 'shortview@ilwan.woah.pw'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD_SHORTVIEW')
+DEFAULT_FROM_EMAIL = 'shortview@ilwan.woah.pw'
+
+# Site ID
 SITE_ID = 1

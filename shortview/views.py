@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse, Http404
+from django.core.mail import send_mail
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
