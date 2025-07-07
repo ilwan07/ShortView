@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.conf import settings
 
+from urllib.parse import urlparse
 import datetime
 
 # Create your models here.
@@ -14,10 +15,13 @@ class Profile(models.Model):
     """
     a model to store a user profile, with all its settings, data and preferences
     """
+    NOTIFY_CLICK_CHOICES = [(0, "never notify"), (1, "notify first click"), (2, "notify each click")]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     delete_expired = models.BooleanField("delete expired links", default=False)
     hide_expired = models.BooleanField("hide expired links", default=True)
     default_lifetime = models.DurationField("default link life duration", default=datetime.timedelta(0))
+    default_notify_click = models.IntegerField("send mail on link click", choices=NOTIFY_CLICK_CHOICES, default=0)
 
     def __str__(self):
         return str(f"{self.user}'s profile")
@@ -27,22 +31,18 @@ class Link(models.Model):
     """
     a model to represent a tracked link shortener with its attributes
     """
+    NOTIFY_CLICK_CHOICES = [(0, "never notify"), (1, "notify first click"), (2, "notify each click")]
+
     description = models.CharField("description", default="", max_length=255)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)  # user who owns the link
     date = models.DateTimeField("date of creation")
     lifetime = models.DurationField("life duration", default=datetime.timedelta(0))  # 0 for unlimited
+    notify_click = models.IntegerField("send mail on link click", choices=NOTIFY_CLICK_CHOICES, default=0)
     destination = models.URLField("url destination", default="https://example.com/", max_length=65535)
 
     def __str__(self):
-        if self.description:
-            short_url = self.destination
-            if "://" in short_url:
-                short_url = short_url.split("://")[1].split("/")[0]
-            else:
-                short_url = short_url.split("/")[0]
-            return f"{self.description} --> {short_url}"
-        else:
-            return super().__str__()
+        domain = urlparse(self.destination).netloc 
+        return f"{self.description} --> {domain}"
     
     def url(self):
         """

@@ -42,6 +42,7 @@ class LinkAdmin(admin.ModelAdmin):
     fieldsets = [
         ("General", {"fields": ["owner", "description", "destination"]}),
         ("Date and time", {"fields": ["date", "lifetime"]}),
+        ("Email notification", {"fields": ["notify_click"]}),
     ]
     inlines = [TrackerInLine]
     list_display = ["description", "owner", "date", "active"]

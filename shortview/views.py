@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse, Http404
 from django.core.mail import send_mail
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.urls import resolve, Resolver404
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
@@ -9,6 +10,7 @@ from django.contrib.auth.models import User
 
 from .models import Profile, Link, Tracker
 
+from urllib.parse import urlparse
 import datetime
 import json
 import re
@@ -271,12 +273,27 @@ def new_link(request: HttpRequest):
     try:
         days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
     except ValueError:
-        return render(request, "shortview/preferences.html", {"description": description,
-                                                              "destination": destination,
-                                                              "never_expire": never_expire,
-                                                              "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                              "error": "Error: You tried to set the lifetime value without using integers.",
-                                                              })
+        return render(request, "shortview/new_link.html", {"description": description,
+                                                           "destination": destination,
+                                                           "never_expire": never_expire,
+                                                           "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                           "error": "Error: You tried to set the lifetime value without using integers.",
+                                                           })
+
+    # check that the destination is not another redirection to avoid loops
+    destination_path = urlparse(destination).path
+    try:
+        pattern = resolve(destination_path)
+    except Resolver404:
+        pass
+    else:
+        if pattern.url_name == "redirect_link":
+            return render(request, "shortview/new_link.html", {"description": description,
+                                                               "destination": destination,
+                                                               "never_expire": never_expire,
+                                                               "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                               "error": "Error: You cannot set another tracked url as the destination.",
+                                                               })
     
     # create the new link
     link:Link = Link(owner=request.user, description=description, date=timezone.now(), destination=destination,
