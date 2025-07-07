@@ -197,12 +197,12 @@ def preferences(request: HttpRequest):
     default_minutes = (default_lifetime.seconds % 3600) // 60
     default_seconds = default_lifetime.seconds % 60
     
-    required_post = ["notify"]
+    required_post_data = ["notify"]
     never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
-    if never_expire and all(element in request.POST for element in required_post):
+    if never_expire and all(element in request.POST for element in required_post_data):
         days, hours, minutes, seconds = 0, 0, 0, 0
         notify = request.POST["notify"]
-    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"]+required_post):
+    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"] + required_post_data):
         days = request.POST["days"]
         hours = request.POST["hours"]
         minutes = request.POST["minutes"]
@@ -234,7 +234,7 @@ def preferences(request: HttpRequest):
                                                               "notify": profile.default_notify_click,
                                                               "delete_expired": profile.delete_expired,
                                                               "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                              "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
+                                                              "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
                                                               "error": "Error: The value for the notification preference is invalid",
                                                               })
     else:
@@ -243,7 +243,7 @@ def preferences(request: HttpRequest):
                                                                 "notify": profile.default_notify_click,
                                                                 "delete_expired": profile.delete_expired,
                                                                 "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                                "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
+                                                                "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
                                                                 "error": "Error: The value for the notification preference is invalid",
                                                                 })
     
@@ -272,29 +272,30 @@ def new_link(request: HttpRequest):
     if not request.user.is_authenticated:
         return redirect("loginpage")
     
+    profile:Profile = request.user.profile
+
+    default_lifetime:datetime.timedelta = profile.default_lifetime
+    default_hours = default_lifetime.seconds // 3600
+    default_minutes = (default_lifetime.seconds % 3600) // 60
+    default_seconds = default_lifetime.seconds % 60
+
     # if we have the post data, then we create the link, else we send the page
     never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
-    required_post_data = ["description", "destination"]
+    required_post_data = ["description", "destination", "notify"]
     if never_expire and all(element in request.POST for element in required_post_data):
         days, hours, minutes, seconds = 0, 0, 0, 0
         description = request.POST["description"]
         destination = request.POST["destination"]
+        notify = request.POST["notify"]
     elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"] + required_post_data):
-        days = request.POST["days"]
-        hours = request.POST["hours"]
-        minutes = request.POST["minutes"]
-        seconds = request.POST["seconds"]
         description = request.POST["description"]
         destination = request.POST["destination"]
+        notify = request.POST["notify"]
     
     else:  # missing post data, user want the page
-        profile:Profile = request.user.profile
-        lifetime:datetime.timedelta = profile.default_lifetime
-        hours = lifetime.seconds // 3600
-        minutes = (lifetime.seconds % 3600) // 60
-        seconds = lifetime.seconds % 60
         return render(request, "shortview/new_link.html", {"never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                           "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                           "notify": profile.default_notify_click,
+                                                           "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
                                                            })
     
     # continue handling post data
@@ -303,10 +304,30 @@ def new_link(request: HttpRequest):
     except ValueError:
         return render(request, "shortview/new_link.html", {"description": description,
                                                            "destination": destination,
+                                                           "notify": profile.default_notify_click,
+                                                           "never_expire": never_expire,
+                                                           "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
+                                                           "error": "Error: You tried to set the lifetime value without using integers.",
+                                                           })
+    try:
+        notify = int(notify)
+    except ValueError:
+        return render(request, "shortview/new_link.html", {"description": description,
+                                                           "destination": destination,
+                                                           "notify": profile.default_notify_click,
                                                            "never_expire": never_expire,
                                                            "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
                                                            "error": "Error: You tried to set the lifetime value without using integers.",
                                                            })
+    else:
+        if not 0 <= notify <= 2:
+            return render(request, "shortview/new_link.html", {"description": description,
+                                                               "destination": destination,
+                                                               "notify": profile.default_notify_click,
+                                                               "never_expire": never_expire,
+                                                               "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                               "error": "Error: You tried to set the lifetime value without using integers.",
+                                                               })
 
     # check that the destination is not another redirection to avoid loops
     destination_path = urlparse(destination).path
@@ -318,13 +339,14 @@ def new_link(request: HttpRequest):
         if pattern.url_name == "redirect_link":
             return render(request, "shortview/new_link.html", {"description": description,
                                                                "destination": destination,
+                                                               "notify": profile.default_notify_click,
                                                                "never_expire": never_expire,
                                                                "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
                                                                "error": "Error: You cannot set another tracked url as the destination.",
                                                                })
     
     # create the new link
-    link:Link = Link(owner=request.user, description=description, date=timezone.now(), destination=destination,
+    link:Link = Link(owner=request.user, description=description, date=timezone.now(), destination=destination, notify_click=notify,
                       lifetime=datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds),
                       )
     link.save()
