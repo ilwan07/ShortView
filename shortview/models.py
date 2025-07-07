@@ -15,7 +15,7 @@ class Profile(models.Model):
     """
     a model to store a user profile, with all its settings, data and preferences
     """
-    NOTIFY_CLICK_CHOICES = [(0, "never notify"), (1, "notify first click"), (2, "notify each click")]
+    NOTIFY_CLICK_CHOICES = [(0, "Never notify"), (1, "Notify first click"), (2, "Notify each click")]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     delete_expired = models.BooleanField("delete expired links", default=False)
@@ -31,7 +31,7 @@ class Link(models.Model):
     """
     a model to represent a tracked link shortener with its attributes
     """
-    NOTIFY_CLICK_CHOICES = [(0, "never notify"), (1, "notify first click"), (2, "notify each click")]
+    NOTIFY_CLICK_CHOICES = [(0, "Never notify"), (1, "Notify first click"), (2, "Notify each click")]
 
     description = models.CharField("description", default="", max_length=255)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)  # user who owns the link
@@ -41,7 +41,7 @@ class Link(models.Model):
     destination = models.URLField("url destination", default="https://example.com/", max_length=65535)
 
     def __str__(self):
-        domain = urlparse(self.destination).netloc 
+        domain = urlparse(self.destination).netloc
         return f"{self.description} --> {domain}"
     
     def url(self):

@@ -163,19 +163,19 @@ def loginpage(request: HttpRequest):
                                                         })
 
 
-def password_info(request: HttpRequest):
-    """
-    an informative page to explain to the user how passwords are stored
-    """
-    return render(request, "shortview/info/passwords.html")
-
-
 def logoutpage(request: HttpRequest):
     """
     logs out the current user
     """
     logout(request)
     return redirect("index")
+
+
+def password_info(request: HttpRequest):
+    """
+    an informative page to explain to the user how passwords are stored
+    """
+    return render(request, "shortview/info/passwords.html")
 
 
 def preferences(request: HttpRequest):
@@ -191,23 +191,29 @@ def preferences(request: HttpRequest):
         profile.save()
     
     profile:Profile = request.user.profile
+
+    default_lifetime:datetime.timedelta = profile.default_lifetime
+    default_hours = default_lifetime.seconds // 3600
+    default_minutes = (default_lifetime.seconds % 3600) // 60
+    default_seconds = default_lifetime.seconds % 60
+    
+    required_post = ["notify"]
     never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
-    if never_expire:
+    if never_expire and all(element in request.POST for element in required_post):
         days, hours, minutes, seconds = 0, 0, 0, 0
-    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"]):
+        notify = request.POST["notify"]
+    elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"]+required_post):
         days = request.POST["days"]
         hours = request.POST["hours"]
         minutes = request.POST["minutes"]
         seconds = request.POST["seconds"]
+        notify = request.POST["notify"]
     else:  # missing post data, user want the page
-        lifetime:datetime.timedelta = profile.default_lifetime
-        hours = lifetime.seconds // 3600
-        minutes = (lifetime.seconds % 3600) // 60
-        seconds = lifetime.seconds % 60
         return render(request, "shortview/preferences.html", {"profile": profile,
+                                                              "notify": profile.default_notify_click,
                                                               "delete_expired": profile.delete_expired,
                                                               "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                              "days": lifetime.days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                              "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
                                                               })
     
     # continue handling post data
@@ -215,21 +221,43 @@ def preferences(request: HttpRequest):
         days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
     except ValueError:
         return render(request, "shortview/preferences.html", {"profile": profile,
+                                                              "notify": profile.default_notify_click,
                                                               "delete_expired": profile.delete_expired,
                                                               "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                              "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                                                              "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
                                                               "error": "Error: You tried to set the lifetime value without using integers.",
                                                               })
+    try:
+        notify = int(notify)
+    except ValueError:
+        return render(request, "shortview/preferences.html", {"profile": profile,
+                                                              "notify": profile.default_notify_click,
+                                                              "delete_expired": profile.delete_expired,
+                                                              "never_expire": profile.default_lifetime == datetime.timedelta(0),
+                                                              "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
+                                                              "error": "Error: The value for the notification preference is invalid",
+                                                              })
+    else:
+        if not 0 <= notify <= 2:
+            return render(request, "shortview/preferences.html", {"profile": profile,
+                                                                "notify": profile.default_notify_click,
+                                                                "delete_expired": profile.delete_expired,
+                                                                "never_expire": profile.default_lifetime == datetime.timedelta(0),
+                                                                "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
+                                                                "error": "Error: The value for the notification preference is invalid",
+                                                                })
     
     delete_expired = request.POST["delete_expired"] == "on" if "delete_expired" in request.POST else False
     hide_expired = request.POST["hide_expired"] == "on" if "hide_expired" in request.POST else False
     
     profile:Profile = request.user.profile
+    profile.default_notify_click = notify
     profile.default_lifetime = datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
     profile.delete_expired = delete_expired
     profile.hide_expired = hide_expired
     profile.save()
     return render(request, "shortview/preferences.html", {"profile": profile,
+                                                          "notify": notify,
                                                           "delete_expired": delete_expired,
                                                           "never_expire": never_expire,
                                                           "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
