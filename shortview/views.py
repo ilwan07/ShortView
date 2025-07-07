@@ -238,7 +238,7 @@ def preferences(request: HttpRequest):
                                                               "error": "Error: The value for the notification preference is invalid",
                                                               })
     else:
-        if not 0 <= notify <= 2:
+        if not 1 <= notify <= 3:
             return render(request, "shortview/preferences.html", {"profile": profile,
                                                                 "notify": profile.default_notify_click,
                                                                 "delete_expired": profile.delete_expired,
@@ -294,7 +294,7 @@ def new_link(request: HttpRequest):
     
     else:  # missing post data, user want the page
         return render(request, "shortview/new_link.html", {"never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                           "notify": profile.default_notify_click,
+                                                           "notify": 0,
                                                            "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
                                                            })
     
@@ -304,7 +304,7 @@ def new_link(request: HttpRequest):
     except ValueError:
         return render(request, "shortview/new_link.html", {"description": description,
                                                            "destination": destination,
-                                                           "notify": profile.default_notify_click,
+                                                           "notify": 0,
                                                            "never_expire": never_expire,
                                                            "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
                                                            "error": "Error: You tried to set the lifetime value without using integers.",
@@ -314,16 +314,16 @@ def new_link(request: HttpRequest):
     except ValueError:
         return render(request, "shortview/new_link.html", {"description": description,
                                                            "destination": destination,
-                                                           "notify": profile.default_notify_click,
+                                                           "notify": 0,
                                                            "never_expire": never_expire,
                                                            "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
                                                            "error": "Error: You tried to set the lifetime value without using integers.",
                                                            })
     else:
-        if not 0 <= notify <= 2:
+        if not 0 <= notify <= 3:
             return render(request, "shortview/new_link.html", {"description": description,
                                                                "destination": destination,
-                                                               "notify": profile.default_notify_click,
+                                                               "notify": 0,
                                                                "never_expire": never_expire,
                                                                "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
                                                                "error": "Error: You tried to set the lifetime value without using integers.",
@@ -392,6 +392,34 @@ def delete_link(request: HttpRequest, link_id: int):
     # delete the link object
     link_object.delete()
     return redirect("index")
+
+
+def link_change_notify(request: HttpRequest, link_id: int):
+    """
+    change the notification preference for a specific link
+    """
+    try:
+        link_object:Link = Link.objects.get(id=link_id)
+    except Link.DoesNotExist:
+        return redirect("view_link", link_id)
+
+    if not "notify" in request.POST:
+        return redirect("view_link", link_id)
+    
+    if not (request.user.is_authenticated and request.user == link_object.owner):
+        return redirect("view_link", link_id)
+    
+    notify = request.POST["notify"]
+    try:
+        notify = int(notify)
+    except ValueError:
+        return redirect("view_link", link_id)
+    if not (0 <= notify <= 3):
+        return redirect("view_link", link_id)
+    
+    link_object.notify_click = notify
+    link_object.save()
+    return redirect("view_link", link_id)
 
 
 def redirect_link(request: HttpRequest, link_id: int):

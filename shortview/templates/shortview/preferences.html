@@ -40,9 +40,9 @@
 
             <label for="notify">Default email notification mode:</label>
             <select onChange="modify()" id="notify" name="notify">
-                <option value="0" {% if notify == 0 %} selected {% endif %}>Never notify</option>
-                <option value="1" {% if notify == 1 %} selected {% endif %}>Notify first click</option>
-                <option value="2" {% if notify == 2 %} selected {% endif %}>Notify each click</option>
+                <option value="1" {% if notify == 1 %} selected {% endif %}>Never notify</option>
+                <option value="2" {% if notify == 2 %} selected {% endif %}>Notify first click</option>
+                <option value="3" {% if notify == 3 %} selected {% endif %}>Notify each click</option>
             </select>
         </fieldset>
         <input class="apply" id="applypreferences" type="submit" value="Apply preferences" onclick="let_confirm()">

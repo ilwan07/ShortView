@@ -61,6 +61,11 @@ small#copyconfirm {
   color: darkslategrey;
 }
 
+button#copylink {
+  padding: 4px;
+  border: 2px dashed darkcyan;
+}
+
 p.expiredtext {
   font-size: 1.15rem;
 }

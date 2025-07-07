@@ -11,10 +11,22 @@
 <body>
     <a href="{% url 'index' %}">Back to home page</a>
     <h2>{{ link.description }}</h2>
-    <p class="destinationlink">Original destination link: <a target="_blank" class="destinationlink" href="{{ link.destination }}">{{ link.destination }}</a></p>
     {% if link.active %}
     <p>The tracked link to send is the following (click to copy): <button onclick="copy_link()" class="urlbutton" id="copylink">{{ link.url }}</button>
         <small id="copyconfirm"></small></p>
+    {% endif %}
+    <p class="destinationlink">Original destination link: <a target="_blank" class="destinationlink" href="{{ link.destination }}">{{ link.destination }}</a></p>
+    {% if link.active %}
+    <form id="link_notify_form" action="{% url 'link_change_notify' link.id %}" method="post">
+        {% csrf_token %}
+        <label for="notify">Default email notification mode:</label>
+        <select onChange="change_notify()" id="notify" name="notify">
+            <option value="0" {% if link.notify_click == 0 %} selected {% endif %}>User preference</option>
+            <option value="1" {% if link.notify_click == 1 %} selected {% endif %}>Never notify</option>
+            <option value="2" {% if link.notify_click == 2 %} selected {% endif %}>Notify first click</option>
+            <option value="3" {% if link.notify_click == 3 %} selected {% endif %}>Notify each click</option>
+        </select>
+    </form> <br>
     {% else %}
     <p class="expiredtext"><i><u>This link is expired</u></i></p>
     {% endif %}

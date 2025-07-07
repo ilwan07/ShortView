@@ -15,13 +15,13 @@ class Profile(models.Model):
     """
     a model to store a user profile, with all its settings, data and preferences
     """
-    NOTIFY_CLICK_CHOICES = [(0, "Never notify"), (1, "Notify first click"), (2, "Notify each click")]
+    NOTIFY_CLICK_CHOICES = [(1, "Never notify"), (2, "Notify first click"), (3, "Notify each click")]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     delete_expired = models.BooleanField("delete expired links", default=False)
     hide_expired = models.BooleanField("hide expired links", default=True)
     default_lifetime = models.DurationField("default link life duration", default=datetime.timedelta(0))
-    default_notify_click = models.IntegerField("send mail on link click", choices=NOTIFY_CLICK_CHOICES, default=0)
+    default_notify_click = models.IntegerField("send mail on link click", choices=NOTIFY_CLICK_CHOICES, default=1)
 
     def __str__(self):
         return str(f"{self.user}'s profile")
@@ -31,7 +31,7 @@ class Link(models.Model):
     """
     a model to represent a tracked link shortener with its attributes
     """
-    NOTIFY_CLICK_CHOICES = [(0, "Never notify"), (1, "Notify first click"), (2, "Notify each click")]
+    NOTIFY_CLICK_CHOICES = [(0, "User preference"), (1, "Never notify"), (2, "Notify first click"), (3, "Notify each click")]
 
     description = models.CharField("description", default="", max_length=255)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)  # user who owns the link
@@ -39,10 +39,6 @@ class Link(models.Model):
     lifetime = models.DurationField("life duration", default=datetime.timedelta(0))  # 0 for unlimited
     notify_click = models.IntegerField("send mail on link click", choices=NOTIFY_CLICK_CHOICES, default=0)
     destination = models.URLField("url destination", default="https://example.com/", max_length=65535)
-
-    def __str__(self):
-        domain = urlparse(self.destination).netloc
-        return f"{self.description} --> {domain}"
     
     def url(self):
         """
@@ -52,6 +48,16 @@ class Link(models.Model):
         domain = Site.objects.get_current().domain
         scheme = "https" if getattr(settings, "SECURE_SSL_REDIRECT", False) else "http"
         return f"{scheme}://{domain}{path}"
+    
+    @admin.display(
+        ordering="destination",
+        description="destination domain",
+    )
+    def short_destination(self):
+        """
+        returns only the domain of the destination url
+        """
+        return urlparse(self.destination).netloc
     
     @admin.display(
         boolean=True,
@@ -66,6 +72,9 @@ class Link(models.Model):
             return True
         # return True if the link isn't expired and is not scheduled to be active in the future
         return self.lifetime >= timezone.now() - self.date and self.date <= timezone.now()
+    
+    def __str__(self):
+        return f"{self.description} --> {self.short_destination()}"
 
 
 class Tracker(models.Model):

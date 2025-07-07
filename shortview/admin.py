@@ -45,7 +45,7 @@ class LinkAdmin(admin.ModelAdmin):
         ("Email notification", {"fields": ["notify_click"]}),
     ]
     inlines = [TrackerInLine]
-    list_display = ["description", "owner", "date", "active"]
+    list_display = ["description", "owner", "short_destination", "date", "active"]
     list_filter = ["date", "owner"]
     search_fields = ["description"]
 
