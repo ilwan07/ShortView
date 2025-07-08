@@ -1,11 +1,15 @@
+var form = document.getElementById("register_form")
 var modified = false;
 
 function modify() {
     modified = true;
 }
 
-function let_confirm() {
-    modified = false;
+// disable the exit warning if the form is valid
+if (form) {
+    form.addEventListener("submit", function(e) {
+        modified = false;
+    });
 }
 
 // warn the user before leaving the page if he started filling some data

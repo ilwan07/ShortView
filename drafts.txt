@@ -1,9 +1,2 @@
-set a way to get notified when a link was clicked,
-
-When selecting an entry, you can see the [ip of the person clicking]
-(you can set the ip to a name directly if it's unknown)
-
-[You can go to a page where you can create a new spy url] and choose to get notified or not for this tracked url, also can be set in preferences
-
-force the user to verify mail?
-Require the user to accept conditions before registering
+set the ip of a person to a conventional name in the preferences
+force the user to verify email?

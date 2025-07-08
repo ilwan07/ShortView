@@ -10,7 +10,7 @@
 </head>
 <body>
     <a href="{% url 'index' %}">Back to index page</a>
-    <form action="{% url 'register' %}" method="post">
+    <form action="{% url 'register' %}" method="post" id="register_form">
         {% csrf_token %}
         {% if error %}<p><strong>Error: {{ error }}</strong></p>{% endif %}
         <fieldset>
@@ -30,8 +30,11 @@
             <label for="password_confirm">Confirm password:</label>
             <input onChange="modify()" type="password" id="password_confirm" name="password_confirm" oninput="check_match()"
                 title="Retype the same password again here" placeholder="password again" required>
+            <br>
+            <label for="accept_conditions">I have read and accept the <a target="_blank" href="{% url 'conditions' %}">conditions of use of the service</a>:</label>
+            <input onChange="modify()" type="checkbox" id="accept_conditions" name="accept_conditions" required>
         </fieldset>
-        <input onclick="let_confirm()" type="submit" value="register">
+        <input type="submit" value="register">
     </form>
     <br>
     <a href="{% url 'password_info' %}">How do we securely store your passwords?</a>

@@ -181,6 +181,13 @@ def password_info(request: HttpRequest):
     return render(request, "shortview/info/passwords.html")
 
 
+def conditions(request: HttpRequest):
+    """
+    an informative page to explain the conditions of use of the service
+    """
+    return render(request, "shortview/info/conditions.html")
+
+
 def preferences(request: HttpRequest):
     """
     the view to let the user change the preferences and set the new preferences using the POST data
