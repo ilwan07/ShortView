@@ -1,0 +1,5 @@
+Link was clicked!
+
+link object: {{ link }}
+
+tracker object: {{ tracker }}

@@ -1,9 +1,11 @@
 from django.shortcuts import redirect, render
+from django.conf import settings
 from django.http import HttpRequest, HttpResponse, Http404
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import resolve, Resolver404
 from django.utils import timezone
+from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import User
@@ -451,10 +453,25 @@ def redirect_link(request: HttpRequest, link_id: int):
     agents_blacklist = ["whatsapp", "discord", "slack"]
     if any([agent.lower() in header["User-Agent"].lower() for agent in agents_blacklist]):
         return redirect(link_object.destination)
-    
-    # else log and redirect
+
+    # log the click
     tracker:Tracker = Tracker(link=link_object, date=timezone.now(), ip=ip, header=header_json)
     tracker.save()
+
+    # notify by email depending on preferences
+    if link_object.notify_click == 0:  # using default preference
+        notify = link_object.owner.profile.default_notify_click
+    else:
+        notify = link_object.notify_click
+    
+    if (notify == 2 and link_object.tracker_set.count() == 1) or notify == 3:  # if notify first click and it is, or always notify
+        # send an email notification
+        text_content = render_to_string("shortview/emails/notify_click.txt", context={"link": link_object, "tracker": tracker})
+        html_content = render_to_string("shortview/emails/notify_click.html", context={"link": link_object, "tracker": tracker})
+        email = EmailMultiAlternatives("ShortView | Your link was clicked", text_content, settings.DEFAULT_FROM_EMAIL, [link_object.owner.email])
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+    
     return redirect(link_object.destination)
 
 
