@@ -37,15 +37,17 @@
     {% else %}
     <table class="trackers">
         <tr>
+            <th>Number</th>
             <th>Date and time</th>
             <th>Opener's IP</th>
             <th>Full request headers</th>
         </tr>
         {% for tracker in trackers %}
         <tr>
+            <td>{{ forloop.counter }}</td>
             <td>{{ tracker.date }}</td>
-            <td>{{ tracker.ip }}</td>
-            <td> <a target="_blank" href="{% url 'view_tracker' link.id tracker.id %}" class="headerlink">See headers content</a> </td>
+            <td><a target="_blank" href="https://whatismyipaddress.com/ip/{{ tracker.ip }}">{{ tracker.ip }}</a></td>
+            <td><a target="_blank" href="{% url 'view_tracker' link.id tracker.id %}" class="headerlink">See headers content</a></td>
         </tr>
         {% endfor %}
     </table>

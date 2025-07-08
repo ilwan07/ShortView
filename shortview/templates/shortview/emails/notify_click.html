@@ -1,5 +1,37 @@
-Link was clicked! <br>
-<br>
-link object: {{ link }} <br>
-<br>
-tracker object: {{ tracker }} <br>
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'shortview/css/emails.css' %}">
+</head>
+<body>
+    <h1>
+        Hi {{ username }}, someone clicked on your link '{{ link.description }}'
+    </h1>
+    <br>
+    <h3>
+        The link '{{ link.description }}' redirects to the domain '{{ link.short_destination }}'.
+    </h3>
+    <h3>
+        The person clicked on the link on {{ tracker.date }} from the following IP address:
+        <a href="https://whatismyipaddress.com/ip/{{ tracker.ip }}">{{ tracker.ip }}</a>
+    </h3>
+    <p>
+        Full destination url: {{ link.destination }}
+    </p>
+    <br>
+    <h3>
+        You can see the link's information and manage it on <a href="{{ link_page }}">this page</a>. <br>
+        Or see the raw detailed data from the person who clicked on <a href="{{ tracker_page }}">this page</a>.
+    </h3>
+    <h3>
+        If you want to change your email preferences, you can modify this link's email preference on the <a href="{{ link_page }}">link's page</a>,
+        or change your global settings on your <a href="{{ preferences_page }}">preferences page</a>.
+    </h3> <br>
+    <p>
+        A question? A suggestion? Contact us at the following address: contact@{{ mail_domain }}
+    </p>
+</body>
+</html>

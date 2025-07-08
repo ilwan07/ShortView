@@ -3,12 +3,13 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse, Http404
 from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.urls import resolve, Resolver404
+from django.urls import resolve, reverse, Resolver404
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 
 from .models import Profile, Link, Tracker
 
@@ -290,6 +291,10 @@ def new_link(request: HttpRequest):
         destination = request.POST["destination"]
         notify = request.POST["notify"]
     elif all(element in request.POST for element in ["days", "hours", "minutes", "seconds"] + required_post_data):
+        days = request.POST["days"]
+        hours = request.POST["hours"]
+        minutes = request.POST["minutes"]
+        seconds = request.POST["seconds"]
         description = request.POST["description"]
         destination = request.POST["destination"]
         notify = request.POST["notify"]
@@ -433,6 +438,9 @@ def redirect_link(request: HttpRequest, link_id: int):
         link_object:Link = Link.objects.get(id=link_id)
     except Link.DoesNotExist:
         raise Http404("link does not exist")
+    # check that the link is active
+    if not link_object.active():
+        raise Http404("link expired")
     # do not log if the link is clicked by the owner
     if request.user.is_authenticated and request.user == link_object.owner:
         return redirect(link_object.destination)
@@ -466,9 +474,23 @@ def redirect_link(request: HttpRequest, link_id: int):
     
     if (notify == 2 and link_object.tracker_set.count() == 1) or notify == 3:  # if notify first click and it is, or always notify
         # send an email notification
-        text_content = render_to_string("shortview/emails/notify_click.txt", context={"link": link_object, "tracker": tracker})
-        html_content = render_to_string("shortview/emails/notify_click.html", context={"link": link_object, "tracker": tracker})
-        email = EmailMultiAlternatives("ShortView | Your link was clicked", text_content, settings.DEFAULT_FROM_EMAIL, [link_object.owner.email])
+        domain = Site.objects.get_current().domain
+        scheme = "https" if getattr(settings, "SECURE_SSL_REDIRECT", False) else "http"
+        base_url = f"{scheme}://{domain}"
+        link_page = f"{base_url}{reverse('view_link', args=[link_object.id])}"
+        tracker_page = f"{base_url}{reverse('view_tracker', args=[link_object.id, tracker.id])}"
+        preferences_page = f"{base_url}{reverse('preferences')}"
+
+        text_content = render_to_string("shortview/emails/notify_click.txt",
+                                        context={"link": link_object, "tracker": tracker, "link_page": link_page,
+                                                 "tracker_page": tracker_page, "preferences_page": preferences_page,
+                                                 "mail_domain": settings.DOMAIN, "username": link_object.owner.username})
+        html_content = render_to_string("shortview/emails/notify_click.html",
+                                        context={"link": link_object, "tracker": tracker, "link_page": link_page,
+                                                 "tracker_page": tracker_page, "preferences_page": preferences_page,
+                                                 "mail_domain": settings.DOMAIN, "username": link_object.owner.username})
+        email = EmailMultiAlternatives(f"ShortView | Your link was clicked | {link_object.description}",
+                                       text_content, settings.DEFAULT_FROM_EMAIL, [link_object.owner.email])
         email.attach_alternative(html_content, "text/html")
         email.send()
     

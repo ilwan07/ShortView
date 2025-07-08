@@ -1,5 +1,16 @@
-Link was clicked!
+Hi {{ username }}, someone clicked on your link '{{ link.description }}'
 
-link object: {{ link }}
+The link '{{ link.description }}' redirects to the domain '{{ link.short_destination }}'.
 
-tracker object: {{ tracker }}
+The person clicked on the link on {{ tracker.date }} from the following IP address: {{ tracker.ip }}
+(Get more information on this IP here: https://whatismyipaddress.com/ip/{{ tracker.ip }})
+
+Full destination url: {{ link.destination }}
+
+You can see the link's information and manage it here: {{ link_page }}
+Or see the raw detailed data from the person who clicked here: {{ tracker_page }}
+
+If you want to change your email preferences, you can modify this link's email preference on its page here: {{ link_page }}
+Or change your global settings on your preferences page here: {{ preferences_page }}
+
+A question? A suggestion? Contact us at the following address: contact@{{ mail_domain }}
