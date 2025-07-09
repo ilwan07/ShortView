@@ -14,6 +14,7 @@ from django.contrib.sites.models import Site
 from .models import Profile, Link, Tracker
 
 from urllib.parse import urlparse
+from threading import Thread
 import datetime
 import json
 import re
@@ -209,6 +210,7 @@ def preferences(request: HttpRequest):
     
     required_post_data = ["notify"]
     never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
+    newsletter = request.POST["newsletter"] == "on" if "newsletter" in request.POST else False
     if never_expire and all(element in request.POST for element in required_post_data):
         days, hours, minutes, seconds = 0, 0, 0, 0
         notify = request.POST["notify"]
@@ -221,6 +223,7 @@ def preferences(request: HttpRequest):
     else:  # missing post data, user want the page
         return render(request, "shortview/preferences.html", {"profile": profile,
                                                               "notify": profile.default_notify_click,
+                                                              "newsletter": profile.receive_newsletters,
                                                               "delete_expired": profile.delete_expired,
                                                               "never_expire": profile.default_lifetime == datetime.timedelta(0),
                                                               "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
@@ -232,6 +235,7 @@ def preferences(request: HttpRequest):
     except ValueError:
         return render(request, "shortview/preferences.html", {"profile": profile,
                                                               "notify": profile.default_notify_click,
+                                                              "newsletter": newsletter,
                                                               "delete_expired": profile.delete_expired,
                                                               "never_expire": profile.default_lifetime == datetime.timedelta(0),
                                                               "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
@@ -242,6 +246,7 @@ def preferences(request: HttpRequest):
     except ValueError:
         return render(request, "shortview/preferences.html", {"profile": profile,
                                                               "notify": profile.default_notify_click,
+                                                              "newsletter": newsletter,
                                                               "delete_expired": profile.delete_expired,
                                                               "never_expire": profile.default_lifetime == datetime.timedelta(0),
                                                               "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
@@ -251,6 +256,7 @@ def preferences(request: HttpRequest):
         if not 1 <= notify <= 3:
             return render(request, "shortview/preferences.html", {"profile": profile,
                                                                 "notify": profile.default_notify_click,
+                                                                "newsletter": newsletter,
                                                                 "delete_expired": profile.delete_expired,
                                                                 "never_expire": profile.default_lifetime == datetime.timedelta(0),
                                                                 "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
@@ -260,14 +266,17 @@ def preferences(request: HttpRequest):
     delete_expired = request.POST["delete_expired"] == "on" if "delete_expired" in request.POST else False
     hide_expired = request.POST["hide_expired"] == "on" if "hide_expired" in request.POST else False
     
+    # modify the profile
     profile:Profile = request.user.profile
     profile.default_notify_click = notify
+    profile.receive_newsletters = newsletter
     profile.default_lifetime = datetime.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
     profile.delete_expired = delete_expired
     profile.hide_expired = hide_expired
     profile.save()
     return render(request, "shortview/preferences.html", {"profile": profile,
                                                           "notify": notify,
+                                                          "newsletter": newsletter,
                                                           "delete_expired": delete_expired,
                                                           "never_expire": never_expire,
                                                           "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
@@ -496,10 +505,10 @@ def redirect_link(request: HttpRequest, link_id: int):
                                         context={"link": link_object, "tracker": tracker, "link_page": link_page,
                                                  "tracker_page": tracker_page, "preferences_page": preferences_page,
                                                  "mail_domain": settings.DOMAIN, "username": link_object.owner.username})
-        email = EmailMultiAlternatives(f"ShortView | Your link was clicked | {link_object.description}",
-                                       text_content, settings.DEFAULT_FROM_EMAIL, [link_object.owner.email])
-        email.attach_alternative(html_content, "text/html")
-        email.send()
+        email_thread = Thread(target=send_email,args=[f"ShortView | Your link was clicked | {link_object.description}",
+                                                           settings.DEFAULT_FROM_EMAIL, link_object.owner.email, text_content, html_content])
+        email_thread.daemon = True
+        email_thread.start()
     
     return redirect(link_object.destination)
 
@@ -529,3 +538,12 @@ def view_tracker(request: HttpRequest, link_id:int, tracker_id:int):
         raise PermissionDenied("You are not the owner of the link associated to this tracker")
     else:
         return HttpResponse(tracker_object.header, content_type="application/json")
+
+
+
+# Below are other function which are not views
+def send_email(subject:str, sender:str, receiver:str, text_content:str, html_content:str=None):
+    email = EmailMultiAlternatives(subject, text_content, sender, [receiver])
+    if html_content is not None:
+        email.attach_alternative(html_content, "text/html")
+    email.send()

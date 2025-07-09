@@ -1,4 +1,4 @@
-var form = document.getElementById("register_form")
+var form = document.getElementById("form_to_submit")
 var modified = false;
 
 function modify() {

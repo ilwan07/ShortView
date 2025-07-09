@@ -10,7 +10,7 @@
 </head>
 <body>
     <a href="{% url 'index' %}">Back to index page</a>
-    <form action="{% url 'register' %}" method="post" id="register_form">
+    <form action="{% url 'register' %}" method="post" id="form_to_submit">
         {% csrf_token %}
         {% if error %}<p><strong>Error: {{ error }}</strong></p>{% endif %}
         <fieldset>

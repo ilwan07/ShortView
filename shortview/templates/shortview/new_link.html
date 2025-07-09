@@ -11,7 +11,7 @@
 <body>
     <a href="{% url 'index' %}">Back to home page</a>
     {% if error %} <p><i>{{ error }}</i></p> {% endif %}
-    <form action="{% url 'new_link' %}" method="post">
+    <form action="{% url 'new_link' %}" method="post" id="form_to_submit">
         {% csrf_token %}
         <fieldset>
             <legend><h3>Create a new tracked shortened link</h3></legend>

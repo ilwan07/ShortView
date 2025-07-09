@@ -12,10 +12,11 @@
     <a href="{% url 'index' %}">Go back to home page</a>
     {% if error %} <p><i>{{ error }}</i></p> {% endif %}
     {% if success %} <p><i>{{ success }}</i></p> {% endif %}
-    <form action="{% url 'preferences' %}" method="post">
+    <form action="{% url 'preferences' %}" method="post" id="form_to_submit">
         {% csrf_token %}
         <fieldset>
             <legend><h3>Change preferences below, then apply</h3></legend>
+            <p><u><b>Global preferences</b></u></p>
             <label>Default time before a link expires (days/hours/minutes/seconds):</label> <br>
             <input onChange="modify()" id="days" type="number" name="days" min="0" max="36500"
                 value="{% if never_expire %}60{% else %}{{ days }}{% endif %}" {% if never_expire %} disabled {% endif %}>
@@ -36,14 +37,17 @@
             <label for="hide_expired">Hide expired tracked links:</label>
             <input onChange="modify()" id="hide_expired" type="checkbox" name="hide_expired"
                 {% if profile.hide_expired or profile.delete_expired %} checked {% endif %} {% if profile.delete_expired %} disabled {% endif %}>
-            <br> <br>
 
+            <p><u><b>Email preferences</b></u></p>
             <label for="notify">Default email notification mode:</label>
             <select onChange="modify()" id="notify" name="notify">
                 <option value="1" {% if notify == 1 %} selected {% endif %}>Never notify</option>
                 <option value="2" {% if notify == 2 %} selected {% endif %}>Notify first click</option>
                 <option value="3" {% if notify == 3 %} selected {% endif %}>Notify each click</option>
             </select>
+            <br>
+            <label for="newsletter">Receive email newsletters:</label>
+            <input onChange="modify()" id="newsletter" type="checkbox" name="newsletter" {% if newsletter %} checked {% endif %}>
         </fieldset>
         <input class="apply" id="applypreferences" type="submit" value="Apply preferences" onclick="let_confirm()">
     </form>

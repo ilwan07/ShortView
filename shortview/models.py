@@ -22,6 +22,7 @@ class Profile(models.Model):
     hide_expired = models.BooleanField("hide expired links", default=True)
     default_lifetime = models.DurationField("default link life duration", default=datetime.timedelta(0))
     default_notify_click = models.IntegerField("send mail on link click", choices=NOTIFY_CLICK_CHOICES, default=1)
+    receive_newsletters = models.BooleanField("receive the newsletters", default=True)
 
     def __str__(self):
         return str(f"{self.user}'s profile")
