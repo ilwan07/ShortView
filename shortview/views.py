@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, Http404
-from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import resolve, reverse, Resolver404
 from django.utils import timezone
@@ -12,6 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 
 from .models import Profile, Link, Tracker
+from . import jobs, tools
 
 from urllib.parse import urlparse
 from threading import Thread
@@ -20,6 +20,7 @@ import json
 import re
 
 # Create your views here.
+
 def index(request: HttpRequest):
     """
     the view to display the index page, or the home page if the user is logged in
@@ -27,34 +28,25 @@ def index(request: HttpRequest):
     if not request.user.is_authenticated:
         return render(request, "shortview/index.html")
     
-    else:
-        # make sure the user has a profile
-        if not Profile.objects.filter(user=request.user).exists():
-            profile = Profile(user=request.user)
-            profile.save()
-        
-        # sort links
-        links = request.user.link_set.all().order_by("-date")
-        active, expired = [], []
-        for link in links:
-            if not link.date > timezone.now():
-                if link.active():
-                    active.append(link)
-                else:
-                    expired.append(link)
-        
-        # delete expired links if necessary
-        profile:Profile = request.user.profile
-        if profile.delete_expired:
-            for link in expired:
-                link.delete()
-            expired = []
-        
-        sorted_links = active + expired
-        return render(request, "shortview/home.html", {"user": request.user,
-                                                      "profile": request.user.profile,
-                                                      "links": sorted_links,
-                                                      })
+    # make sure some jobs are done for this user
+    jobs.check_profiles(request.user)
+    jobs.delete_expired_links(request.user)
+
+    # sort links
+    links = request.user.link_set.all().order_by("-date")
+    active, expired = [], []
+    for link in links:
+        if not link.date > timezone.now():
+            if link.active():
+                active.append(link)
+            else:
+                expired.append(link)
+    
+    sorted_links = active + expired
+    return render(request, "shortview/home.html", {"user": request.user,
+                                                   "profile": request.user.profile,
+                                                   "links": sorted_links,
+                                                   })
 
 
 def register(request: HttpRequest):
@@ -196,10 +188,8 @@ def preferences(request: HttpRequest):
     if not request.user.is_authenticated:
         return redirect("loginpage")
     
-    # make sure the user has a profile
-    if not Profile.objects.filter(user=request.user).exists():
-        profile = Profile(user=request.user)
-        profile.save()
+    # make sure some jobs are done for this user
+    jobs.check_profiles(request.user)
     
     profile:Profile = request.user.profile
 
@@ -290,6 +280,9 @@ def new_link(request: HttpRequest):
     """
     if not request.user.is_authenticated:
         return redirect("loginpage")
+    
+    # make sure some jobs are done for this user
+    jobs.check_profiles(request.user)
     
     profile:Profile = request.user.profile
 
@@ -382,6 +375,11 @@ def view_link(request: HttpRequest, link_id: int):
     """
     if not request.user.is_authenticated:
         return redirect("loginpage")
+    
+    # make sure some jobs are done for this user
+    jobs.check_profiles(request.user)
+    jobs.delete_expired_links(request.user)
+
     # verify that the link exists
     try:
         link_object = Link.objects.get(id=link_id)
@@ -401,6 +399,12 @@ def delete_link(request: HttpRequest, link_id: int):
     """
     delete the link if the correct post data is given and the user owns it
     """
+    if not request.user.is_authenticated:
+        return redirect("view_link", link_id)
+    
+    # make sure some jobs are done for this user
+    jobs.delete_expired_links(request.user)
+
     try:
         link_object:Link = Link.objects.get(id=link_id)
     except Link.DoesNotExist:
@@ -421,6 +425,13 @@ def link_change_notify(request: HttpRequest, link_id: int):
     """
     change the notification preference for a specific link
     """
+    if not request.user.is_authenticated:
+        return redirect("view_link", link_id)
+    
+    # make sure some jobs are done for this user
+    jobs.check_profiles(request.user)
+    jobs.delete_expired_links(request.user)
+
     try:
         link_object:Link = Link.objects.get(id=link_id)
     except Link.DoesNotExist:
@@ -505,7 +516,7 @@ def redirect_link(request: HttpRequest, link_id: int):
                                         context={"link": link_object, "tracker": tracker, "link_page": link_page,
                                                  "tracker_page": tracker_page, "preferences_page": preferences_page,
                                                  "mail_domain": settings.DOMAIN, "username": link_object.owner.username})
-        email_thread = Thread(target=send_email,args=[f"ShortView | Your link was clicked | {link_object.description}",
+        email_thread = Thread(target=tools.send_email,args=[f"ShortView | Your link was clicked | {link_object.description}",
                                                            settings.DEFAULT_FROM_EMAIL, link_object.owner.email, text_content, html_content])
         email_thread.daemon = True
         email_thread.start()
@@ -520,6 +531,10 @@ def view_tracker(request: HttpRequest, link_id:int, tracker_id:int):
     """
     if not request.user.is_authenticated:
         return redirect("loginpage")
+    
+    # make sure some jobs are done for this user
+    jobs.delete_expired_links(request.user)
+
     # verify that the link exists
     try:
         link_object = Link.objects.get(id=link_id)
@@ -538,12 +553,3 @@ def view_tracker(request: HttpRequest, link_id:int, tracker_id:int):
         raise PermissionDenied("You are not the owner of the link associated to this tracker")
     else:
         return HttpResponse(tracker_object.header, content_type="application/json")
-
-
-
-# Below are other function which are not views
-def send_email(subject:str, sender:str, receiver:str, text_content:str, html_content:str=None):
-    email = EmailMultiAlternatives(subject, text_content, sender, [receiver])
-    if html_content is not None:
-        email.attach_alternative(html_content, "text/html")
-    email.send()
