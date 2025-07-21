@@ -1,4 +1,4 @@
-
+from django.shortcuts import render
 from django.http import HttpRequest
 from django.core.mail import EmailMultiAlternatives
 
@@ -25,3 +25,14 @@ def regular_jobs(func):
         return func(*args, **kwargs)
     
     return wrapper
+
+def render_error(request: HttpRequest, template:str, error:str, post_args:tuple, sup_context:dict=None):
+    """
+    returns the render of a page with an error message, and with the given post arguments to refill the form
+    """
+    context = {"error": error}
+    for arg in post_args:
+        context[arg] = request.POST.get(arg, "")
+    if sup_context is not None:
+        context.update(sup_context)
+    return render(request, template, context)

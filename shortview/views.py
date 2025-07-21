@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 
 from .models import Profile, Link, Tracker
-from . import jobs, tools
+from .tools import regular_jobs, send_email, render_error
 
 from urllib.parse import urlparse
 from threading import Thread
@@ -22,7 +22,7 @@ import re
 
 # Create your views here.
 
-@tools.regular_jobs
+@regular_jobs
 def index(request: HttpRequest):
     """
     the view to display the index page, or the home page if the user is logged in
@@ -54,56 +54,54 @@ def register(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect("index")
     
-    if all(element in request.POST for element in ["username", "email", "password", "password_confirm"]):
+    if request.method == "GET":
+        return render(request, "shortview/register.html")
+    
+    # else we have POST data, so we try to register the user
+    try:
         username = request.POST["username"]
         email = request.POST["email"].lower()  # emails are case insensitive, so standarize everything to lowercase
         password = request.POST["password"]
         password_confirm = request.POST["password_confirm"]
-    else:
-        # if some POST data hasn't been received (the user wants the register page)
-        return render(request, "shortview/register.html")
-    
-    # if POST data has been received to try a registration
+    except KeyError:
+        return render_error(request, "shortview/register.html",
+                            "You need to fill in all the fields to register.",
+                            ("username", "email"))
+
     # check username validity
     if not re.fullmatch(r"^[A-Za-z0-9_.+-]{3,50}$", username):
-        return render(request, "shortview/register.html", {"error": "The username format is invalid, it must be between 3 and 50 characters, can only contain letters, numbers, and these symbols:  _ + . -",
-                                                          "username": username,
-                                                          "email": email,
-                                                          })
+        return render_error(request, "shortview/register.html",
+                            "The username format is invalid, it must be between 3 and 50 characters, can only contain letters, numbers, and these symbols:  _ + . -",
+                            ("username", "email"))
     if User.objects.filter(username=username).exists():
-        return render(request, "shortview/register.html", {"error": "This username already exists, try another one, or use the log in page if your account already exists.",
-                                                          "username": username,
-                                                          "email": email,
-                                                          })
+        return render_error(request, "shortview/register.html",
+                            "This username already exists, try another one, or use the log in page if your account already exists.",
+                            ("username", "email"))
     
     # check email validity
     if not re.fullmatch(r"^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$", email):
-        return render(request, "shortview/register.html", {"error": "The email format is invalid, please enter a valid email address.",
-                                                          "username": username,
-                                                          "email": email,
-                                                          })
+        return render_error(request, "shortview/register.html",
+                            "The email format is invalid, please enter a valid email address.",
+                            ("username", "email"))
     if User.objects.filter(email=email).exists():
-        return render(request, "shortview/register.html", {"error": "This email address is already in use, try logging in with it.",
-                                                          "username": username,
-                                                          "email": email,
-                                                          })
+        return render_error(request, "shortview/register.html",
+                            "This email address is already in use, try logging in with it.",
+                            ("username", "email"))
     
     # check basic password validity
     if password != password_confirm:
-        return render(request, "shortview/register.html", {"error": "The two passwords you entered are different, you need to enter the same password twice.",
-                                                          "username": username,
-                                                          "email": email,
-                                                          })
+        return render_error(request, "shortview/register.html",
+                            "The two passwords you entered are different, you need to enter the same password twice.",
+                            ("username", "email"))
     
     # try registering with the given credentials
     try:
         validate_password(password)
     except ValidationError as e:
         # if the password is not valid, return the error message(s)
-        return render(request, "shortview/register.html", {"error": f"The password you entered is not valid. {' '.join(e.messages)}",
-                                                          "username": username,
-                                                          "email": email,
-                                                          })
+        return render_error(request, "shortview/register.html",
+                            f"The password you entered is not valid. {' '.join(e.messages)}",
+                            ("username", "email"))
     else:
         user = User.objects.create_user(username, email, password)
         profile = Profile(user=user)
@@ -119,14 +117,18 @@ def loginpage(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect("index")
     
-    if all(element in request.POST for element in ["identifier", "password"]):
-        identifier = request.POST["identifier"]
-        password = request.POST["password"]
-    else:
-        # if some POST data hasn't been received (the user wants the login page)
+    if request.method == "GET":
         return render(request, "shortview/login.html")
     
-    # if POST data has been received to try a login
+    # else we have POST data, so we try to log the user in
+    try:
+        identifier = request.POST["identifier"]
+        password = request.POST["password"]
+    except KeyError:
+        return render_error(request, "shortview/login.html",
+                            "You need to fill in all the fields to log in.",
+                            ("identifier",))
+    
     login_type = "email" if "@" in identifier else "username"
     try:
         if login_type == "email":
@@ -136,22 +138,22 @@ def loginpage(request: HttpRequest):
             user_object = User.objects.get(username=identifier)
     except User.DoesNotExist:
         # if the identifier is wrong
-        return render(request, "shortview/login.html", {"error": f"The {login_type} you entered is invalid. Make sure the {login_type} is correct, or use the sign in button to create a new account.",
-                                                        "identifier": identifier,
-                                                        })
+        return render_error(request, "shortview/login.html",
+                            f"The {login_type} you entered is invalid. Make sure the {login_type} is correct, or use the sign in button to create a new account.",
+                            ("identifier",))
     except User.MultipleObjectsReturned:
         # if there (somehow) are multiple users possible
-        return render(request, "shortview/login.html", {"error": f"Multiple different users are using this {login_type}. This is an issue, please contact the developper to fix this.",
-                                                        "identifier": identifier,
-                                                        })
+        return render_error(request, "shortview/login.html",
+                            f"Multiple different users are using this {login_type}. This is an issue, please contact the developper to fix this.",
+                            ("identifier",))
     
     # log the user in if everything is ok
     username = user_object.username
     user = authenticate(request, username=username, password=password)
     if user is None:
-        return render(request, "shortview/login.html", {"error": "The credentials are invalid, make sure that the password is correct.",
-                                                        "identifier": identifier,
-                                                        })
+        return render_error(request, "shortview/login.html",
+                            "The credentials are invalid, make sure that the password is correct.",
+                            ("identifier",))
     else:
         login(request, user)
         if "next" in request.POST:
@@ -183,7 +185,7 @@ def conditions(request: HttpRequest):
 
 
 @login_required
-@tools.regular_jobs
+@regular_jobs
 def preferences(request: HttpRequest):
     """
     the view to let the user change the preferences and set the new preferences using the POST data
@@ -194,7 +196,17 @@ def preferences(request: HttpRequest):
     default_hours = default_lifetime.seconds // 3600
     default_minutes = (default_lifetime.seconds % 3600) // 60
     default_seconds = default_lifetime.seconds % 60
+
+    if request.method == "GET":
+        # the user wants the page
+        return render(request, "shortview/preferences.html",
+                      {"profile": profile, "notify": profile.default_notify_click,
+                       "newsletter": profile.receive_newsletters, "delete_expired": profile.delete_expired,
+                       "never_expire": profile.default_lifetime == datetime.timedelta(0),
+                       "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
+                      })
     
+    # else we manage the POST data
     required_post_data = ["notify"]
     never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
     newsletter = request.POST["newsletter"] == "on" if "newsletter" in request.POST else False
@@ -207,48 +219,35 @@ def preferences(request: HttpRequest):
         minutes = request.POST["minutes"]
         seconds = request.POST["seconds"]
         notify = request.POST["notify"]
-    else:  # missing post data, user want the page
-        return render(request, "shortview/preferences.html", {"profile": profile,
-                                                              "notify": profile.default_notify_click,
-                                                              "newsletter": profile.receive_newsletters,
-                                                              "delete_expired": profile.delete_expired,
-                                                              "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                              "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
-                                                              })
-    
+    else:
+        return render_error(request, "shortview/preferenes.html",
+                            "Some data is missing. Please fill the entire form.",
+                            ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
+                            {"profile": profile})
+        
     # continue handling post data
     try:
         days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
     except ValueError:
-        return render(request, "shortview/preferences.html", {"profile": profile,
-                                                              "notify": profile.default_notify_click,
-                                                              "newsletter": newsletter,
-                                                              "delete_expired": profile.delete_expired,
-                                                              "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                              "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
-                                                              "error": "Error: You tried to set the lifetime value without using integers.",
-                                                              })
+        return render_error(request, "shortview/preferenes.html",
+                            "You tried to set the lifetime value without using integers.",
+                            ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
+                            {"profile": profile})
+
     try:
         notify = int(notify)
     except ValueError:
-        return render(request, "shortview/preferences.html", {"profile": profile,
-                                                              "notify": profile.default_notify_click,
-                                                              "newsletter": newsletter,
-                                                              "delete_expired": profile.delete_expired,
-                                                              "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                              "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                              "error": "Error: The value for the notification preference is invalid",
-                                                              })
+        return render_error(request, "shortview/preferenes.html",
+                            "The value for the notification preference is invalid",
+                            ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
+                            {"profile": profile})
+    
     else:
         if not 1 <= notify <= 3:
-            return render(request, "shortview/preferences.html", {"profile": profile,
-                                                                "notify": profile.default_notify_click,
-                                                                "newsletter": newsletter,
-                                                                "delete_expired": profile.delete_expired,
-                                                                "never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                                "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                                "error": "Error: The value for the notification preference is invalid",
-                                                                })
+            return render_error(request, "shortview/preferenes.html",
+                                "The value for the notification preference is invalid",
+                                ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
+                                {"profile": profile})
     
     delete_expired = request.POST["delete_expired"] == "on" if "delete_expired" in request.POST else False
     hide_expired = request.POST["hide_expired"] == "on" if "hide_expired" in request.POST else False
@@ -261,18 +260,16 @@ def preferences(request: HttpRequest):
     profile.delete_expired = delete_expired
     profile.hide_expired = hide_expired
     profile.save()
-    return render(request, "shortview/preferences.html", {"profile": profile,
-                                                          "notify": notify,
-                                                          "newsletter": newsletter,
-                                                          "delete_expired": delete_expired,
-                                                          "never_expire": never_expire,
-                                                          "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                          "success": "Successfully applied the new preferences!",
-                                                          })
+    return render(request, "shortview/preferences.html",
+                  {"profile": profile, "notify": notify, "newsletter": newsletter,
+                   "delete_expired": delete_expired, "never_expire": never_expire,
+                   "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
+                   "success": "Successfully applied the new preferences!",
+                  })
 
 
 @login_required
-@tools.regular_jobs
+@regular_jobs
 def new_link(request: HttpRequest):
     """
     allow the user to create a new tracked link
@@ -283,8 +280,15 @@ def new_link(request: HttpRequest):
     default_hours = default_lifetime.seconds // 3600
     default_minutes = (default_lifetime.seconds % 3600) // 60
     default_seconds = default_lifetime.seconds % 60
-
-    # if we have the post data, then we create the link, else we send the page
+    
+    if request.method == "GET":
+        # give the page to the user
+        return render(request, "shortview/new_link.html", {"never_expire": profile.default_lifetime == datetime.timedelta(0),
+                                                           "notify": 0,
+                                                           "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
+                                                           })
+    
+    # else we handle the POST data
     never_expire = request.POST["never_expire"] == "on" if "never_expire" in request.POST else False
     required_post_data = ["description", "destination", "notify"]
     if never_expire and all(element in request.POST for element in required_post_data):
@@ -300,43 +304,30 @@ def new_link(request: HttpRequest):
         description = request.POST["description"]
         destination = request.POST["destination"]
         notify = request.POST["notify"]
-    
-    else:  # missing post data, user want the page
-        return render(request, "shortview/new_link.html", {"never_expire": profile.default_lifetime == datetime.timedelta(0),
-                                                           "notify": 0,
-                                                           "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
-                                                           })
-    
-    # continue handling post data
+    else:
+        return render_error(request, "shortview/new_link.html",
+                            "Some data is missing. Please fill the entire form",
+                            ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
+
     try:
         days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
     except ValueError:
-        return render(request, "shortview/new_link.html", {"description": description,
-                                                           "destination": destination,
-                                                           "notify": 0,
-                                                           "never_expire": never_expire,
-                                                           "days": default_lifetime.days, "hours": default_hours, "minutes": default_minutes, "seconds": default_seconds,
-                                                           "error": "Error: You tried to set the lifetime value without using integers.",
-                                                           })
+        return render_error(request, "shortview/new_link.html",
+                            "You tried to set the lifetime value without using integers.",
+                            ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
+    
     try:
         notify = int(notify)
     except ValueError:
-        return render(request, "shortview/new_link.html", {"description": description,
-                                                           "destination": destination,
-                                                           "notify": 0,
-                                                           "never_expire": never_expire,
-                                                           "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                           "error": "Error: You tried to set the lifetime value without using integers.",
-                                                           })
+        return render_error(request, "shortview/new_link.html",
+                            "You tried to set the lifetime value without using integers.",
+                            ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
+    
     else:
         if not 0 <= notify <= 3:
-            return render(request, "shortview/new_link.html", {"description": description,
-                                                               "destination": destination,
-                                                               "notify": 0,
-                                                               "never_expire": never_expire,
-                                                               "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                               "error": "Error: You tried to set the lifetime value without using integers.",
-                                                               })
+            return render_error(request, "shortview/new_link.html",
+                                "You tried to set the lifetime value without using integers.",
+                                ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
 
     # check that the destination is not another redirection to avoid loops
     destination_path = urlparse(destination).path
@@ -346,13 +337,9 @@ def new_link(request: HttpRequest):
         pass
     else:
         if pattern.url_name == "redirect_link":
-            return render(request, "shortview/new_link.html", {"description": description,
-                                                               "destination": destination,
-                                                               "notify": profile.default_notify_click,
-                                                               "never_expire": never_expire,
-                                                               "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                                                               "error": "Error: You cannot set another tracked url as the destination.",
-                                                               })
+            return render_error(request, "shortview/new_link.html",
+                                "You cannot set another tracked url as the destination.",
+                                ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
     
     # create the new link
     link:Link = Link(owner=request.user, description=description, date=timezone.now(), destination=destination, notify_click=notify,
@@ -363,71 +350,72 @@ def new_link(request: HttpRequest):
 
 
 @login_required
-@tools.regular_jobs
+@regular_jobs
 def view_link(request: HttpRequest, link_id: int):
     """
     displays info about a tracked link, if it belongs to the active user
     """
-    # verify that the link exists
-    try:
-        link_object = Link.objects.get(id=link_id)
-    except Link.DoesNotExist:
-        raise Http404("Link does not exist")
+    # get the link if it exists
+    link_object = get_object_or_404(Link, id=link_id)
+    
+    # check that the user owns the link, then display the page
+    if link_object.owner == request.user:
+        return render(request, "shortview/view_link.html",
+                        {"link": link_object, "trackers": link_object.tracker_set.all()})
     else:
-        # check that the user owns the link, then display the page
-        if link_object.owner == request.user:
-            return render(request, "shortview/view_link.html", {"link": link_object,
-                                                                "trackers": link_object.tracker_set.all(),
-                                                                })
-        else:
-            raise PermissionDenied("You are not the owner of this link")
+        raise PermissionDenied("You are not the owner of this link")
 
 
 @login_required
-@tools.regular_jobs
+@regular_jobs
 def delete_link(request: HttpRequest, link_id: int):
     """
     delete the link if the correct post data is given and the user owns it
     """
+    ok = True
     try:
         link_object:Link = Link.objects.get(id=link_id)
     except Link.DoesNotExist:
-        return redirect("view_link", link_id)
+        ok = False
 
-    if not "confirm_delete" in request.POST:
-        return redirect("view_link", link_id)
+    if not "confirm_delete" in request.POST or request.user != link_object.owner:
+        ok = False
     
-    if not (request.user.is_authenticated and request.user == link_object.owner):
-        return redirect("view_link", link_id)
+    if not ok:
+        return redirect("view_link", link_id)  # let the link view page handle the situation
     
-    # delete the link object
+    # if everything is ok, then delete the link object
     link_object.delete()
     return redirect("index")
 
 
 @login_required
-@tools.regular_jobs
+@regular_jobs
 def link_change_notify(request: HttpRequest, link_id: int):
     """
     change the notification preference for a specific link
     """
+    ok = True
     try:
         link_object:Link = Link.objects.get(id=link_id)
     except Link.DoesNotExist:
-        return redirect("view_link", link_id)
+        ok = False
 
-    if not "notify" in request.POST:
-        return redirect("view_link", link_id)
+    if "notify" not in request.POST or request.user != link_object.owner:
+        ok = False
     
-    if not (request.user.is_authenticated and request.user == link_object.owner):
+    if not ok:
         return redirect("view_link", link_id)
     
     notify = request.POST["notify"]
     try:
         notify = int(notify)
     except ValueError:
-        return redirect("view_link", link_id)
+        ok = False
     if not (0 <= notify <= 3):
+        ok = False
+    
+    if not ok:
         return redirect("view_link", link_id)
     
     link_object.notify_click = notify
@@ -439,11 +427,9 @@ def redirect_link(request: HttpRequest, link_id: int):
     """
     log the request by creating a tracker and serve the destination page to the client
     """
-    # check that the link exists
-    try:
-        link_object:Link = Link.objects.get(id=link_id)
-    except Link.DoesNotExist:
-        raise Http404("link does not exist")
+    # get the link if it exists
+    link_object:Link = get_object_or_404(Link, id=link_id)
+
     # check that the link is active
     if not link_object.active():
         raise Http404("link expired")
@@ -495,7 +481,7 @@ def redirect_link(request: HttpRequest, link_id: int):
                                         context={"link": link_object, "tracker": tracker, "link_page": link_page,
                                                  "tracker_page": tracker_page, "preferences_page": preferences_page,
                                                  "mail_domain": settings.DOMAIN, "username": link_object.owner.username})
-        email_thread = Thread(target=tools.send_email,args=[f"ShortView | Your link was clicked | {link_object.description}",
+        email_thread = Thread(target=send_email,args=[f"ShortView | Your link was clicked | {link_object.description}",
                                                            settings.DEFAULT_FROM_EMAIL, link_object.owner.email, text_content, html_content])
         email_thread.daemon = True
         email_thread.start()
@@ -504,22 +490,18 @@ def redirect_link(request: HttpRequest, link_id: int):
 
 
 @login_required
-@tools.regular_jobs
+@regular_jobs
 def view_tracker(request: HttpRequest, link_id:int, tracker_id:int):
     """
     view the full header of a request to the tracked link, also verifies if the page url is consistent
     the used page url contains the link id for the sake of easy navigation for the user
     """
-    # verify that the link exists
-    try:
-        link_object = Link.objects.get(id=link_id)
-    except Link.DoesNotExist:
-        raise Http404("Link does not exist")
-    # verify that the tracker exists
-    try:
-        tracker_object = Tracker.objects.get(id=tracker_id)
-    except Tracker.DoesNotExist:
-        raise Http404("Tracker does not exist")
+    # get the link if it exists
+    link_object:Link = get_object_or_404(Link, id=link_id)
+
+    # get the tracker if it exists
+    tracker_object:Tracker = get_object_or_404(Tracker, id=tracker_id)
+    
     # verify that the tracker belongs to the link
     if tracker_object not in link_object.tracker_set.all():
         raise Http404("The tracker is not from the given link")

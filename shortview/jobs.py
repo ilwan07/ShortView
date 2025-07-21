@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from .models import Profile, Link
+from .models import Profile
 
 from threading import Thread
 import os
@@ -50,9 +50,7 @@ def check_profiles(user:User=None):
         affected_users = [affected for affected in User.objects.all()]
     
     for affected in affected_users:
-        try:
-            profile = affected.profile
-        except Profile.DoesNotExist:
+        if not hasattr(affected, "profile"):
             profile = Profile(user=affected)
             profile.save()
 
