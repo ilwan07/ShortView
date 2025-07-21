@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, Http404
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -6,6 +6,7 @@ from django.urls import resolve, reverse, Resolver404
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
@@ -21,16 +22,13 @@ import re
 
 # Create your views here.
 
+@tools.regular_jobs
 def index(request: HttpRequest):
     """
     the view to display the index page, or the home page if the user is logged in
     """
     if not request.user.is_authenticated:
         return render(request, "shortview/index.html")
-    
-    # make sure some jobs are done for this user
-    jobs.check_profiles(request.user)
-    jobs.delete_expired_links(request.user)
 
     # sort links
     links = request.user.link_set.all().order_by("-date")
@@ -150,13 +148,16 @@ def loginpage(request: HttpRequest):
     # log the user in if everything is ok
     username = user_object.username
     user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-        return redirect("index")
-    else:
+    if user is None:
         return render(request, "shortview/login.html", {"error": "The credentials are invalid, make sure that the password is correct.",
                                                         "identifier": identifier,
                                                         })
+    else:
+        login(request, user)
+        if "next" in request.POST:
+            return redirect(request.POST["next"])
+        else:
+            return redirect("index")
 
 
 def logoutpage(request: HttpRequest):
@@ -181,16 +182,12 @@ def conditions(request: HttpRequest):
     return render(request, "shortview/info/conditions.html")
 
 
+@login_required
+@tools.regular_jobs
 def preferences(request: HttpRequest):
     """
     the view to let the user change the preferences and set the new preferences using the POST data
-    """
-    if not request.user.is_authenticated:
-        return redirect("loginpage")
-    
-    # make sure some jobs are done for this user
-    jobs.check_profiles(request.user)
-    
+    """    
     profile:Profile = request.user.profile
 
     default_lifetime:datetime.timedelta = profile.default_lifetime
@@ -274,16 +271,12 @@ def preferences(request: HttpRequest):
                                                           })
 
 
+@login_required
+@tools.regular_jobs
 def new_link(request: HttpRequest):
     """
     allow the user to create a new tracked link
-    """
-    if not request.user.is_authenticated:
-        return redirect("loginpage")
-    
-    # make sure some jobs are done for this user
-    jobs.check_profiles(request.user)
-    
+    """    
     profile:Profile = request.user.profile
 
     default_lifetime:datetime.timedelta = profile.default_lifetime
@@ -369,17 +362,12 @@ def new_link(request: HttpRequest):
     return redirect("view_link", link.id)
 
 
+@login_required
+@tools.regular_jobs
 def view_link(request: HttpRequest, link_id: int):
     """
     displays info about a tracked link, if it belongs to the active user
     """
-    if not request.user.is_authenticated:
-        return redirect("loginpage")
-    
-    # make sure some jobs are done for this user
-    jobs.check_profiles(request.user)
-    jobs.delete_expired_links(request.user)
-
     # verify that the link exists
     try:
         link_object = Link.objects.get(id=link_id)
@@ -395,16 +383,12 @@ def view_link(request: HttpRequest, link_id: int):
             raise PermissionDenied("You are not the owner of this link")
 
 
+@login_required
+@tools.regular_jobs
 def delete_link(request: HttpRequest, link_id: int):
     """
     delete the link if the correct post data is given and the user owns it
     """
-    if not request.user.is_authenticated:
-        return redirect("view_link", link_id)
-    
-    # make sure some jobs are done for this user
-    jobs.delete_expired_links(request.user)
-
     try:
         link_object:Link = Link.objects.get(id=link_id)
     except Link.DoesNotExist:
@@ -421,17 +405,12 @@ def delete_link(request: HttpRequest, link_id: int):
     return redirect("index")
 
 
+@login_required
+@tools.regular_jobs
 def link_change_notify(request: HttpRequest, link_id: int):
     """
     change the notification preference for a specific link
     """
-    if not request.user.is_authenticated:
-        return redirect("view_link", link_id)
-    
-    # make sure some jobs are done for this user
-    jobs.check_profiles(request.user)
-    jobs.delete_expired_links(request.user)
-
     try:
         link_object:Link = Link.objects.get(id=link_id)
     except Link.DoesNotExist:
@@ -524,17 +503,13 @@ def redirect_link(request: HttpRequest, link_id: int):
     return redirect(link_object.destination)
 
 
+@login_required
+@tools.regular_jobs
 def view_tracker(request: HttpRequest, link_id:int, tracker_id:int):
     """
     view the full header of a request to the tracked link, also verifies if the page url is consistent
     the used page url contains the link id for the sake of easy navigation for the user
     """
-    if not request.user.is_authenticated:
-        return redirect("loginpage")
-    
-    # make sure some jobs are done for this user
-    jobs.delete_expired_links(request.user)
-
     # verify that the link exists
     try:
         link_object = Link.objects.get(id=link_id)

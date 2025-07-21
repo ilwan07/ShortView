@@ -23,7 +23,7 @@ def jobs():
         except Exception as e:
             print(f"\n/!\\ Error in job scheduler: {e}:\n{traceback.format_exc()}")
         finally:
-            time.sleep(0.01)
+            time.sleep(1)
 
 
 def start_job_scheduler():

@@ -1,2 +1,2 @@
 set the ip of a person to a conventional name in the preferences
-force the user to verify email?
+force the user to verify email

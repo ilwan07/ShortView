@@ -143,6 +143,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email configuration
+#TODO: use ZeptoMail instead of Zoho mail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.zoho.eu'
 EMAIL_PORT = 587
@@ -155,3 +156,6 @@ DEFAULT_FROM_EMAIL = 'shortview@ilwan.woah.pw'
 
 # Site ID
 SITE_ID = 1
+
+# Some URLs
+LOGIN_URL = 'loginpage'

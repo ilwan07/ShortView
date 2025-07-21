@@ -13,6 +13,7 @@
     <form action="{% url 'loginpage' %}" method="post">
         {% csrf_token %}
         {% if error %}<p><strong>Error: {{ error }}</strong></p>{% endif %}
+        {% if "next" in request.GET %}<input type="hidden" name="next" value="{{request.GET.next}}">{% endif %}
         <fieldset>
             <legend><h1>Log in using your credentials</h1></legend>
             <label>Username/Email:</label>
