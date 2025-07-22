@@ -15,7 +15,7 @@
     <form action="{% url 'preferences' %}" method="post" id="form_to_submit">
         {% csrf_token %}
         <fieldset>
-            <legend><h3>Change preferences below, then apply</h3></legend>
+            <legend><h3>Change your settings below, then hit apply</h3></legend>
             <p><u><b>Global preferences</b></u></p>
             <label>Default time before a link expires (days/hours/minutes/seconds):</label> <br>
             <input onChange="modify()" id="days" type="number" name="days" min="0" max="36500"

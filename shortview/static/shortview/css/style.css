@@ -20,7 +20,7 @@ ul.links li.pending {
 
 ul.links li.inactive {
   text-decoration: line-through;
-  color: grey !important;
+  color: gray !important;
 }
 
 input[type="submit"] {
@@ -36,7 +36,7 @@ button.urlbutton {
   background: transparent;
   border: none;
   font-size: 1rem;
-  color: darkslategrey;
+  color: darkslategray;
 }
 
 button.deletebutton {
@@ -50,15 +50,15 @@ table.trackers {
 }
 
 table.trackers th, table.trackers tr, table.trackers td {
-  border: 1px solid grey;
+  border: 1px solid gray;
 }
 
 a.headerlink {
-  color: darkslategrey;
+  color: darkslategray;
 }
 
 small#copyconfirm {
-  color: darkslategrey;
+  color: darkslategray;
 }
 
 button#copylink {
@@ -85,4 +85,44 @@ a.biglink {
 
 input.apply {
   font-size: 1.2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #10101a;
+    color: white;
+  }
+
+  a {
+    color: #c0d2ff;
+  }
+
+  ul.links li.clicked {
+    color: lightgreen;
+  }
+
+  ul.links li.pending {
+    color: #ffc861;
+  }
+
+  ul.links li.inactive {
+    text-decoration: line-through;
+    color: lightgray !important;
+  }
+
+  button.urlbutton {
+    color: #b6bebe;
+  }
+
+  button.deletebutton {
+    color: #ff3131 !important;
+  }
+
+  a.headerlink {
+    color: #b6bebe;
+  }
+
+  small#copyconfirm {
+    color: #b6bebe;
+  }
 }
