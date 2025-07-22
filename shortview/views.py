@@ -3,6 +3,7 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse, Http404
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import resolve, reverse, Resolver404
+from django.utils.translation import gettext as _
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
@@ -238,14 +239,14 @@ def preferences(request: HttpRequest):
         notify = int(notify)
     except ValueError:
         return render_error(request, "shortview/preferenes.html",
-                            "The value for the notification preference is invalid",
+                            "The value for the notification preference is invalid.",
                             ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
                             {"profile": profile})
     
     else:
         if not 1 <= notify <= 3:
             return render_error(request, "shortview/preferenes.html",
-                                "The value for the notification preference is invalid",
+                                "The value for the notification preference is invalid.",
                                 ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
                                 {"profile": profile})
     
@@ -264,7 +265,7 @@ def preferences(request: HttpRequest):
                   {"profile": profile, "notify": notify, "newsletter": newsletter,
                    "delete_expired": delete_expired, "never_expire": never_expire,
                    "days": days, "hours": hours, "minutes": minutes, "seconds": seconds,
-                   "success": "Successfully applied the new preferences!",
+                   "success": _("Successfully applied the new preferences!"),
                   })
 
 

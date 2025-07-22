@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +10,7 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
-    <a href="{% url 'index' %}">Go back to home page</a>
+    <a href="{% url 'index' %}">{% trans "Go back to home page" %}</a>
     {% if error %} <p><i>Error: {{ error }}</i></p> {% endif %}
     {% if success %} <p><i>{{ success }}</i></p> {% endif %}
     <form action="{% url 'preferences' %}" method="post" id="form_to_submit">
