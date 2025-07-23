@@ -10,13 +10,13 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
-    <a href="{% url 'index' %}">{% trans "Go back to home page" %}</a>
+    <a href="{% url 'index' %}">{% trans "Back to home page" %}</a>
     {% if error %} <p><i>Error: {{ error }}</i></p> {% endif %}
     {% if success %} <p><i>{{ success }}</i></p> {% endif %}
     <form action="{% url 'preferences' %}" method="post" id="form_to_submit">
         {% csrf_token %}
         <fieldset>
-            <legend><h3>Change your settings below, then hit apply</h3></legend>
+            <legend><h3>Change your preferences below, then hit apply</h3></legend>
             <p><u><b>Global preferences</b></u></p>
             <label>Default time before a link expires (days/hours/minutes/seconds):</label> <br>
             <input onChange="modify()" id="days" type="number" name="days" min="0" max="36500"

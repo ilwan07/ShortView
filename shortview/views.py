@@ -66,33 +66,33 @@ def register(request: HttpRequest):
         password_confirm = request.POST["password_confirm"]
     except KeyError:
         return render_error(request, "shortview/register.html",
-                            "You need to fill in all the fields to register.",
+                            _("You need to fill in all the fields to register."),
                             ("username", "email"))
 
     # check username validity
     if not re.fullmatch(r"^[A-Za-z0-9_.+-]{3,50}$", username):
         return render_error(request, "shortview/register.html",
-                            "The username format is invalid, it must be between 3 and 50 characters, can only contain letters, numbers, and these symbols:  _ + . -",
+                            _("The username format is invalid, it must be between 3 and 50 characters, can only contain letters, numbers, and these symbols:  _ + . -"),
                             ("username", "email"))
     if User.objects.filter(username=username).exists():
         return render_error(request, "shortview/register.html",
-                            "This username already exists, try another one, or use the log in page if your account already exists.",
+                            _("This username already exists, try another one, or use the log in page if your account already exists."),
                             ("username", "email"))
     
     # check email validity
     if not re.fullmatch(r"^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$", email):
         return render_error(request, "shortview/register.html",
-                            "The email format is invalid, please enter a valid email address.",
+                            _("The email format is invalid, please enter a valid email address."),
                             ("username", "email"))
     if User.objects.filter(email=email).exists():
         return render_error(request, "shortview/register.html",
-                            "This email address is already in use, try logging in with it.",
+                            _("This email address is already in use, try logging in with it."),
                             ("username", "email"))
     
     # check basic password validity
     if password != password_confirm:
         return render_error(request, "shortview/register.html",
-                            "The two passwords you entered are different, you need to enter the same password twice.",
+                            _("The two passwords you entered are different, you need to enter the same password twice."),
                             ("username", "email"))
     
     # try registering with the given credentials
@@ -101,7 +101,7 @@ def register(request: HttpRequest):
     except ValidationError as e:
         # if the password is not valid, return the error message(s)
         return render_error(request, "shortview/register.html",
-                            f"The password you entered is not valid. {' '.join(e.messages)}",
+                            _("The password you entered is not valid. %(errors)s") % {"errors": ' '.join(e.messages)},
                             ("username", "email"))
     else:
         user = User.objects.create_user(username, email, password)
@@ -127,7 +127,7 @@ def loginpage(request: HttpRequest):
         password = request.POST["password"]
     except KeyError:
         return render_error(request, "shortview/login.html",
-                            "You need to fill in all the fields to log in.",
+                            _("You need to fill in all the fields to log in."),
                             ("identifier",))
     
     login_type = "email" if "@" in identifier else "username"
@@ -140,12 +140,12 @@ def loginpage(request: HttpRequest):
     except User.DoesNotExist:
         # if the identifier is wrong
         return render_error(request, "shortview/login.html",
-                            f"The {login_type} you entered is invalid. Make sure the {login_type} is correct, or use the sign in button to create a new account.",
+                            _("The %(login_type)s you entered isn't registered. Make sure the %(login_type)s is correct, or use the register button to create a new account.") % {"login_type": _(login_type)},
                             ("identifier",))
     except User.MultipleObjectsReturned:
         # if there (somehow) are multiple users possible
         return render_error(request, "shortview/login.html",
-                            f"Multiple different users are using this {login_type}. This is an issue, please contact the developper to fix this.",
+                            _("Multiple different users are using this %(login_type)s. This is an issue, please contact the developper to fix this.") % {"login_type": login_type},
                             ("identifier",))
     
     # log the user in if everything is ok
@@ -153,7 +153,7 @@ def loginpage(request: HttpRequest):
     user = authenticate(request, username=username, password=password)
     if user is None:
         return render_error(request, "shortview/login.html",
-                            "The credentials are invalid, make sure that the password is correct.",
+                            _("The credentials are invalid, make sure that the password is correct."),
                             ("identifier",))
     else:
         login(request, user)
@@ -222,7 +222,7 @@ def preferences(request: HttpRequest):
         notify = request.POST["notify"]
     else:
         return render_error(request, "shortview/preferenes.html",
-                            "Some data is missing. Please fill the entire form.",
+                            _("Some data is missing. Please fill the entire form."),
                             ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
                             {"profile": profile})
         
@@ -231,7 +231,7 @@ def preferences(request: HttpRequest):
         days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
     except ValueError:
         return render_error(request, "shortview/preferenes.html",
-                            "You tried to set the lifetime value without using integers.",
+                            _("You tried to set the lifetime value without using integers."),
                             ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
                             {"profile": profile})
 
@@ -239,14 +239,14 @@ def preferences(request: HttpRequest):
         notify = int(notify)
     except ValueError:
         return render_error(request, "shortview/preferenes.html",
-                            "The value for the notification preference is invalid.",
+                            _("The value for the notification preference is invalid."),
                             ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
                             {"profile": profile})
     
     else:
         if not 1 <= notify <= 3:
             return render_error(request, "shortview/preferenes.html",
-                                "The value for the notification preference is invalid.",
+                                _("The value for the notification preference is invalid."),
                                 ("notify", "newsletter", "delete_expired", "never_expire", "days", "hours", "minutes", "seconds"),
                                 {"profile": profile})
     
@@ -307,27 +307,27 @@ def new_link(request: HttpRequest):
         notify = request.POST["notify"]
     else:
         return render_error(request, "shortview/new_link.html",
-                            "Some data is missing. Please fill the entire form",
+                            _("Some data is missing. Please fill the entire form."),
                             ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
 
     try:
         days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
     except ValueError:
         return render_error(request, "shortview/new_link.html",
-                            "You tried to set the lifetime value without using integers.",
+                            _("You tried to set the lifetime value without using integers."),
                             ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
     
     try:
         notify = int(notify)
     except ValueError:
         return render_error(request, "shortview/new_link.html",
-                            "You tried to set the lifetime value without using integers.",
+                            _("The value for the notification preference is invalid."),
                             ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
     
     else:
         if not 0 <= notify <= 3:
             return render_error(request, "shortview/new_link.html",
-                                "You tried to set the lifetime value without using integers.",
+                                _("The value for the notification preference is invalid."),
                                 ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
 
     # check that the destination is not another redirection to avoid loops
@@ -339,7 +339,7 @@ def new_link(request: HttpRequest):
     else:
         if pattern.url_name == "redirect_link":
             return render_error(request, "shortview/new_link.html",
-                                "You cannot set another tracked url as the destination.",
+                                _("You cannot set another tracked url as the destination."),
                                 ("description", "destination", "notify", "never_expire", "days", "hours", "minutes", "seconds"))
     
     # create the new link
@@ -474,6 +474,7 @@ def redirect_link(request: HttpRequest, link_id: int):
         tracker_page = f"{base_url}{reverse('view_tracker', args=[link_object.id, tracker.id])}"
         preferences_page = f"{base_url}{reverse('preferences')}"
 
+        #TODO: cleaner email sending system
         text_content = render_to_string("shortview/emails/notify_click.txt",
                                         context={"link": link_object, "tracker": tracker, "link_page": link_page,
                                                  "tracker_page": tracker_page, "preferences_page": preferences_page,
@@ -482,7 +483,7 @@ def redirect_link(request: HttpRequest, link_id: int):
                                         context={"link": link_object, "tracker": tracker, "link_page": link_page,
                                                  "tracker_page": tracker_page, "preferences_page": preferences_page,
                                                  "mail_domain": settings.DOMAIN, "username": link_object.owner.username})
-        email_thread = Thread(target=send_email,args=[f"ShortView | Your link was clicked | {link_object.description}",
+        email_thread = Thread(target=send_email, args=[f"ShortView | Your link was clicked | {link_object.description}",
                                                            settings.DEFAULT_FROM_EMAIL, link_object.owner.email, text_content, html_content])
         email_thread.daemon = True
         email_thread.start()

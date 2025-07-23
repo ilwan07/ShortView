@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +13,7 @@
     {% if user.is_staff %}
     <a class="biglink" target="_blank" href="{% url 'admin:index' %}"><i>Admin access</i></a> <br>
     {% endif %}
-    <a class="biglink" href="{% url 'preferences' %}">Settings</a> <br>
+    <a class="biglink" href="{% url 'preferences' %}">Preferences</a> <br>
     <a href="{% url 'logoutpage' %}">Log out</a>
     <h1>{{ user.username }}'s home page</h1>
     <a class="biglink" href="{% url 'new_link' %}">Create new tracked link</a>

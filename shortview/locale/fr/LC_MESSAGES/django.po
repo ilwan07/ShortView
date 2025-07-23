@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-22 21:01+0200\n"
+"POT-Creation-Date: 2025-07-23 15:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,440 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-#: shortview/templates/shortview/preferences.html:12
-msgid "Go back to home page"
+
+#: shortview/templates/shortview/info/conditions.html:8
+#: shortview/templates/shortview/info/conditions.html:13
+msgid "Conditions of Use"
+msgstr "Conditions d'utilisation"
+
+#: shortview/templates/shortview/info/conditions.html:14
+msgid "By using ShortView, you agree to the following conditions:"
+msgstr "En utilisant ShortView, vous acceptez les conditions suivantes :"
+
+#: shortview/templates/shortview/info/conditions.html:16
+msgid ""
+"Summary of the conditions: This service is provided for free but without any "
+"guarantees. You must not use it for illegal activities, you must inform the "
+"people you share links with of the tracking, we reserve the right to take "
+"actions on your account if necessary."
+msgstr ""
+"Récapitulatif des conditions : Ce service est fourni gratuitement, mais sans "
+"aucune garantie. Vous ne devez pas l'utiliser pour des activités illégales, "
+"et vous devez informer les personnes avec lesquelles vous partagez des liens "
+"de leur suivi, nous nous réservons le droit de prendre des mesures sur votre "
+"compte si nécessaire."
+
+#: shortview/templates/shortview/info/conditions.html:19
+msgid ""
+"ShortView is a free service to shorten links and track their usage. "
+"Therefore, we do not guarantee the availability or the proper functioning of "
+"the service at all times."
+msgstr ""
+"ShortView est un service graduit pour raccourcir des liens et traquer leur "
+"utilisation. Ainsi, nous ne garantissons pas la disponibilité ou le bon "
+"fonctionnement de ce service en permanence."
+
+#: shortview/templates/shortview/info/conditions.html:20
+msgid ""
+"You must not use ShortView for any illegal activities or to share malicious "
+"content. Furthermore, you need to make sure that the people you share the "
+"links with are aware that their clicks will be registered."
+msgstr ""
+"Vous ne devez pas utiliser ShortView pour des activités illégales ou pour "
+"partager du contenu malveillant. De plus, vous devez vous assurer que les "
+"personnes avec qui vous partagez les liens savent que leurs clics sur ces "
+"derniers seront enregistrés."
+
+#: shortview/templates/shortview/info/conditions.html:21
+msgid ""
+"We reserve the right to delete any link that violates our terms of service."
+msgstr ""
+"Nous nous réservons le droit de supprimer les liens qui violent nos "
+"conditions d'utilisation."
+
+#: shortview/templates/shortview/info/conditions.html:22
+msgid ""
+"We are not responsible for the content of the links you create. You are "
+"solely responsible for the links you shorten and share."
+msgstr ""
+"Nous ne sommes pas responsables du contenu des liens que vous créez. Vous "
+"êtes entièrement responsables des liens que vous raccourcissez et partagez."
+
+#: shortview/templates/shortview/info/conditions.html:23
+msgid ""
+"You agree to receive notifications about your links, including click "
+"notifications if enabled. You will be able to change the notification "
+"settings at any time in your preferences."
+msgstr ""
+"Vous acceptez de reçevoir des notifications concernant vos liens, incluant "
+"des notifications de clics si l'option est activée. Vous pourrez changer vos "
+"paramètres de notification à tout instant dans vos préférences."
+
+#: shortview/templates/shortview/info/conditions.html:24
+msgid ""
+"We may change these conditions at any time, and your continued use of the "
+"service implies acceptance of the new conditions."
+msgstr ""
+"Nous pouvons changer ces conditions à tout instant, et votre usage continu "
+"du service implique que vous acceptez les nouvelles conditions."
+
+#: shortview/templates/shortview/info/conditions.html:25
+msgid ""
+"We reserve the right to suspend or terminate your account if you violate "
+"these conditions, or if deemed necessary, even if you did not directly "
+"violate them."
+msgstr ""
+"Nous nous réservons le droit de suspendre ou supprimer votre compte si vous "
+"violez ces conditions, ou si cela est jugé nécessaire, même si vous n'avez "
+"pas directement enfreint les conditions."
+
+#: shortview/templates/shortview/info/conditions.html:26
+msgid ""
+"We reserve the right to modify the service, including the features and "
+"functionalities, at any time without prior notice."
+msgstr ""
+"Nous nous réservons le droit de modifier le service, incluant les "
+"fontionnalités, à n'importe quel instat sans préavis."
+
+#: shortview/templates/shortview/info/conditions.html:27
+msgid ""
+"Again, this service is provided as is, without any warranties or guarantees. "
+"We do not guarantee that the service will be uninterrupted or error-free. If "
+"you encounter any issues, you can report them to us and we will try to fix "
+"them in the extend of our possibilities."
+msgstr ""
+"À nouveau, ce service est fourni tel quel, sans aucune garantie. Nous ne "
+"garantissons pas que le service sera ininterrompu ou sans erreurs. Si vous "
+"rencontrez un problème avec la plateforme, vous pouvez nous le signaler et "
+"nous tenterons de le résoudre dans la mesure de nos possibilités."
+
+#: shortview/templates/shortview/info/conditions.html:28
+msgid ""
+"If you do not agree with these conditions, you must stop using the service "
+"immediately."
+msgstr ""
+"Si vous êtes en désaccord avec ces conditions, vous devez arrêter d'utiliser "
+"le service immédiatement."
+
+#: shortview/templates/shortview/info/passwords.html:8
+msgid "Passwords security"
+msgstr "Sécurité des mots de passe"
+
+#: shortview/templates/shortview/info/passwords.html:13
+#: shortview/templates/shortview/preferences.html:13
+msgid "Back to home page"
 msgstr "Retour à l'accueil"
+
+#: shortview/templates/shortview/info/passwords.html:14
+msgid "Back to register page"
+msgstr "Retour à la page d'enregistrement"
+
+#: shortview/templates/shortview/info/passwords.html:15
+msgid "How do we store your passwords?"
+msgstr "Comment stockons-nous vos mots de passe ?"
+
+#: shortview/templates/shortview/info/passwords.html:17
+msgid ""
+"To secure passwords, this platform uses a robust hashing function known as"
+msgstr ""
+"Pour sécuriser les mots de passe, cette plateforme utilise une fonction de "
+"hachage robuse connue sous le nom"
+
+#: shortview/templates/shortview/info/passwords.html:18
+msgid "https://en.wikipedia.org/wiki/Argon2"
+msgstr "https://fr.wikipedia.org/wiki/Argon2"
+
+#: shortview/templates/shortview/info/passwords.html:19
+msgid ", which is the winner of the"
+msgstr ", qui est le gagnant de la"
+
+#: shortview/templates/shortview/info/passwords.html:20
+msgid "https://en.wikipedia.org/wiki/Password_Hashing_Competition"
+msgstr "https://fr.wikipedia.org/wiki/Password_Hashing_Competition"
+
+#: shortview/templates/shortview/info/passwords.html:20
+msgid "2015 Password Hashing Competition"
+msgstr "Compétition de hachage de mots de passe de 2015"
+
+#: shortview/templates/shortview/info/passwords.html:21
+msgid ""
+"and is still recognized as one of the strongest security standards today."
+msgstr ""
+"et est toujours reconnue comme l'un des standards de sécurité les plus forts "
+"à l'heure actuelle."
+
+#: shortview/templates/shortview/info/passwords.html:23
+msgid ""
+"No one, including the platform admins, can see or obtain your password, even "
+"with full access to the user database or in the case of a database leak."
+msgstr ""
+"Personne, même les administrateurs de la plateforme, ne peut voir ou obtenir "
+"vos mots de passe, même avec un accès complet à la base de donnée "
+"d'utilisateurs ou dans le cas d'une fuite de a base de données."
+
+#: shortview/templates/shortview/info/passwords.html:25
+msgid "That's also why we can't give your password back if you forget it."
+msgstr ""
+"C'est également pourquoi nous ne pouvons pas vous redonner votre mot de "
+"passe si vous l'oubliez."
+
+#: shortview/templates/shortview/info/passwords.html:27
+msgid "Here is an explanation on how we secure them:"
+msgstr "Voici une explication sur la façon dont nous les sécurisons :"
+
+#: shortview/templates/shortview/info/passwords.html:29
+msgid ""
+"When creating your account, the system will create for your user a piece of "
+"randomly generated text, called the \"salt\", which will be added at the end "
+"of your password."
+msgstr ""
+"Lorsque vous créez votre compte, le système va vous créer un morceau de "
+"texte généré aléatoirement, appelé le \"salage\" (ou \"salt\" en anglais), "
+"qui va être ajouté à la fin de votre mot de passe."
+
+#: shortview/templates/shortview/info/passwords.html:31
+msgid ""
+"Then, we take the password followed by the salt, which is the \"salted "
+"password\", and apply a hashing algorithm on it, which is built with "
+"cryptography in mind."
+msgstr ""
+"Ensuite, nous prenons le mot de passe suivi du salage, qui est le \"mot de "
+"passe salé\", et appliquons un algorithme de hachage (\"hashing en "
+"anglais\"), qui est conçu spécifiquement pour un usage cryptographique."
+
+#: shortview/templates/shortview/info/passwords.html:33
+msgid ""
+"Hashing is a one way process, which will take the given data as an input, "
+"and will generate its \"hash\", which cannot be turned back into the "
+"original password, but putting the same salted password as an input will "
+"output the exact same hash, and that is how we know if the password is "
+"correct when you try to log in."
+msgstr ""
+"Le hachage est une procédure à sens unique, qui va prendre la donnée en "
+"entrée, et va générer son \"hash\", qui ne pourra pas être retransformé en "
+"son mot de passe original, mais redonner exacteent le même mot de passe salé "
+"en entrée redonnera exactement le même hash, et c'est ainsi que nous savons "
+"si le mot de passe entré est valide lorsque vous essayez de vous connecter."
+
+#: shortview/templates/shortview/info/passwords.html:35
+msgid ""
+"Inside the database, we only store your identification informations, which "
+"are the username, email, and eventually other identification informations "
+"provided by you, and we then store for each user the hash from the salted "
+"password, along with the salt."
+msgstr ""
+"Dans la base de donnée, nous stockons seulement vos informations "
+"d'identification, qui sont le nom d'utilisateur, l'email, et éventuellement "
+"d'autres informations d'identification que vous avez fournies, et nous "
+"stockons pour chaque utilisateur le hash du mot de passe salé, ainsi que le "
+"salage."
+
+#: shortview/templates/shortview/info/passwords.html:37
+msgid ""
+"This way, your original password will never be directly visible nor "
+"obtainable from the database."
+msgstr ""
+"En procédant ainsi, votre mot de passe original de sera jamais directement "
+"visible ni obtenable depuis la base de données."
+
+#: shortview/templates/shortview/info/passwords.html:39
+msgid "This method secures your password against most attacks, including:"
+msgstr ""
+"Cette méthode sécurise votre mot de passe contre la plupart des attaques, "
+"incluant :"
+
+#: shortview/templates/shortview/info/passwords.html:41
+msgid ""
+"Database leaks: your password isn't directly obtainable from the database, "
+"even with full access to it."
+msgstr ""
+"Les fuites de base de données : votre mot de passe n'est pas directement "
+"obtenable depuis la base de données, même avec un accès complet à celle-ci."
+
+#: shortview/templates/shortview/info/passwords.html:42
+msgid ""
+"Rainbow table attacks: this attack consists of trying to see if the hash of "
+"the most common passwords matches with one of the registered users. But "
+"since each user has a unique salt added at the end of the password before "
+"hashing, a generic rainbow table attack would be completely inefficient."
+msgstr ""
+"Les attaques \"rainbow table\" : cette attaque consiste à vérifier si le "
+"hash des mots de passe les plus communs correspond avec ceux des "
+"utilisateurs enregistrés. Mais comme chaque utilisateur possède un salage "
+"unique ajouté à la fin de leur mot de passe avant le hachage, une attaque "
+"\"rainbow table\" générique serait complètement inefficace."
+
+#: shortview/templates/shortview/info/passwords.html:43
+msgid ""
+"Matching users with same password: again, since each user has a unique salt, "
+"two users with the same exact password will have different hashes associated "
+"with their account in the database, therefore preventing attackers from "
+"directly knowing if two or more users share the same password."
+msgstr ""
+"Faire correspondre des utilisateurs avec le même mot de passe : encore une "
+"fois, comme chaque utilisateur possède un salage unique, deux utilisateurs "
+"possédant exactement le même mot de passe auront des hashes différents "
+"associés à leur compte dans la base de donnée, ce qui empêche les attaquants "
+"de directement savoir si deux utilisateurs ou plus partagent le même mot de "
+"passe."
+
+#: shortview/templates/shortview/info/passwords.html:44
+msgid ""
+"Brute force attacks: the hashing algorithm used to transform the passwords "
+"has a high work factor, meaning that it takes time to hash a password and "
+"check if the output hash is the same as the one from the database. When a "
+"user tries to log in with a password, this delay is almost unnoticeable, but "
+"in the case of a brute force attack where the attacker is testing a lot of "
+"different possible passwords, the attack will be rendered almost inefficient "
+"as it takes way too long to try a lot of different passwords."
+msgstr ""
+"Attaques par force brute : l'algorithme de hachage utilisé pour transformer "
+"les mots de passe possède un facteur de travail élevé, ce qui signifie que "
+"hacher le mot de passe et vérifier si le hash correspond à celui de la base "
+"de données prend du temps. Lorsqu'un utilisateur tente de se connecter avec "
+"un mot de passe, ce délai est presque imperçeptible, mais dans le cas d'une "
+"attaque par force brute où l'attaquant teste un grand nombre de mots de "
+"passe possibles, l'attaque sera presque inefficace puisqu'il est bien trop "
+"long d'essayer de hacher un grand nombre de mots de passe."
+
+#: shortview/templates/shortview/info/passwords.html:45
+msgid ""
+"Hashing collision attacks: when two different passwords are passed to a "
+"hashing algorithm and give the same output hash, this is called a hashing "
+"collision. However, the hashing algorithm we use has a very high collision "
+"resistance, meaning that it's impossible with today's means to develop a "
+"method aiming to find a hashing collision, so it's impossible in practice "
+"for someone to log into your account using a different password from the one "
+"you set."
+msgstr ""
+"Attaques par collision de hachage : lorsque deux mots de passe différents "
+"sont passés dans l'algorithme de hachage et donne le même hash en sortie, "
+"cela est appelé une collision de hachage. Cependant, l'algorithme de hachage "
+"que nous utilisons possède une très forte résistance aux collisions, ce qui "
+"signifie qu'il est impossible avec les techniques actuelles de développer "
+"une méthode ayant pour but de trouver une collision de hachage, il est donc "
+"en pratique impossible pour quelqu'un de se connecter à votre compte en "
+"utilisant un mot de passe différent de celui que vous avez entré."
+
+#: shortview/templates/shortview/info/passwords.html:47
+msgid ""
+"Moreover, all of these procedures aiming to securely store and check your "
+"passwords are handled by Django's backend, which is a well known, trustable "
+"and secure framework used by huge companies around the world."
+msgstr ""
+"De plus, l'ensemble de ces procédures ayant pour but de stocker et vérifier "
+"vos mots de passe de manière sécurisée sont gérées par le backend Django, "
+"qui est un framework bien connu, digne de confiance et largement utilisé par "
+"de grandes entreprises dans le monde entier."
+
+#: shortview/templates/shortview/info/passwords.html:49
+msgid ""
+"For more informations on how Django's backend manages the passwords with the "
+"above methods, you can go on"
+msgstr ""
+"Pour plus d'informations sur la manière dont le backend Django gère les mots "
+"de passe avec les méthodes ci-dessus, vous pouvez consulter"
+
+#: shortview/templates/shortview/info/passwords.html:50
+msgid "https://docs.djangoproject.com/en/5.2/topics/auth/passwords/"
+msgstr "https://docs.djangoproject.com/fr/5.2/topics/auth/passwords/"
+
+#: shortview/templates/shortview/info/passwords.html:50
+msgid "this page"
+msgstr "cette page"
+
+#: shortview/views.py:69
+msgid "You need to fill in all the fields to register."
+msgstr "Tous les champs doivent êtres rempli pour créer votre compte."
+
+#: shortview/views.py:75
+msgid ""
+"The username format is invalid, it must be between 3 and 50 characters, can "
+"only contain letters, numbers, and these symbols:  _ + . -"
+msgstr ""
+"Le format du nom d'utilisateur est invalide, il doit contenir entre 3 et 50 "
+"caractères, peut uniquement contenir des lettres, chiffres, et ces "
+"symboles : _ + . -"
+
+#: shortview/views.py:79
+msgid ""
+"This username already exists, try another one, or use the log in page if "
+"your account already exists."
+msgstr ""
+"Ce nom d'utilisateur existe déjà, essayez-en un autre, ou utilisez la page "
+"de connexion si votre compte existe déjà."
+
+#: shortview/views.py:85
+msgid "The email format is invalid, please enter a valid email address."
+msgstr ""
+"Le format de l'email est invalide, merci d'entrer une adresse email valide."
+
+#: shortview/views.py:89
+msgid "This email address is already in use, try logging in with it."
+msgstr "Cette adresse email est déjà utilisée, essayez de vous connecter avec."
+
+#: shortview/views.py:95
+msgid ""
+"The two passwords you entered are different, you need to enter the same "
+"password twice."
+msgstr ""
+"Les deux mots de passe entrés sont différents, vous devez entrer le même mot "
+"de passe deux fois."
+
+#: shortview/views.py:104
+#, python-format
+msgid "The password you entered is not valid. %(errors)s"
+msgstr "Le mot de passe entré est invalide. %(errors)s"
+
+#: shortview/views.py:130
+msgid "You need to fill in all the fields to log in."
+msgstr "Tous les champs doivent êtres rempli pour vous connecter."
+
+#: shortview/views.py:143
+#, python-format
+msgid ""
+"The %(login_type)s you entered isn't registered. Make sure the "
+"%(login_type)s is correct, or use the register button to create a new "
+"account."
+msgstr ""
+"Votre %(login_type)s n'est pas enregistré. Assurez-vous que votre "
+"%(login_type)s est correct, ou utilisez le bouton d'enregistrement de compte "
+"pour créer un nouveau compte."
+
+#: shortview/views.py:148
+#, python-format
+msgid ""
+"Multiple different users are using this %(login_type)s. This is an issue, "
+"please contact the developper to fix this."
+msgstr ""
+"Plusieurs utilisateurs différents possèdent votre %(login_type)s. Ceci est "
+"un problème, merci de contacter le développeur pour le régler."
+
+#: shortview/views.py:156
+msgid "The credentials are invalid, make sure that the password is correct."
+msgstr ""
+"Les identifiants sont invalides, vérifiez que le mot de passe est correct."
+
+#: shortview/views.py:225 shortview/views.py:310
+msgid "Some data is missing. Please fill the entire form."
+msgstr ""
+"Certaines informations sont manquantes. Merci de remplir l'intégralité du "
+"formulaire."
+
+#: shortview/views.py:234 shortview/views.py:317
+msgid "You tried to set the lifetime value without using integers."
+msgstr ""
+"Vous avez essayé de donner la durée de vie sans utiliser des nombres entiers."
+
+#: shortview/views.py:242 shortview/views.py:249 shortview/views.py:324
+#: shortview/views.py:330
+msgid "The value for the notification preference is invalid."
+msgstr "La valeur pour la préférence de notification est invalide."
 
 #: shortview/views.py:268
 msgid "Successfully applied the new preferences!"
 msgstr "Nouvelles préférences appliquées avec succès!"
+
+#: shortview/views.py:342
+msgid "You cannot set another tracked url as the destination."
+msgstr "Vous ne pouvez pas définir un autre url traqué comme destination."

@@ -1,33 +1,31 @@
 {% load static %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ShortView | Conditions of Use</title>
+    <title>ShortView | {% trans "Conditions of Use" %}</title>
     <link rel="stylesheet" href="{% static 'shortview/css/style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
-    <h1><u>Conditions of Use</u></h1>
-    <h2>
-        By using ShortView, you agree to the following conditions:
-    </h2>
+    <h1><u>{% trans "Conditions of Use" %}</u></h1>
+    <h2>{% trans "By using ShortView, you agree to the following conditions:" %}</h2>
     <h4>
-        Summary of the conditions: This service is provided for free but without any guarantees. You must not use it for illegal activities, you must
-        inform the people you share links with of the tracking, we reserve the right to take actions on your account if necessary.
+        {% trans "Summary of the conditions: This service is provided for free but without any guarantees. You must not use it for illegal activities, you must inform the people you share links with of the tracking, we reserve the right to take actions on your account if necessary." %}
     </h4>
     <ul>
-        <li>ShortView is a free service to shorten links and track their usage. Therefore, we do not guarantee the availability or the proper functioning of the service at all times.</li>
-        <li>You must not use ShortView for any illegal activities or to share malicious content. Furthermore, you need to make sure that the people you share the links with are aware that their clicks will be registered.</li>
-        <li>We reserve the right to delete any link that violates our terms of service.</li>
-        <li>We are not responsible for the content of the links you create. You are solely responsible for the links you shorten and share.</li>
-        <li>You agree to receive notifications about your links, including click notifications if enabled. You will be able to change the notification settings at any time in your preferences.</li>
-        <li>We may change these conditions at any time, and your continued use of the service implies acceptance of the new conditions.</li>
-        <li>We reserve the right to suspend or terminate your account if you violate these conditions, or if deemed necessary, even if you did not directly violate them.</li>
-        <li>We reserve the right to modify the service, including the features and functionalities, at any time without prior notice.</li>
-        <li>Again, this service is provided as is, without any warranties or guarantees. We do not guarantee that the service will be uninterrupted or error-free. If you encounter any issues, you can report them to us and we will try to fix them in the extend of our possibilities.</li>
-        <li>If you do not agree with these conditions, you must stop using the service immediately.</li>
+        <li>{% trans "ShortView is a free service to shorten links and track their usage. Therefore, we do not guarantee the availability or the proper functioning of the service at all times." %}</li>
+        <li>{% trans "You must not use ShortView for any illegal activities or to share malicious content. Furthermore, you need to make sure that the people you share the links with are aware that their clicks will be registered." %}</li>
+        <li>{% trans "We reserve the right to delete any link that violates our terms of service." %}</li>
+        <li>{% trans "We are not responsible for the content of the links you create. You are solely responsible for the links you shorten and share." %}</li>
+        <li>{% trans "You agree to receive notifications about your links, including click notifications if enabled. You will be able to change the notification settings at any time in your preferences." %}</li>
+        <li>{% trans "We may change these conditions at any time, and your continued use of the service implies acceptance of the new conditions." %}</li>
+        <li>{% trans "We reserve the right to suspend or terminate your account if you violate these conditions, or if deemed necessary, even if you did not directly violate them." %}</li>
+        <li>{% trans "We reserve the right to modify the service, including the features and functionalities, at any time without prior notice." %}</li>
+        <li>{% trans "Again, this service is provided as is, without any warranties or guarantees. We do not guarantee that the service will be uninterrupted or error-free. If you encounter any issues, you can report them to us and we will try to fix them in the extend of our possibilities." %}</li>
+        <li>{% trans "If you do not agree with these conditions, you must stop using the service immediately." %}</li>
     </ul>
 </body>
 </html>
