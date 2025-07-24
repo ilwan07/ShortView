@@ -10,45 +10,45 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
-    <a href="{% url 'index' %}">Back to home page</a>
+    <a href="{% url 'index' %}">{% trans "Back to home page" %}</a>
     <h2>{{ link.description }}</h2>
     {% if link.active %}
-    <p>The tracked link to send is the following (click to copy): <button onclick="copy_link()" class="urlbutton" id="copylink">{{ link.url }}</button>
+    <p>{% trans "The tracked link to send is the following (click to copy):" %}" <button onclick="copy_link()" class="urlbutton" id="copylink">{{ link.url }}</button>
         <small id="copyconfirm"></small></p>
     {% endif %}
-    <p class="destinationlink">Original destination link: <a target="_blank" class="destinationlink" href="{{ link.destination }}">{{ link.destination }}</a></p>
+    <p class="destinationlink">{% trans "Original destination link:" %} <a target="_blank" class="destinationlink" href="{{ link.destination }}">{{ link.destination }}</a></p>
     {% if link.active %}
     <form id="link_notify_form" action="{% url 'link_change_notify' link.id %}" method="post">
         {% csrf_token %}
-        <label for="notify">Default email notification mode:</label>
+        <label for="notify">{% trans "Email notification mode:" %}</label>
         <select onChange="change_notify()" id="notify" name="notify">
-            <option value="0" {% if link.notify_click == 0 %} selected {% endif %}>User preference</option>
-            <option value="1" {% if link.notify_click == 1 %} selected {% endif %}>Never notify</option>
-            <option value="2" {% if link.notify_click == 2 %} selected {% endif %}>Notify first click</option>
-            <option value="3" {% if link.notify_click == 3 %} selected {% endif %}>Notify each click</option>
+            <option value="0" {% if link.notify_click == 0 %} selected {% endif %}>{% trans "User preference" %}</option>
+            <option value="1" {% if link.notify_click == 1 %} selected {% endif %}>{% trans "Never notify" %}</option>
+            <option value="2" {% if link.notify_click == 2 %} selected {% endif %}>{% trans "Notify first click" %}</option>
+            <option value="3" {% if link.notify_click == 3 %} selected {% endif %}>{% trans "Notify each click" %}</option>
         </select>
     </form> <br>
     {% else %}
-    <p class="expiredtext"><i><u>This link is expired</u></i></p>
+    <p class="expiredtext"><i><u>{% trans "This link is expired" %}</u></i></p>
     {% endif %}
-    <button class="urlbutton deletebutton" onclick="delete_link()">Delete this link</button>
+    <button class="urlbutton deletebutton" onclick="delete_link()">{% trans "Delete this link" %}</button>
     <br> <br>
     {% if trackers|length == 0 %}
-    <p>The link hasn't been clicked yet, no tracker available.</p>
+    <p>{% trans "This link hasn't been clicked yet, no tracker available." %}</p>
     {% else %}
     <table class="trackers">
         <tr>
-            <th>Number</th>
-            <th>Date and time</th>
-            <th>Opener's IP</th>
-            <th>Full request headers</th>
+            <th>{% trans "Number" %}</th>
+            <th>{% trans "Date and time" %}</th>
+            <th>{% trans "Opener's IP" %}</th>
+            <th>{% trans "Full request headers" %}</th>
         </tr>
         {% for tracker in trackers %}
         <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ tracker.date }}</td>
             <td><a target="_blank" href="https://whatismyipaddress.com/ip/{{ tracker.ip }}">{{ tracker.ip }}</a></td>
-            <td><a target="_blank" href="{% url 'view_tracker' link.id tracker.id %}" class="headerlink">See headers content</a></td>
+            <td><a target="_blank" href="{% url 'view_tracker' link.id tracker.id %}" class="headerlink">{% trans "See headers content" %}</a></td>
         </tr>
         {% endfor %}
     </table>
@@ -59,6 +59,7 @@
         <input type="hidden" name="confirm_delete" value="true">
     </form>
 
+    <script src="{% url 'javascript-catalog' %}"></script>
     <script src="{% static 'shortview/js/view_link.js' %}"></script>
 </body>
 </html>

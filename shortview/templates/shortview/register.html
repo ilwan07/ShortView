@@ -5,41 +5,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ShortView | Register</title>
+    <title>ShortView | {% trans "Register" %}</title>
     <link rel="stylesheet" href="{% static 'shortview/css/style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
-    <a href="{% url 'index' %}">Back to index page</a>
+    <a href="{% url 'index' %}">{% trans "Back to index page" %}</a>
     <form action="{% url 'register' %}" method="post" id="form_to_submit">
         {% csrf_token %}
-        {% if error %}<p><strong>Error: {{ error }}</strong></p>{% endif %}
+        {% if error %}<p><strong>{% trans "Error:" %} {{ error }}</strong></p>{% endif %}
         <fieldset>
-            <legend><h1>Register your new account</h1></legend>
-            <label for="username">Username:</label>
+            <legend><h1>{% trans "Register your new account" %}</h1></legend>
+            <label for="username">{% trans "Username:" %}</label>
             <input onChange="modify()" type="text" id="username" name="username" pattern="^[A-Za-z0-9_.+\-]{3,50}$" {% if username %} value='{{username}}' {% endif %}
-                title="Between 3 and 50 characters, can only contain letters, numbers, and these symbols:  _ + . -" placeholder="Username" required>
+                title="{% trans 'Between 3 and 50 characters, can only contain letters, numbers, and these symbols:  _ + . -' %}" placeholder="{% trans 'username' %}" required>
 
-            <label for="email">Email:</label>
+            <label for="email">{% trans "Email:" %}</label>
             <input onChange="modify()" type="email" id="email" name="email" pattern="^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$" {% if email %} value='{{email}}' {% endif %}
-                title="Enter your email address here" placeholder="Email address" required> <br>
+                title="{% trans 'Enter your email address here' %}" placeholder="{% trans 'email' %}" required> <br>
             
-            <label for="password">Password:</label>
+            <label for="password">{% trans "Password:" %}</label>
             <input onChange="modify()" type="password" id="password" name="password" pattern="^(?!\d+$).{8,}$" oninput="check_match()"
-                title="Enter a secure password here: at least 8 characters, not only numbers, don't use common passwords" placeholder="password" required>
+                title="{% trans 'Enter a secure password here: at least 8 characters, not only numbers, do not use common passwords' %}" placeholder="{% trans 'password' %}" required>
 
-            <label for="password_confirm">Confirm password:</label>
+            <label for="password_confirm">{% trans "Confirm password:" %}</label>
             <input onChange="modify()" type="password" id="password_confirm" name="password_confirm" oninput="check_match()"
-                title="Retype the same password again here" placeholder="password again" required>
+                title="{% trans 'Retype the same password again here' %}" placeholder="{% trans 'password' %}" required>
             <br>
-            <label for="accept_conditions">I have read and accept the <a target="_blank" href="{% url 'conditions' %}">conditions of use of the service</a>:</label>
+            <label for="accept_conditions">{% trans "I have read and accept the" %} <a target="_blank" href="{% url 'conditions' %}">{% trans "conditions of use of the service" %}</a>:</label>
             <input onChange="modify()" type="checkbox" id="accept_conditions" name="accept_conditions" required>
         </fieldset>
-        <input type="submit" value="register">
+        <input type="submit" value="{% trans 'Register' %}">
     </form>
     <br>
-    <a href="{% url 'password_info' %}">How do we securely store your passwords?</a>
+    <a target="_blank" href="{% url 'password_info' %}">{% trans "How do we securely store your passwords?" %}</a>
 
+    <script src="{% url 'javascript-catalog' %}"></script>
     <script src="{% static 'shortview/js/register.js' %}"></script>
     <script src="{% static 'shortview/js/warn_exit.js' %}"></script>
 </body>

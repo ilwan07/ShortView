@@ -5,24 +5,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ShortView | Login</title>
+    <title>ShortView | {% trans "Login" %}</title>
     <link rel="stylesheet" href="{% static 'shortview/css/style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
-    <a href="{% url 'index' %}">Back to index page</a>
+    <a href="{% url 'index' %}">{% trans "Back to index page" %}</a>
     <form action="{% url 'loginpage' %}" method="post">
         {% csrf_token %}
-        {% if error %}<p><strong>Error: {{ error }}</strong></p>{% endif %}
+        {% if error %}<p><strong>{% trans "Error:" %} {{ error }}</strong></p>{% endif %}
         {% if "next" in request.GET %}<input type="hidden" name="next" value="{{request.GET.next}}">{% endif %}
         <fieldset>
-            <legend><h1>Log in using your credentials</h1></legend>
-            <label>Username/Email:</label>
-            <input type="text" id="identifier" name="identifier" placeholder="username/email" {% if identifier %} value='{{identifier}}' {% endif %} required>
-            <label>Password:</label>
-            <input type="password" id="password" name="password" placeholder="password" required>
+            <legend><h1>{% trans "Log in using your credentials" %}</h1></legend>
+            <label>{% trans "Username/Email:" %}</label>
+            <input type="text" id="identifier" name="identifier" placeholder="{% trans 'username/email' %}" {% if identifier %} value='{{identifier}}' {% endif %} required>
+            <label>{% trans "Password:" %}</label>
+            <input type="password" id="password" name="password" placeholder="{% trans 'password' %}" required>
         </fieldset>
-        <input type="submit" value="Log in">
+        <input type="submit" value="{% trans 'Log in' %}">
     </form>
     <br>
 </body>

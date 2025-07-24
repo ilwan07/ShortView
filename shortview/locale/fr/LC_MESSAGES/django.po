@@ -1,33 +1,289 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SHORTVIEW FRENCH TRANSLATIONS.
+# Copyright (C) 2025 MILOUDI ILWÂN
+# This file is distributed under the same license as the SHORTVIEW package.
+# FIRST AUTHOR miloudilwan@gmail.com, 2025.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-23 15:40+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2025-07-24 16:43+0200\n"
+"PO-Revision-Date: 2025-07-24 14:15+0200\n"
+"Last-Translator: MILOUDI ILWÂN miloudilwan@gmail.com\n"
+"Language-Team: ILWÂN miloudilwan@gmail.com\n"
+"Language: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: shortview/admin.py:9
+msgid "ShortView Administration"
+msgstr "Administration ShortView"
+
+#: shortview/admin.py:10
+msgid "ShortView Admin Portal"
+msgstr "Portail administrateur ShortView"
+
+#: shortview/admin.py:11
+msgid "Welcome to the ShortView Administration Interface"
+msgstr "Bienvenue sur l'Interface d'Administration ShortView"
+
+#: shortview/admin.py:44
+msgid "General"
+msgstr "Général"
+
+#: shortview/admin.py:45 shortview/templates/shortview/view_link.html:42
+msgid "Date and time"
+msgstr "Date et heure"
+
+#: shortview/admin.py:46
+msgid "Email notifications"
+msgstr "Notifications email"
+
+#: shortview/models.py:19 shortview/models.py:36
+#: shortview/templates/shortview/new_link.html:43
+#: shortview/templates/shortview/preferences.html:45
+#: shortview/templates/shortview/view_link.html:26
+msgid "Never notify"
+msgstr "Jamais notifer"
+
+#: shortview/models.py:19 shortview/models.py:36
+#: shortview/templates/shortview/new_link.html:44
+#: shortview/templates/shortview/preferences.html:46
+#: shortview/templates/shortview/view_link.html:27
+msgid "Notify first click"
+msgstr "Notifier premier clic"
+
+#: shortview/models.py:19 shortview/models.py:36
+#: shortview/templates/shortview/new_link.html:45
+#: shortview/templates/shortview/preferences.html:47
+#: shortview/templates/shortview/view_link.html:28
+msgid "Notify each click"
+msgstr "Notifier chaque clic"
+
+#: shortview/models.py:22
+msgid "delete expired links"
+msgstr "supprimer liens expirés"
+
+#: shortview/models.py:23
+msgid "hide expired links"
+msgstr "cacher liens expirés"
+
+#: shortview/models.py:24
+msgid "default link life duration"
+msgstr "durée de vie du lien par défaut"
+
+#: shortview/models.py:25 shortview/models.py:42
+msgid "send email on link click"
+msgstr "envoyer email lorsque lien cliqué"
+
+#: shortview/models.py:26
+msgid "receive the newsletters"
+msgstr "reçevoir les bulletins"
+
+#: shortview/models.py:29
+#, python-format
+msgid "%(user)s's profile"
+msgstr "profil de %(user)s"
+
+#: shortview/models.py:36 shortview/templates/shortview/new_link.html:42
+#: shortview/templates/shortview/view_link.html:25
+msgid "User preference"
+msgstr "Préférence utilisateur"
+
+#: shortview/models.py:38
+msgid "description"
+msgstr "description"
+
+#: shortview/models.py:40
+msgid "date of creation"
+msgstr "date de création"
+
+#: shortview/models.py:41
+msgid "life duration"
+msgstr "durée de vie"
+
+#: shortview/models.py:43
+msgid "destination url"
+msgstr "url de destination"
+
+#: shortview/models.py:56
+msgid "destination domain"
+msgstr "domaine de destination"
+
+#: shortview/models.py:67
+msgid "still active"
+msgstr "encore actif"
+
+#: shortview/models.py:87
+msgid "receiver ip"
+msgstr "ip du receveur"
+
+#: shortview/models.py:88
+msgid "date of clicking"
+msgstr "date du clic"
+
+#: shortview/models.py:89
+msgid "request header"
+msgstr "en-tête de la requête"
+
+#: shortview/templates/shortview/home.html:8
+msgid "Home"
+msgstr "Accueil"
+
+#: shortview/templates/shortview/home.html:14
+msgid "Admin access"
+msgstr "Accès administrateur"
+
+#: shortview/templates/shortview/home.html:16
+#: shortview/templates/shortview/preferences.html:8
+msgid "Preferences"
+msgstr "Préférences"
+
+#: shortview/templates/shortview/home.html:17
+msgid "Log out"
+msgstr "Se déconnecter"
+
+#: shortview/templates/shortview/home.html:18
+#, python-format
+msgid "%(username)s's home page"
+msgstr "Page d'accueil de %(username)s"
+
+#: shortview/templates/shortview/home.html:19
+#: shortview/templates/shortview/new_link.html:18
+msgid "Create a new tracked link"
+msgstr "Créer un nouveau lien suivi"
+
+#: shortview/templates/shortview/home.html:20
+msgid "Tracked links:"
+msgstr "Liens suivis :"
+
+#: shortview/templates/shortview/home.html:26
+#, python-format
+msgid "click%(plur)s"
+msgstr "clic%(plur)s"
+
+#: shortview/templates/shortview/home.html:31
+msgid "You haven't created any link yet."
+msgstr "Vous n'avez encore créé aucun lien."
+
+#: shortview/templates/shortview/index.html:13
+msgid "Welcome to ShortView!"
+msgstr "Bienvenue sur ShortView !"
+
+#: shortview/templates/shortview/index.html:14
+#: shortview/templates/shortview/register.html:8
+#: shortview/templates/shortview/register.html:38
+msgid "Register"
+msgstr "S'enregister"
+
+#: shortview/templates/shortview/index.html:15
+#: shortview/templates/shortview/login.html:25
+msgid "Log in"
+msgstr "Se connecter"
+
+#: shortview/templates/shortview/index.html:17
+msgid "What is ShortView?"
+msgstr "Qu'est-ce que ShortView ?"
+
+#: shortview/templates/shortview/index.html:19
+msgid ""
+"With this platform, you can shorten a link you want to share with people, "
+"and monitor when these links have been opened."
+msgstr ""
+"Avec cette plateforme, vous pouvez raccourcir un lien que vous voulez "
+"partager à d'autres personnes, et vérifier lorsque ces liens ont été ouverts."
+
+#: shortview/templates/shortview/index.html:20
+msgid ""
+"So it allows do do two things at the same time: shorten a long link if you "
+"need to, and allow tracking of the link!"
+msgstr ""
+"Cela permet donc de faire deux choses à la fois : raccourcir un lien trop "
+"long si cela est  nécessaire, et permettre le suivi de ce lien !"
+
+#: shortview/templates/shortview/index.html:22
+msgid "How does this work?"
+msgstr "Comment cela fonctionne-t-il ?"
+
+#: shortview/templates/shortview/index.html:24
+msgid ""
+"To achieve that, this platform will create a shortened link to the "
+"destination url you want to share."
+msgstr ""
+"Pour réussir à faire cela, cette plateforme va créer un lien raccourci qui "
+"pointe vers l'url de destination que vous souhaitez partager."
+
+#: shortview/templates/shortview/index.html:25
+msgid ""
+"When people will click this link, they will send a request to our servers "
+"with the id of the link they clicked."
+msgstr ""
+"Lorsque quelqu'un clique sur ce lien, cela va envoyer une requête à nos "
+"serveurs avec l'identifiant du lien sur lequel la personne à cliqué."
+
+#: shortview/templates/shortview/index.html:26
+msgid ""
+"The server will then register that this link has been clicked, with data "
+"such as the ip of the person who clicked and the date."
+msgstr ""
+"Le serveur va ensuite enregistrer le fait que ce lien ait été cliqué, avec "
+"des informations telles que l'ip de la personne ayant cliqué et la date."
+
+#: shortview/templates/shortview/index.html:27
+msgid ""
+"After registering the action, the server will perform a redirection to the "
+"destination url."
+msgstr ""
+"Une fois l'action enregistrée, le serveur va effectuer une redirection vers "
+"l'url de destination."
+
+#: shortview/templates/shortview/index.html:28
+msgid ""
+"This whole process is practically instant for the user who clicked the link."
+msgstr ""
+"Ce processus est presque instantané pour la personne qui clique sur le lien."
+
+#: shortview/templates/shortview/index.html:30
+msgid "Who can I send tracked links to?"
+msgstr "À qui puis-je envoyer des liens suivis ?"
+
+#: shortview/templates/shortview/index.html:32
+msgid ""
+"Make sure that the people you're going to send tracked links to are aware "
+"that their clicks will be registered."
+msgstr ""
+"Assurez-vous que les personnes à qui vous allez envoyer des liens suivis "
+"savent que leurs clics seront enregistrés."
+
+#: shortview/templates/shortview/index.html:33
+msgid ""
+"Never send it without telling that you're collecting the person's activity, "
+"as it may constitute a privacy violation."
+msgstr ""
+"N'en envoyez jamais un sans prévenir que vous enregistrez l'activité de la "
+"personne, puisque cela pourrait constituer une violation de la vie privée."
+
 #: shortview/templates/shortview/info/conditions.html:8
-#: shortview/templates/shortview/info/conditions.html:13
+#: shortview/templates/shortview/info/conditions.html:14
 msgid "Conditions of Use"
 msgstr "Conditions d'utilisation"
 
-#: shortview/templates/shortview/info/conditions.html:14
+#: shortview/templates/shortview/info/conditions.html:13
+#: shortview/templates/shortview/info/passwords.html:13
+#: shortview/templates/shortview/new_link.html:13
+#: shortview/templates/shortview/preferences.html:13
+#: shortview/templates/shortview/view_link.html:13
+msgid "Back to home page"
+msgstr "Retour à l'accueil"
+
+#: shortview/templates/shortview/info/conditions.html:15
 msgid "By using ShortView, you agree to the following conditions:"
 msgstr "En utilisant ShortView, vous acceptez les conditions suivantes :"
 
-#: shortview/templates/shortview/info/conditions.html:16
+#: shortview/templates/shortview/info/conditions.html:17
 msgid ""
 "Summary of the conditions: This service is provided for free but without any "
 "guarantees. You must not use it for illegal activities, you must inform the "
@@ -40,17 +296,17 @@ msgstr ""
 "de leur suivi, nous nous réservons le droit de prendre des mesures sur votre "
 "compte si nécessaire."
 
-#: shortview/templates/shortview/info/conditions.html:19
+#: shortview/templates/shortview/info/conditions.html:20
 msgid ""
 "ShortView is a free service to shorten links and track their usage. "
 "Therefore, we do not guarantee the availability or the proper functioning of "
 "the service at all times."
 msgstr ""
-"ShortView est un service graduit pour raccourcir des liens et traquer leur "
+"ShortView est un service graduit pour raccourcir des liens et suivre leur "
 "utilisation. Ainsi, nous ne garantissons pas la disponibilité ou le bon "
 "fonctionnement de ce service en permanence."
 
-#: shortview/templates/shortview/info/conditions.html:20
+#: shortview/templates/shortview/info/conditions.html:21
 msgid ""
 "You must not use ShortView for any illegal activities or to share malicious "
 "content. Furthermore, you need to make sure that the people you share the "
@@ -61,14 +317,14 @@ msgstr ""
 "personnes avec qui vous partagez les liens savent que leurs clics sur ces "
 "derniers seront enregistrés."
 
-#: shortview/templates/shortview/info/conditions.html:21
+#: shortview/templates/shortview/info/conditions.html:22
 msgid ""
 "We reserve the right to delete any link that violates our terms of service."
 msgstr ""
 "Nous nous réservons le droit de supprimer les liens qui violent nos "
 "conditions d'utilisation."
 
-#: shortview/templates/shortview/info/conditions.html:22
+#: shortview/templates/shortview/info/conditions.html:23
 msgid ""
 "We are not responsible for the content of the links you create. You are "
 "solely responsible for the links you shorten and share."
@@ -76,7 +332,7 @@ msgstr ""
 "Nous ne sommes pas responsables du contenu des liens que vous créez. Vous "
 "êtes entièrement responsables des liens que vous raccourcissez et partagez."
 
-#: shortview/templates/shortview/info/conditions.html:23
+#: shortview/templates/shortview/info/conditions.html:24
 msgid ""
 "You agree to receive notifications about your links, including click "
 "notifications if enabled. You will be able to change the notification "
@@ -86,7 +342,7 @@ msgstr ""
 "des notifications de clics si l'option est activée. Vous pourrez changer vos "
 "paramètres de notification à tout instant dans vos préférences."
 
-#: shortview/templates/shortview/info/conditions.html:24
+#: shortview/templates/shortview/info/conditions.html:25
 msgid ""
 "We may change these conditions at any time, and your continued use of the "
 "service implies acceptance of the new conditions."
@@ -94,7 +350,7 @@ msgstr ""
 "Nous pouvons changer ces conditions à tout instant, et votre usage continu "
 "du service implique que vous acceptez les nouvelles conditions."
 
-#: shortview/templates/shortview/info/conditions.html:25
+#: shortview/templates/shortview/info/conditions.html:26
 msgid ""
 "We reserve the right to suspend or terminate your account if you violate "
 "these conditions, or if deemed necessary, even if you did not directly "
@@ -104,7 +360,7 @@ msgstr ""
 "violez ces conditions, ou si cela est jugé nécessaire, même si vous n'avez "
 "pas directement enfreint les conditions."
 
-#: shortview/templates/shortview/info/conditions.html:26
+#: shortview/templates/shortview/info/conditions.html:27
 msgid ""
 "We reserve the right to modify the service, including the features and "
 "functionalities, at any time without prior notice."
@@ -112,7 +368,7 @@ msgstr ""
 "Nous nous réservons le droit de modifier le service, incluant les "
 "fontionnalités, à n'importe quel instat sans préavis."
 
-#: shortview/templates/shortview/info/conditions.html:27
+#: shortview/templates/shortview/info/conditions.html:28
 msgid ""
 "Again, this service is provided as is, without any warranties or guarantees. "
 "We do not guarantee that the service will be uninterrupted or error-free. If "
@@ -124,7 +380,7 @@ msgstr ""
 "rencontrez un problème avec la plateforme, vous pouvez nous le signaler et "
 "nous tenterons de le résoudre dans la mesure de nos possibilités."
 
-#: shortview/templates/shortview/info/conditions.html:28
+#: shortview/templates/shortview/info/conditions.html:29
 msgid ""
 "If you do not agree with these conditions, you must stop using the service "
 "immediately."
@@ -136,50 +392,42 @@ msgstr ""
 msgid "Passwords security"
 msgstr "Sécurité des mots de passe"
 
-#: shortview/templates/shortview/info/passwords.html:13
-#: shortview/templates/shortview/preferences.html:13
-msgid "Back to home page"
-msgstr "Retour à l'accueil"
-
 #: shortview/templates/shortview/info/passwords.html:14
-msgid "Back to register page"
-msgstr "Retour à la page d'enregistrement"
+#: shortview/templates/shortview/register.html:41
+msgid "How do we securely store your passwords?"
+msgstr "Comment stockons-nous vos mots de passe de manière sécurisée ?"
 
-#: shortview/templates/shortview/info/passwords.html:15
-msgid "How do we store your passwords?"
-msgstr "Comment stockons-nous vos mots de passe ?"
-
-#: shortview/templates/shortview/info/passwords.html:17
+#: shortview/templates/shortview/info/passwords.html:16
 msgid ""
 "To secure passwords, this platform uses a robust hashing function known as"
 msgstr ""
 "Pour sécuriser les mots de passe, cette plateforme utilise une fonction de "
 "hachage robuse connue sous le nom"
 
-#: shortview/templates/shortview/info/passwords.html:18
+#: shortview/templates/shortview/info/passwords.html:17
 msgid "https://en.wikipedia.org/wiki/Argon2"
 msgstr "https://fr.wikipedia.org/wiki/Argon2"
 
-#: shortview/templates/shortview/info/passwords.html:19
+#: shortview/templates/shortview/info/passwords.html:18
 msgid ", which is the winner of the"
-msgstr ", qui est le gagnant de la"
+msgstr ", qui est gagnant de la"
 
-#: shortview/templates/shortview/info/passwords.html:20
+#: shortview/templates/shortview/info/passwords.html:19
 msgid "https://en.wikipedia.org/wiki/Password_Hashing_Competition"
 msgstr "https://fr.wikipedia.org/wiki/Password_Hashing_Competition"
 
-#: shortview/templates/shortview/info/passwords.html:20
+#: shortview/templates/shortview/info/passwords.html:19
 msgid "2015 Password Hashing Competition"
 msgstr "Compétition de hachage de mots de passe de 2015"
 
-#: shortview/templates/shortview/info/passwords.html:21
+#: shortview/templates/shortview/info/passwords.html:20
 msgid ""
 "and is still recognized as one of the strongest security standards today."
 msgstr ""
 "et est toujours reconnue comme l'un des standards de sécurité les plus forts "
 "à l'heure actuelle."
 
-#: shortview/templates/shortview/info/passwords.html:23
+#: shortview/templates/shortview/info/passwords.html:22
 msgid ""
 "No one, including the platform admins, can see or obtain your password, even "
 "with full access to the user database or in the case of a database leak."
@@ -188,17 +436,17 @@ msgstr ""
 "vos mots de passe, même avec un accès complet à la base de donnée "
 "d'utilisateurs ou dans le cas d'une fuite de a base de données."
 
-#: shortview/templates/shortview/info/passwords.html:25
+#: shortview/templates/shortview/info/passwords.html:24
 msgid "That's also why we can't give your password back if you forget it."
 msgstr ""
 "C'est également pourquoi nous ne pouvons pas vous redonner votre mot de "
 "passe si vous l'oubliez."
 
-#: shortview/templates/shortview/info/passwords.html:27
+#: shortview/templates/shortview/info/passwords.html:26
 msgid "Here is an explanation on how we secure them:"
 msgstr "Voici une explication sur la façon dont nous les sécurisons :"
 
-#: shortview/templates/shortview/info/passwords.html:29
+#: shortview/templates/shortview/info/passwords.html:28
 msgid ""
 "When creating your account, the system will create for your user a piece of "
 "randomly generated text, called the \"salt\", which will be added at the end "
@@ -208,7 +456,7 @@ msgstr ""
 "texte généré aléatoirement, appelé le \"salage\" (ou \"salt\" en anglais), "
 "qui va être ajouté à la fin de votre mot de passe."
 
-#: shortview/templates/shortview/info/passwords.html:31
+#: shortview/templates/shortview/info/passwords.html:30
 msgid ""
 "Then, we take the password followed by the salt, which is the \"salted "
 "password\", and apply a hashing algorithm on it, which is built with "
@@ -218,7 +466,7 @@ msgstr ""
 "passe salé\", et appliquons un algorithme de hachage (\"hashing en "
 "anglais\"), qui est conçu spécifiquement pour un usage cryptographique."
 
-#: shortview/templates/shortview/info/passwords.html:33
+#: shortview/templates/shortview/info/passwords.html:32
 msgid ""
 "Hashing is a one way process, which will take the given data as an input, "
 "and will generate its \"hash\", which cannot be turned back into the "
@@ -232,7 +480,7 @@ msgstr ""
 "en entrée redonnera exactement le même hash, et c'est ainsi que nous savons "
 "si le mot de passe entré est valide lorsque vous essayez de vous connecter."
 
-#: shortview/templates/shortview/info/passwords.html:35
+#: shortview/templates/shortview/info/passwords.html:34
 msgid ""
 "Inside the database, we only store your identification informations, which "
 "are the username, email, and eventually other identification informations "
@@ -245,7 +493,7 @@ msgstr ""
 "stockons pour chaque utilisateur le hash du mot de passe salé, ainsi que le "
 "salage."
 
-#: shortview/templates/shortview/info/passwords.html:37
+#: shortview/templates/shortview/info/passwords.html:36
 msgid ""
 "This way, your original password will never be directly visible nor "
 "obtainable from the database."
@@ -253,13 +501,13 @@ msgstr ""
 "En procédant ainsi, votre mot de passe original de sera jamais directement "
 "visible ni obtenable depuis la base de données."
 
-#: shortview/templates/shortview/info/passwords.html:39
+#: shortview/templates/shortview/info/passwords.html:38
 msgid "This method secures your password against most attacks, including:"
 msgstr ""
 "Cette méthode sécurise votre mot de passe contre la plupart des attaques, "
 "incluant :"
 
-#: shortview/templates/shortview/info/passwords.html:41
+#: shortview/templates/shortview/info/passwords.html:40
 msgid ""
 "Database leaks: your password isn't directly obtainable from the database, "
 "even with full access to it."
@@ -267,7 +515,7 @@ msgstr ""
 "Les fuites de base de données : votre mot de passe n'est pas directement "
 "obtenable depuis la base de données, même avec un accès complet à celle-ci."
 
-#: shortview/templates/shortview/info/passwords.html:42
+#: shortview/templates/shortview/info/passwords.html:41
 msgid ""
 "Rainbow table attacks: this attack consists of trying to see if the hash of "
 "the most common passwords matches with one of the registered users. But "
@@ -280,7 +528,7 @@ msgstr ""
 "unique ajouté à la fin de leur mot de passe avant le hachage, une attaque "
 "\"rainbow table\" générique serait complètement inefficace."
 
-#: shortview/templates/shortview/info/passwords.html:43
+#: shortview/templates/shortview/info/passwords.html:42
 msgid ""
 "Matching users with same password: again, since each user has a unique salt, "
 "two users with the same exact password will have different hashes associated "
@@ -294,7 +542,7 @@ msgstr ""
 "de directement savoir si deux utilisateurs ou plus partagent le même mot de "
 "passe."
 
-#: shortview/templates/shortview/info/passwords.html:44
+#: shortview/templates/shortview/info/passwords.html:43
 msgid ""
 "Brute force attacks: the hashing algorithm used to transform the passwords "
 "has a high work factor, meaning that it takes time to hash a password and "
@@ -313,7 +561,7 @@ msgstr ""
 "passe possibles, l'attaque sera presque inefficace puisqu'il est bien trop "
 "long d'essayer de hacher un grand nombre de mots de passe."
 
-#: shortview/templates/shortview/info/passwords.html:45
+#: shortview/templates/shortview/info/passwords.html:44
 msgid ""
 "Hashing collision attacks: when two different passwords are passed to a "
 "hashing algorithm and give the same output hash, this is called a hashing "
@@ -332,7 +580,7 @@ msgstr ""
 "en pratique impossible pour quelqu'un de se connecter à votre compte en "
 "utilisant un mot de passe différent de celui que vous avez entré."
 
-#: shortview/templates/shortview/info/passwords.html:47
+#: shortview/templates/shortview/info/passwords.html:46
 msgid ""
 "Moreover, all of these procedures aiming to securely store and check your "
 "passwords are handled by Django's backend, which is a well known, trustable "
@@ -343,7 +591,7 @@ msgstr ""
 "qui est un framework bien connu, digne de confiance et largement utilisé par "
 "de grandes entreprises dans le monde entier."
 
-#: shortview/templates/shortview/info/passwords.html:49
+#: shortview/templates/shortview/info/passwords.html:48
 msgid ""
 "For more informations on how Django's backend manages the passwords with the "
 "above methods, you can go on"
@@ -351,13 +599,208 @@ msgstr ""
 "Pour plus d'informations sur la manière dont le backend Django gère les mots "
 "de passe avec les méthodes ci-dessus, vous pouvez consulter"
 
-#: shortview/templates/shortview/info/passwords.html:50
+#: shortview/templates/shortview/info/passwords.html:49
 msgid "https://docs.djangoproject.com/en/5.2/topics/auth/passwords/"
 msgstr "https://docs.djangoproject.com/fr/5.2/topics/auth/passwords/"
 
-#: shortview/templates/shortview/info/passwords.html:50
+#: shortview/templates/shortview/info/passwords.html:49
 msgid "this page"
 msgstr "cette page"
+
+#: shortview/templates/shortview/login.html:8
+msgid "Login"
+msgstr "Se connecter"
+
+#: shortview/templates/shortview/login.html:13
+#: shortview/templates/shortview/register.html:13
+msgid "Back to index page"
+msgstr "Retour à la page d'index"
+
+#: shortview/templates/shortview/login.html:16
+#: shortview/templates/shortview/new_link.html:14
+#: shortview/templates/shortview/preferences.html:14
+#: shortview/templates/shortview/register.html:16
+msgid "Error:"
+msgstr "Erreur :"
+
+#: shortview/templates/shortview/login.html:19
+msgid "Log in using your credentials"
+msgstr "Connectez-vous en utilisant vos identifiants"
+
+#: shortview/templates/shortview/login.html:20
+msgid "Username/Email:"
+msgstr "Nom d'utilisateur/Email :"
+
+#: shortview/templates/shortview/login.html:21
+msgid "username/email"
+msgstr "nom d'utilisateur/email"
+
+#: shortview/templates/shortview/login.html:22
+#: shortview/templates/shortview/register.html:27
+msgid "Password:"
+msgstr "Mot de passe :"
+
+#: shortview/templates/shortview/login.html:23
+#: shortview/templates/shortview/register.html:29
+#: shortview/templates/shortview/register.html:33
+msgid "password"
+msgstr "mot de passe"
+
+#: shortview/templates/shortview/new_link.html:8
+msgid "Create Link"
+msgstr "Créer un lien"
+
+#: shortview/templates/shortview/new_link.html:19
+msgid "Description:"
+msgstr "Description :"
+
+#: shortview/templates/shortview/new_link.html:21
+msgid "tracked link description"
+msgstr "description du lien suivi"
+
+#: shortview/templates/shortview/new_link.html:22
+msgid "Full destination URL:"
+msgstr "URL de destination complète :"
+
+#: shortview/templates/shortview/new_link.html:26
+#: shortview/templates/shortview/preferences.html:21
+msgid "Time before the link expires (days/hours/minutes/seconds):"
+msgstr "Temps avant expiration du lien (jours/heures/minutes/secondes) :"
+
+#: shortview/templates/shortview/new_link.html:36
+#: shortview/templates/shortview/preferences.html:31
+msgid "Never expire:"
+msgstr "N'expire jamais :"
+
+#: shortview/templates/shortview/new_link.html:40
+#: shortview/templates/shortview/preferences.html:43
+#: shortview/templates/shortview/view_link.html:23
+msgid "Email notification mode:"
+msgstr "Mode de notification email :"
+
+#: shortview/templates/shortview/new_link.html:48
+msgid "Create the link"
+msgstr "Créer le lien"
+
+#: shortview/templates/shortview/preferences.html:19
+msgid "Change your preferences below, then hit apply"
+msgstr "Changer vos préférences ci-dessous, puis cliquez sur appliqer"
+
+#: shortview/templates/shortview/preferences.html:20
+msgid "Global preferences"
+msgstr "Préférences globales"
+
+#: shortview/templates/shortview/preferences.html:35
+msgid "Automatically delete expired links (including the current ones)"
+msgstr "Supprimer les liens expirés automatiquement (incluant ceux actuels)"
+
+#: shortview/templates/shortview/preferences.html:38
+msgid "Hide expired links:"
+msgstr "Cacher liens expirés :"
+
+#: shortview/templates/shortview/preferences.html:42
+msgid "Email preferences"
+msgstr "Préférences email :"
+
+#: shortview/templates/shortview/preferences.html:50
+msgid "Receive email newsletters:"
+msgstr "Reçevoir les bulletins par email :"
+
+#: shortview/templates/shortview/preferences.html:53
+msgid "Apply preferences"
+msgstr "Appliquer les préférences"
+
+#: shortview/templates/shortview/register.html:18
+msgid "Register your new account"
+msgstr "Enregistrez votre nouveau compte"
+
+#: shortview/templates/shortview/register.html:19
+msgid "Username:"
+msgstr "Nom d'utilisateur :"
+
+#: shortview/templates/shortview/register.html:21
+msgid ""
+"Between 3 and 50 characters, can only contain letters, numbers, and these "
+"symbols:  _ + . -"
+msgstr ""
+"Entre 3 et 50 caractères, peut uniquement contenir des lettres, chiffres, et "
+"ces symboles : _ + . -"
+
+#: shortview/templates/shortview/register.html:21
+msgid "username"
+msgstr "nom d'utilisateur"
+
+#: shortview/templates/shortview/register.html:23
+msgid "Email:"
+msgstr "Email :"
+
+#: shortview/templates/shortview/register.html:25
+msgid "Enter your email address here"
+msgstr "Entrez votre adresse email ici"
+
+#: shortview/templates/shortview/register.html:25
+msgid "email"
+msgstr "email"
+
+#: shortview/templates/shortview/register.html:29
+msgid ""
+"Enter a secure password here: at least 8 characters, not only numbers, do "
+"not use common passwords"
+msgstr ""
+"Entrez un mot de passe sécurisé ici : au  moins 8 caractères, pas seulement "
+"des chiffres, n'utilisez pas un mot de passe commun"
+
+#: shortview/templates/shortview/register.html:31
+msgid "Confirm password:"
+msgstr "Confirmation du mot de passe :"
+
+#: shortview/templates/shortview/register.html:33
+msgid "Retype the same password again here"
+msgstr "Réécrivez le même mot de passe ici"
+
+#: shortview/templates/shortview/register.html:35
+msgid "I have read and accept the"
+msgstr "J'ai lu et accepté les"
+
+#: shortview/templates/shortview/register.html:35
+msgid "conditions of use of the service"
+msgstr "conditions d'utilisation du service"
+
+#: shortview/templates/shortview/view_link.html:16
+msgid "The tracked link to send is the following (click to copy):"
+msgstr "Le lien suivi à envoyer est le suivant (clic pour copier) :"
+
+#: shortview/templates/shortview/view_link.html:19
+msgid "Original destination link:"
+msgstr "Lien de destination original :"
+
+#: shortview/templates/shortview/view_link.html:32
+msgid "This link is expired"
+msgstr "Ce lien est expiré"
+
+#: shortview/templates/shortview/view_link.html:34
+msgid "Delete this link"
+msgstr "Supprimer ce lien"
+
+#: shortview/templates/shortview/view_link.html:37
+msgid "This link hasn't been clicked yet, no tracker available."
+msgstr "Ce lien n'a pas encore été cliqué, aucun suivi disponnible."
+
+#: shortview/templates/shortview/view_link.html:41
+msgid "Number"
+msgstr "Numéro"
+
+#: shortview/templates/shortview/view_link.html:43
+msgid "Opener's IP"
+msgstr "IP de l'ouvreur"
+
+#: shortview/templates/shortview/view_link.html:44
+msgid "Full request headers"
+msgstr "En-tête de la requête"
+
+#: shortview/templates/shortview/view_link.html:51
+msgid "See headers content"
+msgstr "Voir le contenu de l'en-tête"
 
 #: shortview/views.py:69
 msgid "You need to fill in all the fields to register."
@@ -453,4 +896,10 @@ msgstr "Nouvelles préférences appliquées avec succès!"
 
 #: shortview/views.py:342
 msgid "You cannot set another tracked url as the destination."
-msgstr "Vous ne pouvez pas définir un autre url traqué comme destination."
+msgstr "Vous ne pouvez pas définir un autre url suivi comme destination."
+
+#~ msgid "Back to register page"
+#~ msgstr "Retour à la page d'enregistrement"
+
+#~ msgid "How do we securly store your passwords?"
+#~ msgstr "Comment stockons-nous vos mots de passe de manière sécurisée ?"

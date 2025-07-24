@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext_lazy as _
 
 from .models import Profile, Link, Tracker
 
 # Change admin page headers
-admin.site.site_header = "ShortView Administration"
-admin.site.site_title = "ShortView Admin Portal"
-admin.site.index_title = "Welcome to the ShortView Administration Interface"
+admin.site.site_header = _("ShortView Administration")
+admin.site.site_title = _("ShortView Admin Portal")
+admin.site.index_title = _("Welcome to the ShortView Administration Interface")
 
 # Register your models here.
 class ProfileInLine(admin.TabularInline):
@@ -40,9 +41,9 @@ class LinkAdmin(admin.ModelAdmin):
     section to manage links and their trackers
     """
     fieldsets = [
-        ("General", {"fields": ["owner", "description", "destination"]}),
-        ("Date and time", {"fields": ["date", "lifetime"]}),
-        ("Email notification", {"fields": ["notify_click"]}),
+        (_("General"), {"fields": ["owner", "description", "destination"]}),
+        (_("Date and time"), {"fields": ["date", "lifetime"]}),
+        (_("Email notifications"), {"fields": ["notify_click"]}),
     ]
     inlines = [TrackerInLine]
     list_display = ["description", "owner", "short_destination", "date", "active"]

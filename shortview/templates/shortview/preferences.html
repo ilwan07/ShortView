@@ -5,20 +5,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ShortView | Preferences</title>
+    <title>ShortView | {% trans "Preferences" %}</title>
     <link rel="stylesheet" href="{% static 'shortview/css/style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
     <a href="{% url 'index' %}">{% trans "Back to home page" %}</a>
-    {% if error %} <p><i>Error: {{ error }}</i></p> {% endif %}
+    {% if error %} <p><i>{% trans "Error:" %} {{ error }}</i></p> {% endif %}
     {% if success %} <p><i>{{ success }}</i></p> {% endif %}
     <form action="{% url 'preferences' %}" method="post" id="form_to_submit">
         {% csrf_token %}
         <fieldset>
-            <legend><h3>Change your preferences below, then hit apply</h3></legend>
-            <p><u><b>Global preferences</b></u></p>
-            <label>Default time before a link expires (days/hours/minutes/seconds):</label> <br>
+            <legend><h3>{% trans "Change your preferences below, then hit apply" %}</h3></legend>
+            <p><u><b>{% trans "Global preferences" %}</b></u></p>
+            <label>{% trans "Time before the link expires (days/hours/minutes/seconds):" %}</label> <br>
             <input onChange="modify()" id="days" type="number" name="days" min="0" max="36500"
                 value="{% if never_expire %}60{% else %}{{ days }}{% endif %}" {% if never_expire %} disabled {% endif %}>
             <input onChange="modify()" id="hours" type="number" name="hours" min="0" max="23"
@@ -28,29 +28,29 @@
             <input onChange="modify()" id="seconds" type="number" name="seconds" min="0" max="59"
                 value="{{ seconds }}" {% if never_expire %} disabled {% endif %}>
             <br>
-            <label for="never_expire">Never expire:</label>
+            <label for="never_expire">{% trans "Never expire:" %}</label>
             <input onChange="modify(); change_never_expire()" id="never_expire" type="checkbox" name="never_expire" {% if never_expire %} checked {% endif %}>
             <br><br>
 
-            <label for="delete_expired">Automatically delete expired links (including the current ones)</label>
+            <label for="delete_expired">{% trans "Automatically delete expired links (including the current ones)" %}</label>
             <input onChange="modify(); change_delete_expired()" id="delete_expired" type="checkbox" name="delete_expired"
                 {% if profile.delete_expired %} checked {% endif %}> <br>
-            <label for="hide_expired">Hide expired tracked links:</label>
+            <label for="hide_expired">{% trans "Hide expired links:" %}</label>
             <input onChange="modify()" id="hide_expired" type="checkbox" name="hide_expired"
                 {% if profile.hide_expired or profile.delete_expired %} checked {% endif %} {% if profile.delete_expired %} disabled {% endif %}>
 
-            <p><u><b>Email preferences</b></u></p>
-            <label for="notify">Default email notification mode:</label>
+            <p><u><b>{% trans "Email preferences" %}</b></u></p>
+            <label for="notify">{% trans "Email notification mode:" %}</label>
             <select onChange="modify()" id="notify" name="notify">
-                <option value="1" {% if notify == 1 %} selected {% endif %}>Never notify</option>
-                <option value="2" {% if notify == 2 %} selected {% endif %}>Notify first click</option>
-                <option value="3" {% if notify == 3 %} selected {% endif %}>Notify each click</option>
+                <option value="1" {% if notify == 1 %} selected {% endif %}>{% trans "Never notify" %}</option>
+                <option value="2" {% if notify == 2 %} selected {% endif %}>{% trans "Notify first click" %}</option>
+                <option value="3" {% if notify == 3 %} selected {% endif %}>{% trans "Notify each click" %}</option>
             </select>
             <br>
-            <label for="newsletter">Receive email newsletters:</label>
+            <label for="newsletter">{% trans "Receive email newsletters:" %}</label>
             <input onChange="modify()" id="newsletter" type="checkbox" name="newsletter" {% if newsletter %} checked {% endif %}>
         </fieldset>
-        <input class="apply" id="applypreferences" type="submit" value="Apply preferences" onclick="let_confirm()">
+        <input class="apply" id="applypreferences" type="submit" value="{% trans 'Apply preferences' %}" onclick="let_confirm()">
     </form>
 
     <script src="{% static 'shortview/js/preferences.js' %}"></script>

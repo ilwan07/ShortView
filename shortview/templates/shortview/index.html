@@ -10,27 +10,27 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'shortview/assets/icon_16.png' %}">
 </head>
 <body>
-    <h1>Welcome to ShortView!</h1>
-    <a href="{% url 'register' %}">Register</a> <br>
-    <a href="{% url 'loginpage' %}">Log in</a>
+    <h1>{% trans "Welcome to ShortView!" %}</h1>
+    <a href="{% url 'register' %}">{% trans "Register" %}</a> <br>
+    <a href="{% url 'loginpage' %}">{% trans "Log in" %}</a>
     <br><br>
-    <h3>What is ShortView?</h3>
+    <h3>{% trans "What is ShortView?" %}</h3>
     <p>
-        With this platform, you can shorten a link you want to share with people, and monitor when these links have been opened.
-        So it allows do do two things at the same time: shorten a long link if you need to, and allow tracking of the link!
+        {% trans "With this platform, you can shorten a link you want to share with people, and monitor when these links have been opened." %}
+        {% trans "So it allows do do two things at the same time: shorten a long link if you need to, and allow tracking of the link!" %}
     </p>
-    <h3>How does this work?</h3>
+    <h3>{% trans "How does this work?" %}</h3>
     <p>
-        To achieve that, this platform will create a shortened link to the destination url you want to share.
-        When people will click this link, they will send a request to our servers with the id of the link they clicked.
-        The server will then register that this link has been clicked, with data such as the ip of the person who clicked and the date.
-        After registering the action, the server will perform a redirection to the destination url.
-        This whole process is practically instant for the user who clicked the link.
+        {% trans "To achieve that, this platform will create a shortened link to the destination url you want to share." %}
+        {% trans "When people will click this link, they will send a request to our servers with the id of the link they clicked." %}
+        {% trans "The server will then register that this link has been clicked, with data such as the ip of the person who clicked and the date." %}
+        {% trans "After registering the action, the server will perform a redirection to the destination url." %}
+        {% trans "This whole process is practically instant for the user who clicked the link." %}
     </p>
-    <h3>Who can I send tracked links to?</h3>
+    <h3>{% trans "Who can I send tracked links to?" %}</h3>
     <p>
-        Make sure that the people you're going to send tracked links to are aware that his clicks may be registered. 
-        Never send it without telling that you're collecting the person's activity, as it may constitute a privacy violation.
+        {% trans "Make sure that the people you're going to send tracked links to are aware that their clicks will be registered." %}
+        {% trans "Never send it without telling that you're collecting the person's activity, as it may constitute a privacy violation." %}
     </p>
 </body>
 </html>

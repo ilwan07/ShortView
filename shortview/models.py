@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib import admin
@@ -15,31 +16,31 @@ class Profile(models.Model):
     """
     a model to store a user profile, with all its settings, data and preferences
     """
-    NOTIFY_CLICK_CHOICES = [(1, "Never notify"), (2, "Notify first click"), (3, "Notify each click")]
+    NOTIFY_CLICK_CHOICES = [(1, _("Never notify")), (2, _("Notify first click")), (3, _("Notify each click"))]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    delete_expired = models.BooleanField("delete expired links", default=False)
-    hide_expired = models.BooleanField("hide expired links", default=True)
-    default_lifetime = models.DurationField("default link life duration", default=datetime.timedelta(0))
-    default_notify_click = models.IntegerField("send mail on link click", choices=NOTIFY_CLICK_CHOICES, default=1)
-    receive_newsletters = models.BooleanField("receive the newsletters", default=True)
+    delete_expired = models.BooleanField(_("delete expired links"), default=False)
+    hide_expired = models.BooleanField(_("hide expired links"), default=True)
+    default_lifetime = models.DurationField(_("default link life duration"), default=datetime.timedelta(0))
+    default_notify_click = models.IntegerField(_("send email on link click"), choices=NOTIFY_CLICK_CHOICES, default=1)
+    receive_newsletters = models.BooleanField(_("receive the newsletters"), default=True)
 
     def __str__(self):
-        return str(f"{self.user}'s profile")
+        return str(_("%(user)s's profile") % {"user": self.user})
 
 
 class Link(models.Model):
     """
     a model to represent a tracked link shortener with its attributes
     """
-    NOTIFY_CLICK_CHOICES = [(0, "User preference"), (1, "Never notify"), (2, "Notify first click"), (3, "Notify each click")]
+    NOTIFY_CLICK_CHOICES = [(0, _("User preference")), (1, _("Never notify")), (2, _("Notify first click")), (3, _("Notify each click"))]
 
-    description = models.CharField("description", default="", max_length=255)
+    description = models.CharField(_("description"), default="", max_length=255)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)  # user who owns the link
-    date = models.DateTimeField("date of creation")
-    lifetime = models.DurationField("life duration", default=datetime.timedelta(0))  # 0 for unlimited
-    notify_click = models.IntegerField("send mail on link click", choices=NOTIFY_CLICK_CHOICES, default=0)
-    destination = models.URLField("url destination", default="https://example.com/", max_length=65535)
+    date = models.DateTimeField(_("date of creation"))
+    lifetime = models.DurationField(_("life duration"), default=datetime.timedelta(0))  # 0 for unlimited
+    notify_click = models.IntegerField(_("send email on link click"), choices=NOTIFY_CLICK_CHOICES, default=0)
+    destination = models.URLField(_("destination url"), default="https://example.com/", max_length=65535)
     
     def url(self):
         """
@@ -52,7 +53,7 @@ class Link(models.Model):
     
     @admin.display(
         ordering="destination",
-        description="destination domain",
+        description=_("destination domain"),
     )
     def short_destination(self):
         """
@@ -63,7 +64,7 @@ class Link(models.Model):
     @admin.display(
         boolean=True,
         ordering="date",
-        description="still active",
+        description=_("still active"),
     )
     def active(self) -> bool:
         """
@@ -83,9 +84,9 @@ class Tracker(models.Model):
     a model to store the informations when a link has been clicked, a link can have multiple trackers
     """
     link = models.ForeignKey(Link, on_delete=models.CASCADE)  # the link from which the tracking originates
-    ip = models.GenericIPAddressField("receiver ip", default="0.0.0.0")
-    date = models.DateTimeField("date of clicking")
-    header = models.TextField("request header", default="")
+    ip = models.GenericIPAddressField(_("receiver ip"), default="0.0.0.0")
+    date = models.DateTimeField(_("date of clicking"))
+    header = models.TextField(_("request header"), default="")
 
     def __str__(self):
         return f"{self.ip} | {self.date}"
