@@ -30,8 +30,6 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY_SHORTVIEW')
 DEBUG = True
 
 ALLOWED_HOSTS = ['sv.woah.pw',
-                 '82.66.207.254',
-                 '192.168.1.130',
                  'localhost']
 
 # CSRF settings
