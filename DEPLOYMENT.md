@@ -139,3 +139,5 @@ git stash
 git pull
 git stash pop
 ```
+
+Then run `sudo systemctl restart shortview` to reload the project.
