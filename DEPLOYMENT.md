@@ -128,9 +128,13 @@ First obtain your certificate by executing `sudo certbot --nginx -d [your domain
 
 The certificate should automatically be loaded in your server and the Nginx config will automatically be edited too. The certificate will automatically be renewed when necessary.
 
+### One last thing
+
+The last thing you need to do is to set your domain or subdomain in the websites administrator interface. For this, open your web browser and access the webapp with your domain, then log in as the superuser you created earlier, then go to the Admin access, then to Sites at the very end, then click on the example.com domain, change both fields to your domain or subdomain, then hit SAVE.
+
 ## You're now all set!
 
-Open your web browser and enter your domain, and you should get the ShortView index page!
+The webapp is now deployed and available on the Internet!
 
 If you need to update the project, you can stash the current files, then pull the changes, and then get bach the local files, and eventually handle conflicts, with this set of commands:
 
