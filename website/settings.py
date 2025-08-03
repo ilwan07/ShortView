@@ -29,15 +29,15 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY_SHORTVIEW')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-DOMAIN = os.getenv('DOMAIN_SHORTVIEW')
+WEB_DOMAIN = 'sv.woah.pw'
 
-ALLOWED_HOSTS = [DOMAIN,
+ALLOWED_HOSTS = [WEB_DOMAIN,
                  'localhost']
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
-    f'https://{DOMAIN}',
-    f'http://{DOMAIN}',
+    f'https://{WEB_DOMAIN}',
+    f'http://{WEB_DOMAIN}',
 ]
 
 
@@ -97,11 +97,11 @@ DATABASES = {
 
 # Password hashing functions
 PASSWORD_HASHERS = [
-    "django.contrib.auth.hashers.Argon2PasswordHasher",
-    #"django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
-    #"django.contrib.auth.hashers.PBKDF2PasswordHasher",
-    #"django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
-    #"django.contrib.auth.hashers.ScryptPasswordHasher",
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    #'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    #'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    #'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    #'django.contrib.auth.hashers.ScryptPasswordHasher',
 ]
 
 
