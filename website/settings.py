@@ -29,13 +29,15 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY_SHORTVIEW')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sv.woah.pw',
+DOMAIN = os.getenv('DOMAIN_SHORTVIEW')
+
+ALLOWED_HOSTS = [DOMAIN,
                  'localhost']
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
-    'https://sv.woah.pw',
-    'http://sv.woah.pw',
+    f'https://{DOMAIN}',
+    f'http://{DOMAIN}',
 ]
 
 
@@ -149,7 +151,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email configuration
+# Email configuration: change as needed
 #TODO: use ZeptoMail instead of Zoho mail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.zoho.eu'
@@ -166,3 +168,11 @@ SITE_ID = 1
 
 # Some URLs
 LOGIN_URL = 'loginpage'
+
+# SECURITY FEATURES: uncomment these in production
+#SECURE_SSL_REDIRECT = True
+#SECURE_HSTS_SECONDS = 31536000  # 1 year
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = True
+#SESSION_COOKIE_SECURE = True
+#CSRF_COOKIE_SECURE = True
