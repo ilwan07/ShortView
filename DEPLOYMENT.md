@@ -136,7 +136,7 @@ The last thing you need to do is to set your domain or subdomain in the websites
 
 The webapp is now deployed and available on the Internet!
 
-If you need to update the project, you can stash the current files, then pull the changes, and then get bach the local files, and eventually handle conflicts, with this set of commands:
+If you need to update the project, you can stash the current files, then pull the changes, and then get back the local files, and eventually handle conflicts, with this set of commands:
 
 ```bash
 git stash
