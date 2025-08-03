@@ -13,7 +13,7 @@
     <a href="{% url 'index' %}">{% trans "Back to home page" %}</a>
     <h2>{{ link.description }}</h2>
     {% if link.active %}
-    <p>{% trans "The tracked link to send is the following (click to copy):" %}" <button onclick="copy_link()" class="urlbutton" id="copylink">{{ link.url }}</button>
+    <p>{% trans "The tracked link to send is the following (click to copy):" %} <button onclick="copy_link()" class="urlbutton" id="copylink">{{ link.url }}</button>
         <small id="copyconfirm"></small></p>
     {% endif %}
     <p class="destinationlink">{% trans "Original destination link:" %} <a target="_blank" class="destinationlink" href="{{ link.destination }}">{{ link.destination }}</a></p>
