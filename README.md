@@ -4,6 +4,8 @@ A webapp that allows you to create a tracked shortened link and know when it's c
 
 # **Try it at [sv.woah.pw](https://sv.woah.pw)**
 
+*IMPORTANT note for testing: the click on a link won't get registered if you're logged in and clicking on your own link. If you just want to test the app, then either open your tracked links on another device or in an incognito tab.*
+
 ### What is ShortView?
 
 With this platform, you can shorten a link you want to share with people, and monitor when these links have been opened.
