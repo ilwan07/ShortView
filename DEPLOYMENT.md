@@ -78,7 +78,7 @@ Group=www-data
 WorkingDirectory=/home/[your username]/ShortView
 ExecStart=/home/[your username]/ShortView/.venv/bin/gunicorn \
           --access-logfile - \
-          --workers 3 \
+          --workers 1 \
           --bind unix:/run/shortview.sock \
           website.wsgi:application
 
