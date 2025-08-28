@@ -118,7 +118,7 @@ By replacing (without the square brackets) `[your domain]` by the domain or subd
 
 And now enable it with `sudo ln -s /etc/nginx/sites-available/shortview /etc/nginx/sites-enabled/` then test its syntax with `sudo nginx -t` and if everything is ok, then apply with `sudo systemctl restart nginx`.
 
-Finally, we need to add your user to a apecial group to avoid issues with serving static files, so execute `sudo gpasswd -a www-data [your username]` with your own username then `sudo nginx -s reload` to fix the issue.
+Finally, we need to add your user to a special group to avoid issues with serving static files, so execute `sudo gpasswd -a www-data [your username]` with your own username then `sudo nginx -s reload` to fix the issue.
 
 ## Get and enable your SSL certificate to get HTTPS
 
