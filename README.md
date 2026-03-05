@@ -2,7 +2,7 @@
 
 A webapp that allows you to create a tracked shortened link and know when it's clicked
 
-# **Try it at [sv.woah.pw](https://sv.woah.pw)**
+# **Try it at [sv.ilwan.org](https://sv.ilwan.org)**
 
 ### What is ShortView?
 
