@@ -157,7 +157,7 @@ def loginpage(request: HttpRequest):
                             ("identifier",))
     else:
         login(request, user)
-        if "next" in request.POST:
+        if "next" in request.POST and request.POST["next"].startswith("/"):
             return redirect(request.POST["next"])
         else:
             return redirect("index")
