@@ -474,7 +474,6 @@ def redirect_link(request: HttpRequest, link_id: int):
         tracker_page = f"{base_url}{reverse('view_tracker', args=[link_object.id, tracker.id])}"
         preferences_page = f"{base_url}{reverse('preferences')}"
 
-        #TODO: cleaner email sending system
         text_content = render_to_string("shortview/emails/notify_click.txt",
                                         context={"link": link_object, "tracker": tracker, "link_page": link_page,
                                                  "tracker_page": tracker_page, "preferences_page": preferences_page,

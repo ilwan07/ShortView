@@ -24,10 +24,13 @@ Create the file with `nano .env` and fill it like this:
 
 ```bash
 DJANGO_SECRET_KEY_SHORTVIEW = '[secret key here]'
-EMAIL_HOST_PASSWORD_SHORTVIEW = '[email password here]'
+EMAIL_HOST_USER = '[email user here]'
+EMAIL_HOST_PASSWORD = '[email password here]'
+AGENT_EMAIL = '[email address for automated emails here]'
+BCC_EMAIL = '[email address to give copy of sent emails]'
 ```
 
-Replace (without the square brackets) `[secret key here]` with the secret key you just generated, and replace `[email password here]` by the app specific password for the email you wish to use to send notifications (leave it blank if you don't want to use emails, it shouldn't cause issues). For a bit more security, you can change by hand some of the characters from the secret key, this will make it more "random" and therefore more secure.
+Replace (without the square brackets) the env variables with appropriate values (leave the email fields blank if you don't want to use emails, it shouldn't cause issues). For a bit more security, you can change by hand some of the characters from the secret key, this will make it more "random" and therefore more secure.
 
 Now, we need to edit the settings file. Still from the ShortView folder, open it with `nano website/settings.py`, then change the followings.
 

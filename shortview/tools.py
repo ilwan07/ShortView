@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpRequest
 from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 from . import jobs
 
 # Below are other functions which can be used elsewhere
 
 def send_email(subject:str, sender:str, receiver:str, text_content:str, html_content:str=None):
-    email = EmailMultiAlternatives(subject, text_content, sender, [receiver])
+    bcc = [settings.BCC_EMAIL] if settings.BCC_EMAIL else []
+    email = EmailMultiAlternatives(subject, text_content, sender, [receiver], bcc=bcc)
     if html_content is not None:
         email.attach_alternative(html_content, "text/html")
     email.send()

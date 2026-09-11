@@ -152,16 +152,16 @@ STATIC_ROOT = '/var/www/shortview'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email configuration: change as needed
-#TODO: use ZeptoMail instead of Zoho mail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.zoho.eu'
+EMAIL_HOST = 'in-v3.mailjet.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-DOMAIN = 'ilwan.woah.pw'
-EMAIL_HOST_USER = 'shortview@ilwan.woah.pw'
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD_SHORTVIEW')
-DEFAULT_FROM_EMAIL = 'shortview@ilwan.woah.pw'
+DOMAIN = 'ilwan.org'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('AGENT_EMAIL')
+BCC_EMAIL = os.getenv('BCC_EMAIL')
 
 # Site ID
 SITE_ID = 1
